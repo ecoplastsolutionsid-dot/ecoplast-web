@@ -1,0 +1,105 @@
+/* ==========================================================================
+   responsive.css — Adaptive overrides (tablet / mobile / motion)
+   Dimuat SETELAH styles.css. Tata letak desktop/base ada di styles.css;
+   semua yang spesifik ukuran-layar atau preferensi ada di sini agar rapi
+   dan mode desktop vs mobile tidak saling mengganggu.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   ≤900px — grid tablet
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: repeat(2, 1fr); }
+  .site-footer .container { grid-template-columns: 1fr 1fr; }
+  .foot-info { grid-column: 1 / -1; }
+}
+
+/* --------------------------------------------------------------------------
+   ≤720px — MOBILE: header hamburger + layout menumpuk
+   -------------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  /* Header: brand (kiri) · tombol ikon WhatsApp · hamburger (kanan).
+     Header dibuat solid & container relatif agar panel menu menempel
+     tepat di bawah header. */
+  .site-header { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .site-header .container { position: relative; gap: 0.5rem; }
+  .brand__mark { width: 24px; height: 24px; }
+  .brand__name { font-size: 0.92rem; font-variation-settings: "wdth" 100; }
+  .nav { display: contents; }
+  .brand { order: 0; min-width: 0; }
+  .nav__cta { order: 1; margin-left: auto; flex: none; font-size: 0; gap: 0; padding: 8px; }
+  .nav__cta .wa-ico { width: 20px; height: 20px; }
+  .nav-burger { display: inline-flex; order: 2; flex: none; }
+
+  /* Panel dropdown: lebar penuh, tinggi sesuai konten (bukan full-screen).
+     Animasi buka/tutup halus tanpa JS (visibility + opacity + transform). */
+  .nav__links {
+    order: 3;
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    z-index: 40;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 22px 34px -22px rgba(18, 39, 29, .55);
+    padding: 0.25rem 0 0.6rem;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity .2s ease, transform .2s ease, visibility .2s;
+  }
+  .nav-toggle:checked ~ .nav .nav__links { visibility: visible; opacity: 1; transform: none; }
+  .nav__link {
+    display: block;
+    text-align: center;
+    padding: 0.95rem clamp(1.25rem, 5vw, 2rem);
+    font-size: 1.05rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav__link:last-child { border-bottom: 0; }
+  .nav__link[aria-current="page"]::after { display: none; }
+  .nav__link[aria-current="page"] { color: var(--green); box-shadow: inset 4px 0 0 var(--green); }
+
+  .prod { grid-template-columns: 1fr; }
+  .prod--reverse .prod__media { order: -1; }   /* gambar tetap di atas saat menumpuk */
+}
+
+/* --------------------------------------------------------------------------
+   ≤560px — kartu satu kolom
+   -------------------------------------------------------------------------- */
+@media (max-width: 560px) {
+  .grid--2 { grid-template-columns: 1fr; }
+  .grid--4 { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .site-footer .container { grid-template-columns: 1fr; }
+  .cta-band .container { flex-direction: column; align-items: flex-start; }
+}
+
+/* --------------------------------------------------------------------------
+   ≤360px — layar sangat kecil
+   -------------------------------------------------------------------------- */
+@media (max-width: 360px) {
+  :root { --space: 3rem; }
+  .brand__name { font-size: 0.86rem; }
+  .btn { font-size: 0.92rem; padding: 0.8em 1.15em; }
+  .nav__cta { padding: 7px; }
+}
+
+/* --------------------------------------------------------------------------
+   Preferensi gerak
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .btn:hover, .pcard:hover, .feature:hover { transform: none; }
+}
