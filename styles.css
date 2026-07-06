@@ -533,8 +533,12 @@ a.crow__val:hover { color: var(--green); }
   background: radial-gradient(60% 100% at 50% 0%, rgba(31,122,77,.18), transparent 70%);
   pointer-events: none;
 }
-.site-footer .container { position: relative; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(1.75rem, 4vw, 3rem); }
-.foot-brand { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; margin-bottom: 0.9rem; transition: opacity .15s ease; }
+.site-footer .container { position: relative; }
+/* Logo = elemen dekoratif di atas; tiga kolom di bawahnya berbagi baseline yang sama
+   (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
+   bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
+.foot-cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(1.75rem, 4vw, 3rem); align-items: start; }
+.foot-brand { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem); transition: opacity var(--dur) var(--ease); }
 .foot-brand:hover { opacity: 0.85; }
 .foot-brand img { height: 70px; width: auto; }
 .foot-brand span { font-weight: 800; color: #fff; font-variation-settings: "wdth" 112; }
