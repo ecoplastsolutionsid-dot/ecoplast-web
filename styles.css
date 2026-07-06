@@ -554,16 +554,20 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.5fr 0.9fr 1.4fr 1.05fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Logo footer = wordmark putih (logo-footer.png, dibuat untuk latar gelap) langsung
-   di latar footer, lurus kiri tepat di atas teks deskripsi. Tanpa kotak. */
+/* Logo footer = lockup horizontal ala header (emblem + wordmark) dgn teks PUTIH untuk
+   latar gelap. Tanpa kotak; flush-left, emblem lurus dgn teks di bawahnya. */
 .foot-brand {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   text-decoration: none;
   margin-bottom: 1.4rem;
   transition: opacity var(--dur) var(--ease);
 }
 .foot-brand:hover { opacity: 0.85; }
-.foot-brand img { height: 64px; width: auto; display: block; }
+.foot-brand__mark { width: auto; height: 36px; display: block; }
+.foot-brand__name { font-weight: 800; font-size: 1.25rem; color: #fff; font-variation-settings: "wdth" 112; letter-spacing: -0.01em; }
+.foot-brand__name .s { color: var(--green-light); }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */
 .foot-col h3 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; font-variation-settings: normal; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }
