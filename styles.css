@@ -566,7 +566,9 @@ a.crow__val:hover { color: var(--green); }
   padding: 0.65rem 1rem;
   border-radius: 13px;
   box-shadow: 0 8px 20px -12px rgba(0, 0, 0, .5);
-  margin-bottom: 1.5rem;
+  /* geser kiri sebesar padding-kiri agar EMBLEM (bukan tepi kotak) sejajar dengan
+     teks/kontainer di bawahnya — padding dalam kotak tetap untuk breathing room */
+  margin: 0 0 1.5rem -1rem;
   transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .foot-brand:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -12px rgba(0, 0, 0, .55); }
