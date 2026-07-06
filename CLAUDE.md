@@ -33,6 +33,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ produk.html         # #tali (Tali Plastik PP), #biji (Biji Plastik PP), alur produksi 4 tahap
 ├─ tentang.html        # Profil + lokasi
 ├─ kontak.html         # Kartu info kontak, kartu penawaran, blok peta (embed Google Maps)
+├─ kebijakan-privasi.html   # Kebijakan privasi (tautan di footer, di luar nav utama)
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
@@ -41,7 +42,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
 ├─ favicon.ico / favicon-32x32.png / apple-touch-icon.png   # favicon + gambar OG
 ├─ robots.txt          # Allow all + pointer ke sitemap
-├─ sitemap.xml         # 4 URL (/, produk, tentang, kontak)
+├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi)
 ├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
 ├─ CNAME               # Pengikat custom domain — JANGAN diubah/dihapus
 ├─ README.md
@@ -64,11 +65,27 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 > Untuk blok identik lintas file, aman pakai skrip Python kecil (lihat riwayat commit).
 
 ### Sistem desain (`styles.css` + `responsive.css`)
-- CSS variables: `--bg #F4F6F1`, `--ink #14271D`, `--green #1F7A4D`,
+- CSS variables warna: `--bg #F4F6F1`, `--ink #14271D`, `--green #1F7A4D`,
   `--green-deep #12442B`, `--blue #2B5CB8`, `--muted #5C6B60`, `--line #D9E0D6`,
-  `--green-light #7BE0A6` (highlight di background gelap), `--card-pad`, `--radius`.
+  `--green-light #7BE0A6` (highlight di background gelap).
+- **Token elevation & motion (fondasi polish premium — pakai token ini, jangan
+  hard-code):**
+  - Radius: `--radius 14px` (default), `--radius-lg 20px` (bingkai media besar:
+    `.prod__img`, `.map-wrap`), `--radius-sm 10px`. Spasi: `--card-pad`, `--space`.
+  - Shadow berlapis low-opacity: `--shadow-xs/sm/md/lg`. Kartu diam = `--shadow-sm`,
+    hover naik ke `--shadow-md`/`--shadow-lg`. Hindari drop-shadow berat.
+  - Motion: easing `--ease` (umum) & `--ease-out` (masuk), durasi `--dur .22s` &
+    `--dur-slow .4s`. Semua transisi memakai token ini agar terasa satu bahasa.
 - **Pola pellet**: kelas `.dotted` = `--green-deep` + SVG titik-titik (data-URI inline).
-  Dipakai di hero halaman & CTA band.
+  Dipakai di hero halaman & CTA band. Kedalaman via pseudo: `::before` = ambient
+  lighting (glow hijau kiri-atas + aksen biru kanan-atas + vignette bawah, radial),
+  `::after` = grain `feTurbulence` SVG inline (`mix-blend-mode: soft-light`, opacity
+  rendah). Keduanya `pointer-events:none`; `.container` di atasnya (`z-index:1`).
+- **Micro-interaction (CSS-native, tanpa library):** underline nav animatif
+  (`.nav__link::after` scaleX), kartu angkat + `.pcard__img` zoom saat hover, chip
+  `.feature__num`/`.crow__ico`/`.fc-ico` mengisi hijau saat hover, tombol
+  hover/active (press scale), link footer memunculkan panah `::before`. Semua transform
+  hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
 - **Hero beranda** = `.hero--factory`: background industri **murni CSS/SVG** (siluet
   garis pabrik + lingkaran gulungan + pellet) di atas gradasi gelap. Tanpa foto.
 - **Foto produk**: `object-fit: contain` di bingkai tinggi tetap dengan matting lembut
@@ -95,7 +112,8 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 - **Koordinat lokasi (sumber kebenaran): `-6.207711, 106.441524`** (dari share Google
   Maps). Dipakai di: embed peta & tombol "Buka di Google Maps" (`kontak.html`), geo
   meta tags (4 halaman), dan JSON-LD `LocalBusiness` (`index.html` + `kontak.html`).
-- **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 4 URL absolut.
+- **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 5 URL absolut
+  (beranda, produk, tentang, kontak, kebijakan-privasi).
 - **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
   di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
   berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
