@@ -554,11 +554,25 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-.foot-brand { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem); transition: opacity var(--dur) var(--ease); }
-.foot-brand:hover { opacity: 0.85; }
-.foot-brand img { height: 70px; width: auto; }
-.foot-brand span { font-weight: 800; color: #fff; font-variation-settings: "wdth" 112; }
-.foot-brand span .s { color: var(--green-light); }
+/* Logo footer = brand block putih (kotak korporat premium). logo-footer.png berteks
+   putih (hilang di atas putih), jadi pakai komposisi brand ala header: emblem berwarna
+   + wordmark ink/hijau — tampil bersih di kotak putih. */
+.foot-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  background: #fff;
+  padding: 0.72rem 1.1rem;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px -12px rgba(0, 0, 0, .5);
+  margin-bottom: 1.5rem;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.foot-brand:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -12px rgba(0, 0, 0, .55); }
+.foot-brand__mark { width: 40px; height: 40px; object-fit: contain; }
+.foot-brand__name { font-weight: 800; font-size: 1.3rem; color: var(--ink); font-variation-settings: "wdth" 112; letter-spacing: -0.01em; }
+.foot-brand__name .s { color: var(--green); }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 .foot-col h4 { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }
 .foot-col ul { list-style: none; display: grid; gap: 0.65rem; }
@@ -629,9 +643,10 @@ a.fc-val:hover { color: #fff; }
   border-top: 1px solid rgba(255, 255, 255, .06);
   font-size: 0.8rem;
   letter-spacing: 0.01em;
-  color: #7C8C81;
+  color: #8A9A8E;
   text-align: center;
 }
+.foot-bottom .js-year { color: inherit; }   /* tahun ikut warna copyright, tak tersembunyi */
 
 /* ==========================================================================
    Accessibility helpers
