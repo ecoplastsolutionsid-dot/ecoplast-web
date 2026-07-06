@@ -114,5 +114,6 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .btn:hover, .pcard:hover, .feature:hover { transform: none; }
+  .btn:hover, .pcard:hover, .feature:hover,
+  .pcard:hover .pcard__img, .step:hover .step__n { transform: none; }
 }
