@@ -33,38 +33,51 @@
   .nav__cta .wa-ico { width: 20px; height: 20px; }
   .nav-burger { display: inline-flex; order: 2; flex: none; }
 
-  /* Panel dropdown: lebar penuh, tinggi sesuai konten (bukan full-screen).
-     Animasi buka/tutup halus tanpa JS (visibility + opacity + transform). */
+  /* Overlay gelap di belakang drawer — klik untuk menutup (label → checkbox). */
+  .nav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(9, 26, 18, .5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s;
+    cursor: pointer;
+  }
+  .nav-toggle:checked ~ .nav-overlay { opacity: 1; visibility: visible; }
+
+  /* Drawer geser dari kanan (gaya centralcats.id) — panel hijau, slide .35s. */
   .nav__links {
     order: 3;
-    position: absolute;
-    top: 100%;
-    left: 0; right: 0;
-    z-index: 40;
+    position: fixed;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    width: min(74vw, 300px);
+    z-index: 46;
     flex-direction: column;
     align-items: stretch;
-    gap: 0;
-    background: var(--bg);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 22px 34px -22px rgba(18, 39, 29, .55);
-    padding: 0.25rem 0 0.6rem;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-8px);
-    transition: opacity .2s ease, transform .2s ease, visibility .2s;
+    gap: 2px;
+    background: var(--green-deep);
+    padding: 1.4rem 1.35rem 2rem;
+    box-shadow: -14px 0 36px rgba(0, 0, 0, .3);
+    transform: translateX(100%);
+    transition: transform .35s ease;
+    overflow-y: auto;
   }
-  .nav-toggle:checked ~ .nav .nav__links { visibility: visible; opacity: 1; transform: none; }
+  .nav-toggle:checked ~ .nav .nav__links { transform: translateX(0); }
   .nav__link {
     display: block;
-    text-align: center;
-    padding: 0.95rem clamp(1.25rem, 5vw, 2rem);
+    color: #EAF6EE;
     font-size: 1.05rem;
-    border-bottom: 1px solid var(--line);
+    font-weight: 600;
+    padding: 0.9rem 0.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
   }
-  .nav__link:last-child { border-bottom: 0; }
+  .nav__link:hover { color: var(--green-light); }
   .nav__link[aria-current="page"]::after { display: none; }
-  .nav__link[aria-current="page"] { color: var(--green); box-shadow: inset 4px 0 0 var(--green); }
+  .nav__link[aria-current="page"] { color: var(--green-light); }
 
   .prod { grid-template-columns: 1fr; }
   .prod--reverse .prod__media { order: -1; }   /* gambar tetap di atas saat menumpuk */
