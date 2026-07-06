@@ -37,7 +37,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — logo header & kotak logo footer
+│  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — logo header
+│  ├─ logo-footer.png  # Wordmark PUTIH (emblem warna + teks putih) — logo footer (latar gelap)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
 ├─ favicon.ico / favicon-32x32.png / apple-touch-icon.png   # favicon + gambar OG
 ├─ robots.txt          # Allow all + pointer ke sitemap
@@ -100,11 +101,10 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 - **Footer (4 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`)
   berisi 4 kolom yang **semua mulai di baseline atas yang sama** (sejajar tepi atas
   logo):
-  1. **Perusahaan** (`.foot-info`): **kotak logo putih** (`.foot-brand` = kartu putih
-     radius + shadow halus, berisi emblem `logo-mark.png` `.foot-brand__mark` height:34px
-     rasio natural + wordmark `.foot-brand__name` teks ink/hijau — TIDAK pakai
-     `logo-footer.png` karena teksnya putih & hilang di kotak putih), lalu deskripsi +
-     blok **ALAMAT** (`.foot-address`).
+  1. **Perusahaan** (`.foot-info`): **logo `logo-footer.png`** (wordmark PUTIH, dibuat
+     untuk latar gelap) via `.foot-brand > img` (height 64px) — **tanpa kotak**, langsung
+     di latar footer, **lurus kiri tepat di atas** teks deskripsi (`img.left ==
+     deskripsi.left`), lalu deskripsi + blok **ALAMAT** (`.foot-address`).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
   3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
   4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
