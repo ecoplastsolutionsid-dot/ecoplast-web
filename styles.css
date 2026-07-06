@@ -562,6 +562,7 @@ a.crow__val:hover { color: var(--green); }
   gap: 0.55rem;
   text-decoration: none;
   margin-bottom: 1.4rem;
+  margin-left: 1.5rem;   /* indent logo sedikit ke kanan (permintaan) */
   transition: opacity var(--dur) var(--ease);
 }
 .foot-brand:hover { opacity: 0.85; }
