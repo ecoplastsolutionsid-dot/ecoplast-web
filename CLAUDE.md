@@ -40,6 +40,9 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 │  ├─ logo-footer.png  # Logo lengkap versi wordmark PUTIH (emblem warna + teks putih) — footer gelap
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
 ├─ favicon.ico / favicon-32x32.png / apple-touch-icon.png   # favicon + gambar OG
+├─ robots.txt          # Allow all + pointer ke sitemap
+├─ sitemap.xml         # 4 URL (/, produk, tentang, kontak)
+├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
 ├─ CNAME               # Pengikat custom domain — JANGAN diubah/dihapus
 ├─ README.md
 └─ CLAUDE.md
@@ -50,6 +53,12 @@ Semua halaman berbagi markup **header sticky** dan **footer** yang identik (di-i
 di tiap file karena tanpa build step). Yang berbeda per halaman:
 - `<title>`, `<meta name="description">`, Open Graph (`og:title/description/url`), `<link rel="canonical">`.
 - Penanda nav aktif: `aria-current="page"` pada link nav halaman itu.
+
+Yang **sama di keempat file** (SEO/GEO): geo meta tags (`geo.region=ID-BT`,
+`geo.placename`, `geo.position`, `ICBM`) memakai koordinat `-6.207711;106.441524`.
+`index.html` & `kontak.html` juga punya **JSON-LD `LocalBusiness`** (nama, badan
+hukum, `PostalAddress`, `GeoCoordinates`, telepon, `openingHoursSpecification`).
+Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 
 > Kalau mengedit header/footer/nav, ubah di **keempat** file HTML agar konsisten.
 > Untuk blok identik lintas file, aman pakai skrip Python kecil (lihat riwayat commit).
@@ -81,6 +90,23 @@ di tiap file karena tanpa build step). Yang berbeda per halaman:
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion` dihormati,
   responsif sampai lebar 360px.
 
+## SEO / GEO (local SEO)
+
+- **Koordinat lokasi (sumber kebenaran): `-6.207711, 106.441524`** (dari share Google
+  Maps). Dipakai di: embed peta & tombol "Buka di Google Maps" (`kontak.html`), geo
+  meta tags (4 halaman), dan JSON-LD `LocalBusiness` (`index.html` + `kontak.html`).
+- **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 4 URL absolut.
+- **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
+  di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
+  berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
+- **Cloudflare & robots.txt (penting)**: Cloudflare bisa **menyisipkan blok managed
+  robots.txt sendiri** (fitur "Managed robots.txt" / Content Signals) yang menaruh
+  `ai-train=no` + `Disallow: /` untuk bot AI (ClaudeBot, GPTBot, CCBot, dll) **di atas**
+  file kita — ini pernah bikin robots.txt live ≠ file repo. Setting itu sudah
+  **di-OFF-kan** di dashboard Cloudflare agar crawler AI diizinkan; Googlebot search
+  tidak pernah terpengaruh. Kalau robots.txt live tampak beda dari repo, cek setting
+  ini dulu (Security → Settings → filter "Bot traffic" → Managed robots.txt).
+
 ## Kontak / data bisnis (sumber kebenaran)
 
 - Badan hukum: **PT. Mencoba Bertahan Hidup** (brand: Ecoplast Solutions).
@@ -94,6 +120,8 @@ di tiap file karena tanpa build step). Yang berbeda per halaman:
 
 - **CNAME JANGAN diubah/dihapus** — mengikat domain `ecoplastsolutions.id` ke
   GitHub Pages. Menghapusnya memutus custom domain.
+- **`google5c4d18bf39fc4ecf.html` JANGAN dihapus** — file verifikasi Google Search
+  Console; dihapus = verifikasi dicabut.
 - Jangan mengarang klaim/angka (kapasitas ton, tahun berdiri, jumlah klien, testimoni).
   Konten hanya yang faktual/diberikan.
 - Pertahankan: tanpa build step, tanpa framework, JS hanya seperlunya (kini hanya
