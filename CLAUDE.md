@@ -37,8 +37,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem daun "e" (crop dari logo, transparan) — logo header
-│  ├─ logo-footer.png  # Logo lengkap versi wordmark PUTIH (emblem warna + teks putih) — footer gelap
+│  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — logo header & kotak logo footer
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
 ├─ favicon.ico / favicon-32x32.png / apple-touch-icon.png   # favicon + gambar OG
 ├─ robots.txt          # Allow all + pointer ke sitemap
@@ -98,20 +97,27 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     `--green-deep`, lebar `min(74vw, 300px)`.
   - `.nav-overlay` = layer gelap; klik untuk menutup. Hamburger 3 garis → X.
   - Header mobile mematikan `backdrop-filter` (agar tidak jadi containing block).
-- **Footer (4 kolom, gaya B2B manufaktur):** logo `logo-footer.png` (putih) berdiri
-  **dekoratif di atas** (di luar grid), lalu grid `.foot-cols` (`align-items: start`)
-  berisi 4 kolom yang berbagi baseline konten — bukan sejajar puncak logo:
-  1. **Perusahaan** (`.foot-info`): deskripsi + blok **ALAMAT** (`.foot-address`).
+- **Footer (4 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`)
+  berisi 4 kolom yang **semua mulai di baseline atas yang sama** (sejajar tepi atas
+  logo):
+  1. **Perusahaan** (`.foot-info`): **kotak logo putih** (`.foot-brand` = kartu putih
+     radius + shadow halus, berisi emblem `logo-mark.png` `.foot-brand__mark` height:34px
+     rasio natural + wordmark `.foot-brand__name` teks ink/hijau — TIDAK pakai
+     `logo-footer.png` karena teksnya putih & hilang di kotak putih), lalu deskripsi +
+     blok **ALAMAT** (`.foot-address`).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
   3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
   4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
      LinkedIn, YouTube (inline SVG) dengan label **"Segera hadir"** low-emphasis
      (`opacity .6`) — **placeholder, JANGAN dihapus**; siap jadi tautan asli nanti
      (ganti `<span>` → `<a href>`). Ecoplast belum punya akun sosial.
+  - Judul kolom pakai **`<h3>`** (`.foot-col h3`, distyle jadi label mono kecil) — bukan
+    `h4`, agar urutan heading valid (WCAG 1.3.1, tak melompati level).
   - Depth latar: `--ink` + gradasi lembut + radial light + grain SVG (`::before`/
     `::after`, `isolation: isolate` + `z-index:-1` agar di belakang konten).
   - Border-top aksen hijau; divider copyright halus (`rgba(255,255,255,.06)`); baris
-    copyright **center full-width** (`.foot-bottom`, di luar grid kolom).
+    copyright **center full-width** (`.foot-bottom`, di luar grid kolom), tahun otomatis
+    via `.js-year` + `getFullYear()` (fallback `2026`).
   - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
     ≤560px **1 kolom** (urutan: logo, deskripsi, alamat, Halaman, Kontak, Media Sosial,
     copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
