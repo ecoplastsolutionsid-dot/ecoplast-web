@@ -167,6 +167,27 @@ h1, h2, h3 {
 }
 .nav__cta { padding: 0.7em 1.1em; font-size: 0.9rem; }
 
+/* Hamburger (CSS-only, no JS) — hidden on desktop, shown ≤720px */
+.nav-toggle { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px; height: 44px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  flex: none;
+}
+.nav-burger span { display: block; height: 2px; width: 100%; background: var(--ink); border-radius: 2px; transition: transform .25s ease, opacity .2s ease; }
+.nav-toggle:focus-visible + .nav-burger { outline: 3px solid var(--blue); outline-offset: 2px; }
+.nav-toggle:checked + .nav-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle:checked + .nav-burger span:nth-child(2) { opacity: 0; }
+.nav-toggle:checked + .nav-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
 /* ==========================================================================
    Dotted "pellet" pattern backgrounds (hero + CTA band)
    ========================================================================== */
@@ -250,10 +271,13 @@ h1, h2, h3 {
 .pcard:hover { transform: translateY(-3px); border-color: var(--green); box-shadow: 0 12px 30px -18px rgba(18,68,43,.45); }
 .pcard__img {
   width: calc(100% + 2 * var(--card-pad));
-  margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0.6rem;
-  height: clamp(190px, 22vw, 240px);
-  object-fit: cover;
-  background: var(--line);
+  margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0.7rem;
+  height: clamp(210px, 30vw, 280px);
+  object-fit: contain;                 /* tampilkan produk utuh, tidak terpotong */
+  background: linear-gradient(155deg, #eef2ea 0%, #e1e7db 100%);
+  padding: clamp(0.7rem, 2vw, 1.1rem);
+  border-bottom: 1px solid var(--line);
+  animation: img-in .55s ease both;
 }
 .pcard:hover .pcard__img { filter: saturate(1.05); }
 .pcard__tag { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--blue); }
@@ -294,11 +318,17 @@ h1, h2, h3 {
 .prod--reverse .prod__media { order: 2; }        /* image on the right */
 .prod__img {
   width: 100%;
-  height: clamp(280px, 40vw, 460px);
-  object-fit: cover;
+  height: clamp(300px, 42vw, 420px);
+  object-fit: contain;                 /* utuh, tidak terpotong */
+  background: linear-gradient(155deg, #eef2ea 0%, #e1e7db 100%);
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: var(--line);
+  padding: clamp(0.8rem, 2.5vw, 1.4rem);
+  animation: img-in .55s ease both;
+}
+@keyframes img-in {
+  from { opacity: 0; transform: translateY(8px) scale(.99); }
+  to   { opacity: 1; transform: none; }
 }
 .prod__proof {
   margin: 0.9rem 0 0;
@@ -398,7 +428,7 @@ h1, h2, h3 {
 .foot-contact li { display: flex; align-items: center; gap: 0.55rem; line-height: 1.45; font-size: 0.95rem; }
 .foot-contact a { display: inline-flex; align-items: center; gap: 0.55rem; }
 .foot-ico { width: 1rem; height: 1rem; flex: none; color: var(--green-light); }
-.foot-bottom { border-top: 1px solid rgba(255,255,255,.1); margin-top: 2.25rem; padding-top: 1.25rem; font-size: 0.85rem; color: #8A9A8E; }
+.foot-bottom { border-top: 1px solid rgba(255,255,255,.1); margin-top: 2.25rem; padding-top: 1.25rem; font-size: 0.85rem; color: #8A9A8E; text-align: center; }
 
 /* ==========================================================================
    Accessibility helpers
@@ -441,26 +471,44 @@ h1, h2, h3 {
 }
 
 @media (max-width: 720px) {
-  /* Header becomes two rows: [brand · WA] then a full-width scrollable nav strip.
-     display:contents promotes the nav's children into the header flex row. */
-  .site-header .container { flex-wrap: wrap; row-gap: 0.55rem; min-height: 0; padding-block: 0.6rem; }
+  /* Header: brand (left) · icon-only WhatsApp · hamburger (right).
+     Tapping the burger drops a full-width menu panel. display:contents lets
+     the nav's children take part in the header flex row. */
+  /* Solid header (no backdrop-filter) so the fixed full-screen menu isn't
+     trapped by the header's containing block. */
+  .site-header { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .site-header .container { position: relative; gap: 0.5rem; }
+  .brand__mark { width: 24px; height: 24px; }
+  .brand__name { font-size: 0.92rem; font-variation-settings: "wdth" 100; }
   .nav { display: contents; }
-  .brand { order: 0; }
-  .nav__cta { order: 1; margin-left: auto; }
+  .brand { order: 0; min-width: 0; }
+  .nav__cta { order: 1; margin-left: auto; flex: none; font-size: 0; gap: 0; padding: 8px; }
+  .nav__cta .wa-ico { width: 20px; height: 20px; }
+  .nav-burger { display: inline-flex; order: 2; flex: none; }
+
   .nav__links {
-    order: 2;
-    width: 100%;
-    justify-content: space-between;
-    gap: 0.25rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    border-top: 1px solid var(--line);
-    padding-top: 0.5rem;
+    order: 3;
+    position: fixed;
+    inset: 66px 0 0 0;               /* full-screen panel below the header */
+    z-index: 40;
+    flex-direction: column;
+    align-items: stretch;            /* full-width rows (not centered/narrow) */
+    gap: 0;
+    background: var(--bg);
+    padding: 0.4rem 0 2rem;
+    overflow-y: auto;
+    display: none;
   }
-  .nav__links::-webkit-scrollbar { display: none; }
-  .nav__link { font-size: 0.92rem; padding: 0.5em 0.3em; white-space: nowrap; }
-  .nav__link[aria-current="page"]::after { bottom: 0; }
+  .nav-toggle:checked ~ .nav .nav__links { display: flex; }
+  .nav__link {
+    display: block;
+    text-align: center;
+    padding: 1.05rem clamp(1.25rem, 5vw, 2rem);
+    font-size: 1.08rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav__link[aria-current="page"]::after { display: none; }
+  .nav__link[aria-current="page"] { box-shadow: inset 4px 0 0 var(--green); }
 
   .prod { grid-template-columns: 1fr; }
   .prod--reverse .prod__media { order: -1; }   /* image stays on top when stacked */
@@ -476,9 +524,9 @@ h1, h2, h3 {
 
 @media (max-width: 360px) {
   :root { --space: 3rem; }
-  .brand__name { font-size: 1rem; }
-  .nav__cta { padding: 0.6em 0.9em; }
+  .brand__name { font-size: 0.86rem; }
   .btn { font-size: 0.92rem; padding: 0.8em 1.15em; }
+  .nav__cta { padding: 7px; }       /* keep icon-only WA compact, not em-based */
 }
 
 /* ==========================================================================
