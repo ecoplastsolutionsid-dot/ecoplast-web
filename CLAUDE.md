@@ -9,8 +9,10 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 
 ## Stack
 
-- **HTML + CSS statis murni.** TANPA build step, TANPA framework, TANPA JavaScript.
-  Jika suatu saat perlu JS, tambahkan hanya bila memang diminta.
+- **HTML + CSS statis murni.** TANPA build step, TANPA framework.
+  JavaScript hanya satu baris inline di tiap halaman untuk mengisi tahun
+  copyright footer otomatis (`.js-year`, fallback teks tetap ada) — sesuai
+  permintaan agar tahun tidak di-hardcode. Selain itu tanpa JS.
 - Satu stylesheet global: `styles.css` (dipakai semua halaman).
 - Font via Google Fonts CDN: **Archivo** (heading + body, variable — display pakai
   `font-variation-settings: "wdth" 112` + weight 800) dan **IBM Plex Mono**
@@ -27,7 +29,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ kontak.html         # Alamat, telp/WA, jam operasional, kartu penawaran, embed Google Maps
 ├─ styles.css          # Stylesheet tunggal untuk semua halaman
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem daun "e" (crop dari logo, transparan) — logo header/footer
+│  ├─ logo-mark.png    # Emblem daun "e" (crop dari logo, transparan) — logo header
+│  ├─ logo-footer.png  # Logo lengkap versi wordmark putih (emblem warna + teks putih) — footer gelap
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
 ├─ favicon.ico         # Favicon multi-res
 ├─ favicon-32x32.png   # Favicon PNG (ketajaman)
@@ -56,10 +59,10 @@ di tiap file karena tanpa build step). Yang berbeda per halaman:
   inline di CSS). Dipakai di hero dan CTA band.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion`
   dihormati, responsif sampai lebar 360px.
-- Nav responsif tanpa JS: di ≤720px header jadi dua baris — baris 1 brand +
-  tombol WhatsApp, baris 2 daftar nav (strip full-width yang bisa di-scroll).
-  Diatur via `.nav { display: contents }` + `order` pada media query, jadi nav
-  tetap bisa diakses di semua ukuran layar.
+- Nav responsif: di ≤720px muncul tombol **hamburger** (CSS-only, tanpa JS —
+  checkbox hack `.nav-toggle` + label `.nav-burger`) yang membuka panel menu
+  **full-screen**; WhatsApp jadi tombol ikon. Header di mobile mematikan
+  `backdrop-filter` supaya panel `position: fixed` benar-benar menutupi layar.
 
 ## Kontak / data bisnis (sumber kebenaran)
 

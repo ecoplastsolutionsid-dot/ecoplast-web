@@ -417,7 +417,7 @@ h1, h2, h3 {
 .site-footer { background: var(--ink); color: #C7D3CA; padding-block: 3rem 2rem; margin-top: 0; }
 .site-footer .container { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; }
 .foot-brand { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; margin-bottom: 0.9rem; }
-.foot-brand img { width: 30px; height: 30px; }
+.foot-brand img { height: 70px; width: auto; }
 .foot-brand span { font-weight: 800; color: #fff; font-variation-settings: "wdth" 112; }
 .foot-brand span .s { color: var(--green-light); }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
