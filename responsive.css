@@ -12,8 +12,7 @@
   .contact-grid { grid-template-columns: 1fr; }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
-  .foot-cols { grid-template-columns: 1fr 1fr; }
-  .foot-info { grid-column: 1 / -1; }
+  .foot-cols { grid-template-columns: 1fr 1fr; }   /* tablet: 2 x 2 */
 }
 
 /* --------------------------------------------------------------------------
