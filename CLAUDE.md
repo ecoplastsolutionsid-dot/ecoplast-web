@@ -163,8 +163,19 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     `/responsive.css` hanya benar di server/live.
   - **Edge headless punya lebar window minimum ~504px** — window <504 tidak dihormati,
     jadi screenshot "375px" sebenarnya layout ~504px (mobile sejati sulit dipotret;
-    pakai pengukuran + logika). Untuk mensimulasikan drawer terbuka, buat salinan HTML
+    pakai pengukuran + logika). Semua trik (window kecil, `--headless=new`, DPR ×2)
+    tetap terkunci ~504px. Untuk mensimulasikan drawer terbuka, buat salinan HTML
     dengan atribut `checked` pada `#nav-toggle`.
+  - **JANGAN percaya screenshot `--headless=new --window-size=<lebar><504>`** — mode
+    itu TIDAK meng-clamp seperti `--headless` lama, tapi me-*render layout 504px lalu
+    meng-crop* ke lebar gambar. Hasilnya menyesatkan: sisi kanan (mis. hamburger + ikon
+    WA di header) terpotong sehingga tampak "rusak"/overflow padahal tidak. Gunakan
+    `--headless` (lama) pada `--window-size=504,H` untuk layout mobile yang jujur.
+  - **Cek overflow horizontal dengan ANGKA, bukan mata.** Suntik skrip kecil yang
+    membandingkan `document.documentElement.scrollWidth` vs `window.innerWidth` (tulis
+    hasil ke `document.title`, baca via `--dump-dom`). `scrollWidth <= innerWidth`
+    berarti tidak ada overflow — drawer off-canvas (`position:fixed` + `translateX(100%)`)
+    memang melar ke kanan tapi Chromium mengecualikannya dari scroll (bukan bug).
   - **Peta Google kosong di headless** (tak ada internet ke Google) — normal; akan
     termuat di live. Tombol "Buka di Google Maps" jadi cadangan.
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
