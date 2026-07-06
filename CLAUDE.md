@@ -27,7 +27,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ kontak.html         # Alamat, telp/WA, jam operasional, kartu penawaran, embed Google Maps
 ├─ styles.css          # Stylesheet tunggal untuk semua halaman
 ├─ assets/
-│  └─ logo-mark.png    # Emblem daun "e" (crop dari logo, transparan) — logo header/footer
+│  ├─ logo-mark.png    # Emblem daun "e" (crop dari logo, transparan) — logo header/footer
+│  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
 ├─ favicon.ico         # Favicon multi-res
 ├─ favicon-32x32.png   # Favicon PNG (ketajaman)
 ├─ apple-touch-icon.png# Ikon iOS + gambar Open Graph
@@ -54,8 +55,11 @@ di tiap file karena tanpa build step). Yang berbeda per halaman:
   ("pellet" biji plastik, circle kecil hijau/biru opacity rendah, sebagai data-URI
   inline di CSS). Dipakai di hero dan CTA band.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion`
-  dihormati, responsif sampai lebar 360px. Di ≤720px daftar nav disembunyikan
-  (header tetap punya brand + tombol WhatsApp).
+  dihormati, responsif sampai lebar 360px.
+- Nav responsif tanpa JS: di ≤720px header jadi dua baris — baris 1 brand +
+  tombol WhatsApp, baris 2 daftar nav (strip full-width yang bisa di-scroll).
+  Diatur via `.nav { display: contents }` + `order` pada media query, jadi nav
+  tetap bisa diakses di semua ukuran layar.
 
 ## Kontak / data bisnis (sumber kebenaran)
 
