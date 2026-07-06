@@ -61,7 +61,7 @@ Yang **sama di keempat file** (SEO/GEO): geo meta tags (`geo.region=ID-BT`,
 hukum, `PostalAddress`, `GeoCoordinates`, telepon, `openingHoursSpecification`).
 Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 
-> Kalau mengedit header/footer/nav, ubah di **keempat** file HTML agar konsisten.
+> Kalau mengedit header/footer/nav, ubah di **kelima** file HTML agar konsisten.
 > Untuk blok identik lintas file, aman pakai skrip Python kecil (lihat riwayat commit).
 
 ### Sistem desain (`styles.css` + `responsive.css`)
@@ -98,9 +98,23 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     `--green-deep`, lebar `min(74vw, 300px)`.
   - `.nav-overlay` = layer gelap; klik untuk menutup. Hamburger 3 garis → X.
   - Header mobile mematikan `backdrop-filter` (agar tidak jadi containing block).
-- **Footer**: pakai `logo-footer.png` (versi putih), blok **ALAMAT**, kolom **Kontak**
-  berupa baris chip-ikon + label + nilai + divider (`.fc-*`), border-top aksen hijau,
-  dan baris copyright **center full-width** (`.foot-bottom`, di luar grid kolom).
+- **Footer (4 kolom, gaya B2B manufaktur):** logo `logo-footer.png` (putih) berdiri
+  **dekoratif di atas** (di luar grid), lalu grid `.foot-cols` (`align-items: start`)
+  berisi 4 kolom yang berbagi baseline konten — bukan sejajar puncak logo:
+  1. **Perusahaan** (`.foot-info`): deskripsi + blok **ALAMAT** (`.foot-address`).
+  2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
+  3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
+  4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
+     LinkedIn, YouTube (inline SVG) dengan label **"Segera hadir"** low-emphasis
+     (`opacity .6`) — **placeholder, JANGAN dihapus**; siap jadi tautan asli nanti
+     (ganti `<span>` → `<a href>`). Ecoplast belum punya akun sosial.
+  - Depth latar: `--ink` + gradasi lembut + radial light + grain SVG (`::before`/
+    `::after`, `isolation: isolate` + `z-index:-1` agar di belakang konten).
+  - Border-top aksen hijau; divider copyright halus (`rgba(255,255,255,.06)`); baris
+    copyright **center full-width** (`.foot-bottom`, di luar grid kolom).
+  - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
+    ≤560px **1 kolom** (urutan: logo, deskripsi, alamat, Halaman, Kontak, Media Sosial,
+    copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
   "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**.
