@@ -554,28 +554,16 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.5fr 0.9fr 1.4fr 1.05fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Logo footer = brand block putih (kotak korporat premium). logo-footer.png berteks
-   putih (hilang di atas putih), jadi pakai komposisi brand ala header: emblem berwarna
-   + wordmark ink/hijau — tampil bersih di kotak putih. */
+/* Logo footer = wordmark putih (logo-footer.png, dibuat untuk latar gelap) langsung
+   di latar footer, lurus kiri tepat di atas teks deskripsi. Tanpa kotak. */
 .foot-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
+  display: inline-block;
   text-decoration: none;
-  background: #fff;
-  padding: 0.65rem 1rem;
-  border-radius: 13px;
-  box-shadow: 0 8px 20px -12px rgba(0, 0, 0, .5);
-  /* geser kiri sebesar padding-kiri agar EMBLEM (bukan tepi kotak) sejajar dengan
-     teks/kontainer di bawahnya — padding dalam kotak tetap untuk breathing room */
-  margin: 0 0 1.5rem -1rem;
-  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  margin-bottom: 1.4rem;
+  transition: opacity var(--dur) var(--ease);
 }
-.foot-brand:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -12px rgba(0, 0, 0, .55); }
-/* logo-mark.png = 164x140 (rasio 1.17) → pakai rasio natural agar tidak letterbox */
-.foot-brand__mark { width: auto; height: 34px; display: block; }
-.foot-brand__name { font-weight: 800; font-size: 1.22rem; color: var(--ink); font-variation-settings: "wdth" 112; letter-spacing: -0.01em; line-height: 1; }
-.foot-brand__name .s { color: var(--green); }
+.foot-brand:hover { opacity: 0.85; }
+.foot-brand img { height: 64px; width: auto; display: block; }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */
 .foot-col h3 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; font-variation-settings: normal; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }
