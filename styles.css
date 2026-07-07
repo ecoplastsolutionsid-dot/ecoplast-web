@@ -315,9 +315,9 @@ h1, h2, h3 {
 .pcard__img {
   width: calc(100% + 2 * var(--card-pad));
   margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0.7rem;
-  height: clamp(210px, 30vw, 280px);
+  height: clamp(210px, 30vw, 280px);   /* tinggi bingkai foto sama utk kedua kartu */
   object-fit: contain;                 /* tampilkan produk utuh, tidak terpotong */
-  background: linear-gradient(155deg, #eef2ea 0%, #e1e7db 100%);
+  background: linear-gradient(155deg, #ffffff 0%, #f6f8f4 100%);  /* matte putih: cutout biji menyatu */
   padding: clamp(0.7rem, 2vw, 1.1rem);
   border-bottom: 1px solid var(--line);
   animation: img-in .55s ease both;
@@ -370,7 +370,7 @@ h1, h2, h3 {
   width: 100%;
   height: clamp(300px, 42vw, 420px);
   object-fit: contain;                 /* utuh, tidak terpotong */
-  background: linear-gradient(155deg, #eef2ea 0%, #e1e7db 100%);
+  background: linear-gradient(155deg, #ffffff 0%, #f6f8f4 100%);  /* matte putih: cutout biji menyatu (sinkron .pcard__img) */
   border-radius: var(--radius-lg);
   border: 1px solid var(--line);
   padding: clamp(0.8rem, 2.5vw, 1.4rem);
