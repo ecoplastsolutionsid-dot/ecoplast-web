@@ -122,4 +122,6 @@
   }
   .btn:hover, .pcard:hover, .feature:hover,
   .pcard:hover .pcard__img, .step:hover .step__n { transform: none; }
+  /* Cahaya berjalan mati total → sisakan siluet skyline statis (background CSS). */
+  .hero__skyline { display: none; }
 }

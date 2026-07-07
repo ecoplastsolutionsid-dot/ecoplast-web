@@ -275,6 +275,36 @@ h1, h2, h3 {
   background-repeat: no-repeat, no-repeat, no-repeat, repeat;
   background-position: center, bottom center, right -70px top -150px, top left;
   background-size: cover, min(1180px, 150%) auto, 640px 640px, 260px 260px;
+  overflow: hidden;   /* klip overlay skyline (lebar 150%) agar tak bikin scroll-x */
+}
+
+/* Overlay "cahaya berjalan": inline SVG diposisikan persis di atas layer skyline
+   background (ukuran/anchor identik dgn background-size/position skyline di atas)
+   sehingga segmen cahaya menyusuri outline pabrik yang sama. */
+.hero__skyline {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, 150%);
+  height: auto;
+  pointer-events: none;
+}
+.hero__skyline-run {
+  stroke: #7ED6A3;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .62;
+  filter: drop-shadow(0 0 3px rgba(126, 214, 163, .7));
+  /* satu segmen pendek (90) + gap sepanjang sisa path (910) = pathLength 1000,
+     jadi hanya satu berkas cahaya yang tampak dan loop-nya mulus. */
+  stroke-dasharray: 90 910;
+  animation: skyline-run 11s linear infinite;
+}
+@keyframes skyline-run {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
 }
 
 /* ==========================================================================
