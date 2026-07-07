@@ -101,8 +101,6 @@
   /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
      wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */
   .hero--banner { min-height: 380px; }
-  /* Kartu produk 1 kolom: foto 3:4 terlalu tinggi → pakai 4:3 agar ringkas. */
-  .pcard__media { aspect-ratio: 4 / 3; }
 }
 
 /* --------------------------------------------------------------------------
