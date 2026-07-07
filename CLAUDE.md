@@ -113,9 +113,21 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     (`responsive.css`): `.hero__skyline { display:none }` → animasi mati, sisakan siluet
     statis. Hanya `index.html` yang punya `.hero--factory`; kalau kelak halaman lain
     memakai siluet serupa, terapkan overlay yang sama. Murni CSS/SVG, tanpa JS.
-- **Foto produk**: `object-fit: contain` di bingkai tinggi tetap dengan matting lembut
-  → produk tampil UTUH (tidak terpotong), kartu seragam. Frasa highlight judul dijaga
-  `white-space: nowrap` agar tidak terpecah antar-baris.
+- **Foto produk — dua pola berbeda:**
+  - **Kartu ringkasan beranda (`.pcard`)**: foto di dalam `.pcard__media` = container
+    **full-bleed** ke tepi kartu, **`aspect-ratio: 3/4`** (portrait), `overflow:hidden`;
+    `<img class="pcard__img">` `object-fit: cover` + `object-position:center` → mengisi
+    penuh tanpa area kosong. Kedua kartu **identik tinggi** (rasio & lebar sama). Sudut
+    atas membulat ikut radius kartu (via `overflow:hidden` di `.pcard`). Mobile (≤560,
+    1 kolom): `aspect-ratio: 4/3` biar tidak kepanjangan. **File `tali.webp` (1086×1448)
+    & `biji1.webp` (791×1055) keduanya sudah rasio 3:4** — jadi `cover` = tampil utuh.
+  - **Halaman detail produk (`.prod__img` di produk.html)**: tetap `object-fit: contain`
+    + matting lembut (gradasi putih) → produk tampil UTUH tak terpotong untuk tampilan
+    detail. Pakai file foto yang sama.
+  - Frasa highlight judul dijaga `white-space: nowrap` agar tidak terpecah antar-baris.
+  - **Ikon inline SVG dekoratif** (mis. `.feature__ico`) wajib punya atribut
+    `width`/`height` eksplisit **selain** ukuran via CSS — jaga-jaga bila `styles.css`
+    ke-cache lama (Cloudflare) sementara HTML sudah baru, SVG tak membesar ke default.
 - **Header mobile = drawer hamburger** (≤720px, CSS-only, tanpa JS — checkbox hack
   `.nav-toggle` + label `.nav-burger` + label `.nav-overlay`):
   - Meniru gaya **centralcats.id**: panel **geser dari kanan** (`.nav__links`,
