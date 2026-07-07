@@ -29,6 +29,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/responsive.css" />
+  <script>document.documentElement.classList.add('has-js');</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Lewati ke konten</a>
@@ -253,6 +254,24 @@
     <div class="foot-bottom">© <span class="js-year">2026</span> PT. Mencoba Bertahan Hidup. Balaraja, Kab. Tangerang, Banten.</div>
   </footer>
 
-  <script>document.querySelectorAll(".js-year").forEach(function(e){e.textContent=new Date().getFullYear();});</script>
+  <script>
+    document.querySelectorAll(".js-year").forEach(function(e){e.textContent=new Date().getFullYear();});
+    /* Reveal saat masuk layar. Daftar SEL harus sama dgn selector .has-js di styles.css. */
+    (function(){
+      var SEL=".hero__inner > *, .sec-head, .pcard, .feature, .prod, .step, .card, .map-block, .cta-band .container > *";
+      var els=[].slice.call(document.querySelectorAll(SEL));
+      if(!els.length)return;
+      if(!("IntersectionObserver" in window)){els.forEach(function(el){el.classList.add("in");});return;}
+      els.forEach(function(el){
+        var sibs=[].slice.call(el.parentNode.children).filter(function(c){return els.indexOf(c)>-1;});
+        var i=sibs.indexOf(el);
+        if(i>0)el.style.transitionDelay=Math.min(i,5)*0.08+"s";
+      });
+      var io=new IntersectionObserver(function(ents){
+        ents.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
+      },{rootMargin:"0px 0px -8% 0px",threshold:0.08});
+      els.forEach(function(el){io.observe(el);});
+    })();
+  </script>
 </body>
 </html>

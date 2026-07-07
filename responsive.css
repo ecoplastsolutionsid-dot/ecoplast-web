@@ -127,4 +127,17 @@
   .pcard:hover .pcard__img, .step:hover .step__n { transform: none; }
   /* Cahaya berjalan mati total → sisakan siluet skyline statis (background CSS). */
   .hero__skyline { display: none; }
+  /* Reveal scroll-in: jangan sembunyikan apa pun → paksa tampil tanpa gerak. */
+  .has-js .hero__inner > *,
+  .has-js .sec-head,
+  .has-js .pcard,
+  .has-js .feature,
+  .has-js .prod,
+  .has-js .step,
+  .has-js .card,
+  .has-js .map-block,
+  .has-js .cta-band .container > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

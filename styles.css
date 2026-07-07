@@ -734,6 +734,41 @@ a.fc-val:hover { color: #fff; }
 .dotted :focus-visible, .quote-card :focus-visible { outline-color: #fff; }
 
 /* ==========================================================================
+   Reveal saat masuk layar (scroll-in)
+   Progressive enhancement: hanya aktif bila JS hidup (kelas .has-js di <html>,
+   disetel skrip sinkron di <head> → tanpa flash). Tanpa JS = tak ada .has-js =
+   konten tampil normal. JS (skrip body) menambah .in saat elemen masuk viewport;
+   daftar selector di bawah HARUS sama dengan konstanta SEL di skrip itu.
+   prefers-reduced-motion: dipaksa tampil (tanpa gerak) di responsive.css.
+   ========================================================================== */
+.has-js .hero__inner > *,
+.has-js .sec-head,
+.has-js .pcard,
+.has-js .feature,
+.has-js .prod,
+.has-js .step,
+.has-js .card,
+.has-js .map-block,
+.has-js .cta-band .container > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+.has-js .hero__inner > *.in,
+.has-js .sec-head.in,
+.has-js .pcard.in,
+.has-js .feature.in,
+.has-js .prod.in,
+.has-js .step.in,
+.has-js .card.in,
+.has-js .map-block.in,
+.has-js .cta-band .container > *.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
    Responsive & Motion
    Semua breakpoint (@media) dan preferensi gerak dipindah ke responsive.css,
    yang dimuat SETELAH file ini. Tujuannya memisahkan aturan desktop (di sini)
