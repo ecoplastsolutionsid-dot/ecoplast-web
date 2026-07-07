@@ -120,7 +120,8 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     penuh tanpa area kosong. Kedua kartu **identik tinggi** (rasio & lebar sama). Sudut
     atas membulat ikut radius kartu (via `overflow:hidden` di `.pcard`). Mobile (≤560,
     1 kolom): `aspect-ratio: 4/3` biar tidak kepanjangan. **File `tali.webp` (1086×1448)
-    & `biji1.webp` (791×1055) keduanya sudah rasio 3:4** — jadi `cover` = tampil utuh.
+    & `biji1.webp` (789×1052) keduanya rasio 3:4 PERSIS** — jadi `cover` = tampil utuh
+    (di desktop tak ada yang terpangkas).
   - **Halaman detail produk (`.prod__img` di produk.html)**: tetap `object-fit: contain`
     + matting lembut (gradasi putih) → produk tampil UTUH tak terpotong untuk tampilan
     detail. Pakai file foto yang sama.
