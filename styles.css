@@ -415,6 +415,18 @@ h1, h2, h3 {
 }
 .feature__ico svg { width: 24px; height: 24px; display: block; }
 .feature:hover .feature__ico { background: var(--green); color: #fff; }
+/* Varian tentang.html: ikon BERDAMPINGAN dengan label mono kecil (label dipertahankan),
+   lalu judul di bawahnya. .feature__head = baris ikon + label. */
+.feature__head { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.9rem; }
+.feature__head .feature__ico { margin-bottom: 0; }
+.feature__tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+}
 
 /* ==========================================================================
    Product page — detail rows
