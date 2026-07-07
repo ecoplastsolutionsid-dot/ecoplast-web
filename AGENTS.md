@@ -1,4 +1,4 @@
-# CLAUDE.md — Ecoplast Solutions (ecoplast-web)
+# AGENTS.md — Ecoplast Solutions (ecoplast-web)
 
 Company profile statis untuk **Ecoplast Solutions** — jasa produksi tali plastik &
 biji plastik PP (polypropylene) di Balaraja, Kab. Tangerang, Banten.
@@ -45,7 +45,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
 ├─ CNAME               # Pengikat custom domain — JANGAN diubah/dihapus
 ├─ README.md
-└─ CLAUDE.md
+└─ AGENTS.md
 ```
 
 ### Pola per halaman
