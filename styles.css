@@ -365,6 +365,7 @@ h1, h2, h3 {
   border-top: 1px solid var(--line);
 }
 .prod:first-of-type { border-top: 0; padding-top: clamp(0.5rem, 2vw, 1.5rem); }
+.prod--reverse { align-items: start; }           /* biji: media (gambar+bukti) rata atas dgn teks, gambar tak menjulang di atas judul */
 .prod--reverse .prod__media { order: 2; }        /* image on the right */
 .prod__img {
   width: 100%;
