@@ -67,6 +67,16 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 - CSS variables warna: `--bg #F4F6F1`, `--ink #14271D`, `--green #1F7A4D`,
   `--green-deep #12442B`, `--blue #2B5CB8`, `--muted #5C6B60`, `--line #D9E0D6`,
   `--green-light #7BE0A6` (highlight di background gelap).
+- **Warna wordmark "Ecoplast Solutions" (kiblat = LOGO ASLI):** logo memenggal warna
+  **ECO = hijau** + **PLAST = navy**, dan **SOLUTIONS = navy** (sama dgn PLAST). Token:
+  `--brand-green #3E9B37` (ECO) & `--brand-navy #173B5C` (PLAST + SOLUTIONS) — di-eyedrop
+  dari file logo (`ECOPLAST SOLUTION.jpeg`). Markup wordmark (header & footer, kelima
+  file): `<span class="eco">ECO</span>PLAST SOLUTIONS` — base `.brand__name`/
+  `.foot-brand__name` = navy, `.eco` = hijau. **Ada spasi** antara PLAST & SOLUTIONS
+  (dulu mendempet "ECOPLASTSOLUTIONS" + SOLUTIONS hijau; kini ikut struktur dua-kata
+  logo). Header di latar terang → warna logo langsung; footer di latar gelap → lockup
+  dibungkus panel putih (lihat bagian Footer) supaya warna logo tetap tampil apa adanya.
+  Kalau logo/warna brand berubah, perbarui kedua token ini.
 - **Token elevation & motion (fondasi polish premium — pakai token ini, jangan
   hard-code):**
   - Radius: `--radius 14px` (default), `--radius-lg 20px` (bingkai media besar:
@@ -118,10 +128,12 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   logo):
   1. **Perusahaan** (`.foot-info`): **logo = lockup yang sama dengan header** —
      `.foot-brand` berisi emblem `logo-mark.png` (`.foot-brand__mark` height 36px) +
-     wordmark `.foot-brand__name` (`ECOPLAST` putih + `.s` `SOLUTIONS` green-light,
-     karena latar gelap). Tanpa kotak; flush-left, emblem **lurus kiri tepat di atas**
-     teks deskripsi (`emblem.left == deskripsi.left`). Lalu deskripsi + **ALAMAT**
-     (`.foot-address`).
+     wordmark `.foot-brand__name`. Karena latar footer gelap, lockup ini diberi
+     **panel terang** (`.foot-brand` = chip putih, `border-radius: --radius`,
+     `box-shadow: --shadow-sm`, padding) supaya warna wordmark tampil **persis logo
+     asli** (ECO hijau + PLAST/SOLUTIONS navy — lihat "Warna wordmark" di bawah).
+     Flush-left, emblem **lurus kiri tepat di atas** teks deskripsi
+     (`emblem.left == deskripsi.left`). Lalu deskripsi + **ALAMAT** (`.foot-address`).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
   3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
   4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
