@@ -11,10 +11,15 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ## Stack
 
 - **HTML + CSS statis murni.** TANPA build step, TANPA framework.
-- **JavaScript minimal**: hanya satu baris `<script>` inline di tiap halaman untuk
-  mengisi tahun copyright footer otomatis (elemen `.js-year`, ada fallback teks
-  `2026` bila JS mati) — agar tahun tidak di-hardcode. Selain itu tanpa JS
-  (termasuk menu hamburger yang murni CSS).
+- **JavaScript minimal & progressive-enhancement** (dua fungsi, keduanya di
+  **satu** `<script>` inline di akhir `<body>` tiap halaman):
+  1. **Tahun copyright** — mengisi `.js-year` via `getFullYear()` (fallback teks
+     `2026` bila JS mati) agar tahun tidak di-hardcode.
+  2. **Reveal saat masuk layar (scroll-in)** — `IntersectionObserver` menambah
+     kelas `.in` ke elemen target saat masuk viewport (fade + geser naik, ala
+     jagopijat.com). Detail di bagian "Reveal scroll-in" pada Sistem desain.
+  Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
+  ini, tidak ada JS lain — pertahankan seminimal mungkin.
 - **Dua stylesheet**, dimuat berurutan di tiap halaman:
   - `styles.css` — sistem desain + layout **desktop/base**.
   - `responsive.css` — **semua `@media`** (breakpoint mobile/tablet + preferensi
@@ -95,6 +100,29 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   `.feature__num`/`.crow__ico`/`.fc-ico` mengisi hijau saat hover, tombol
   hover/active (press scale), link footer memunculkan panah `::before`. Semua transform
   hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
+- **Reveal scroll-in (elemen muncul saat masuk layar — satu-satunya JS selain
+  tahun):** pola *progressive enhancement* & **anti-flash**:
+  - Skrip sinkron di `<head>` (`document.documentElement.classList.add('has-js')`)
+    menandai `<html class="has-js">` **sebelum** body render. CSS menyembunyikan
+    target (`opacity:0` + `translateY(18px)`, transisi `--dur-slow`/`--ease-out`)
+    **hanya** saat `.has-js` aktif → tanpa JS = tak ada `.has-js` = konten tampil
+    normal, tanpa flash.
+  - Skrip di akhir `<body>` (gabung dengan skrip tahun) menjalankan
+    `IntersectionObserver` yang menambah kelas `.in` (→ `opacity:1; transform:none`)
+    saat elemen masuk viewport, lalu `unobserve`. **Stagger**: tetangga se-parent
+    yang juga target diberi `transition-delay` `index*0.08s` (maks 5) via inline
+    style → kartu dalam satu grid muncul berurutan. Hero (di atas fold) ter-reveal
+    saat load. Fallback: bila `IntersectionObserver` tak ada → semua langsung `.in`.
+  - **Daftar selector target ADA DI DUA TEMPAT & wajib sinkron:** blok `.has-js …`
+    di `styles.css` **dan** konstanta `SEL` di skrip body tiap HTML. Target:
+    `.hero__inner > *`, `.sec-head`, `.pcard`, `.feature`, `.prod`, `.step`,
+    `.card`, `.map-block`, `.cta-band .container > *`. Kalau menambah target,
+    ubah **kedua** tempat (dan blok reduced-motion di bawah). Hindari menargetkan
+    elemen yang ter-nest (mis. `.crow` di dalam `.card`) agar tak dobel-animasi.
+  - **`prefers-reduced-motion`** (`responsive.css`): target dipaksa
+    `opacity:1 !important; transform:none !important` → konten selalu tampil tanpa
+    gerak (aman walau observer tak jalan). Skrip observer dipasang **identik di
+    kelima** file HTML.
 - **Hero beranda** = `.hero--factory`: background industri **murni CSS/SVG** (siluet
   garis pabrik + lingkaran gulungan + pellet) di atas gradasi gelap. Tanpa foto.
   - **Cahaya berjalan (running light) di skyline:** siluet pabrik = layer statis redup
@@ -210,8 +238,9 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   Console; dihapus = verifikasi dicabut.
 - Jangan mengarang klaim/angka (kapasitas ton, tahun berdiri, jumlah klien, testimoni).
   Konten hanya yang faktual/diberikan.
-- Pertahankan: tanpa build step, tanpa framework, JS hanya seperlunya (kini hanya
-  skrip tahun). `@media` hanya di `responsive.css`.
+- Pertahankan: tanpa build step, tanpa framework, JS hanya seperlunya (kini: skrip
+  tahun + reveal `IntersectionObserver`, keduanya progressive-enhancement).
+  `@media` hanya di `responsive.css`.
 
 ## Deploy
 
