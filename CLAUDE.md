@@ -55,7 +55,7 @@ di tiap file karena tanpa build step). Yang berbeda per halaman:
 - Penanda nav aktif: `aria-current="page"` pada link nav halaman itu.
 
 Yang **sama di keempat file** (SEO/GEO): geo meta tags (`geo.region=ID-BT`,
-`geo.placename`, `geo.position`, `ICBM`) memakai koordinat `-6.207711;106.441524`.
+`geo.placename`, `geo.position`, `ICBM`) memakai koordinat `-6.2077458;106.4415609`.
 `index.html` & `kontak.html` juga punya **JSON-LD `LocalBusiness`** (nama, badan
 hukum, `PostalAddress`, `GeoCoordinates`, telepon, `openingHoursSpecification`).
 Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
@@ -130,7 +130,7 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 
 ## SEO / GEO (local SEO)
 
-- **Koordinat lokasi (sumber kebenaran): `-6.207711, 106.441524`** (dari share Google
+- **Koordinat lokasi (sumber kebenaran): `-6.2077458, 106.4415609`** (dari share Google
   Maps). Dipakai di: embed peta & tombol "Buka di Google Maps" (`kontak.html`), geo
   meta tags (4 halaman), dan JSON-LD `LocalBusiness` (`index.html` + `kontak.html`).
 - **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 5 URL absolut
