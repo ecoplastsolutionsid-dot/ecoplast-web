@@ -398,6 +398,23 @@ h1, h2, h3 {
   transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 .feature:hover .feature__num { background: var(--green); color: #fff; border-color: var(--green); }
+/* Badge IKON (menggantikan angka 01–04 di "Kenapa Ecoplast" — poin non-sequence):
+   tile rounded hijau muda, ikon outline stroke pakai currentColor supaya ikut
+   berubah putih saat kartu di-hover (konsisten dgn micro-interaction chip lain). */
+.feature__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.85rem;
+  color: var(--green);
+  background: #E4EFE7;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.feature__ico svg { width: 24px; height: 24px; display: block; }
+.feature:hover .feature__ico { background: var(--green); color: #fff; }
 
 /* ==========================================================================
    Product page — detail rows
