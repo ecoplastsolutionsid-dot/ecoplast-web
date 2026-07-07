@@ -79,7 +79,11 @@
   .nav__link[aria-current="page"] { color: var(--green-light); }
 
   .prod { grid-template-columns: 1fr; }
-  .prod--reverse .prod__media { order: -1; }   /* gambar tetap di atas saat menumpuk */
+  .prod--reverse .prod__media { order: -1; position: static; }   /* gambar tetap di atas saat menumpuk */
+  /* batalkan trik absolute desktop → foto & bukti kembali mengalir normal saat 1 kolom */
+  .prod--reverse { padding-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .prod--reverse .prod__img { position: static; inset: auto; height: clamp(300px, 42vw, 420px); }
+  .prod--reverse .prod__proof { position: static; }
 
   /* Judul yang dipaksa satu baris di desktop → boleh wrap lagi agar tak overflow di mobile */
   .sec-head h2.h2-nowrap-lg { white-space: normal; }
