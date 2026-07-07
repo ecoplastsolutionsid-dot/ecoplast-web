@@ -87,6 +87,22 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
 - **Hero beranda** = `.hero--factory`: background industri **murni CSS/SVG** (siluet
   garis pabrik + lingkaran gulungan + pellet) di atas gradasi gelap. Tanpa foto.
+  - **Cahaya berjalan (running light) di skyline:** siluet pabrik = layer statis redup
+    dari `background-image` data-URI (tak bisa dianimasi). Di atasnya ada **overlay inline
+    SVG** `.hero__skyline` (child pertama di `<section>`, sebelum `.container`) berisi
+    **satu** `<path class="hero__skyline-run" pathLength="1000">` yang menelusuri seluruh
+    outline pabrik. Overlay diposisikan **identik** dengan layer skyline background
+    (`width: min(1180px,150%)`, `left:50%` + `translateX(-50%)`, `bottom:0`, viewBox
+    `0 0 1200 230`) sehingga berkas cahaya nempel persis di outline yang sama. Animasi:
+    `stroke-dasharray: 90 910` (jumlah = `pathLength` 1000 → hanya satu segmen tampak,
+    loop mulus) + `@keyframes skyline-run` menggeser `stroke-dashoffset` 1000→0,
+    `linear infinite` (**durasi 20s** — sempat kali diperlambat dari 11s karena terasa
+    terlalu cepat), warna `#7ED6A3`, `opacity .62`, glow via `drop-shadow`. `.container`
+    (`z-index:1`) selalu di atas cahaya. `.hero--factory` diberi **`overflow: hidden`**
+    supaya overlay lebar 150% tak bikin scroll horizontal. **Reduced-motion**
+    (`responsive.css`): `.hero__skyline { display:none }` → animasi mati, sisakan siluet
+    statis. Hanya `index.html` yang punya `.hero--factory`; kalau kelak halaman lain
+    memakai siluet serupa, terapkan overlay yang sama. Murni CSS/SVG, tanpa JS.
 - **Foto produk**: `object-fit: contain` di bingkai tinggi tetap dengan matting lembut
   → produk tampil UTUH (tidak terpotong), kartu seragam. Frasa highlight judul dijaga
   `white-space: nowrap` agar tidak terpecah antar-baris.
