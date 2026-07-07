@@ -389,23 +389,6 @@ h1, h2, h3 {
 .feature:hover { border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-md); transform: translateY(-3px); }
 .feature h3 { font-size: 1.12rem; margin-bottom: 0.4rem; }
 .feature p { color: var(--muted); font-size: 0.97rem; }
-.feature__num {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: .12em;
-  color: var(--green);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.2rem;
-  margin-bottom: 0.85rem;
-  padding: 0.3em 0.65em;
-  background: rgba(31,122,77,.06);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
-}
-.feature:hover .feature__num { background: var(--green); color: #fff; border-color: var(--green); }
 /* Badge IKON (menggantikan angka 01–04 di "Kenapa Ecoplast" — poin non-sequence):
    tile rounded hijau muda, ikon outline stroke pakai currentColor supaya ikut
    berubah putih saat kartu di-hover (konsisten dgn micro-interaction chip lain). */

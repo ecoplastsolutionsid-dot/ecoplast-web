@@ -247,4 +247,4 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   - **Peta Google kosong di headless** (tak ada internet ke Google) — normal; akan
     termuat di live. Tombol "Buka di Google Maps" jadi cadangan.
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
-  `/assets/logo-mark.png`, `/assets/logo-footer.png`, `/assets/product/*.webp`, favicon.
+  `/assets/logo-mark.png`, `/assets/product/*.webp`, favicon.
