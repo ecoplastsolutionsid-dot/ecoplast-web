@@ -433,15 +433,12 @@ h1, h2, h3 {
   border-top: 1px solid var(--line);
 }
 .prod:first-of-type { border-top: 0; padding-top: clamp(0.5rem, 2vw, 1.5rem); }
-/* biji: tinggi foto mengikuti kolom teks → bawah foto sejajar tombol "Tanya biji PP".
-   Foto & thumbnail bukti di-absolute-kan agar tidak menentukan tinggi kolom; tinggi
-   baris ditentukan oleh teks, lalu foto mengisi penuh (inset:0). Bukti menggantung di
-   bawah foto (top:100%), ruangnya dicadangkan lewat padding-bottom. Di mobile direset
-   ke alur normal (responsive.css). */
-.prod--reverse { align-items: stretch; padding-bottom: calc(clamp(2.5rem, 5vw, 4rem) + 104px); }
-.prod--reverse .prod__media { order: 2; position: relative; }   /* image on the right */
-.prod--reverse .prod__img { position: absolute; inset: 0; height: 100%; }
-.prod--reverse .prod__proof { position: absolute; top: 100%; left: 0; right: 0; margin: 0.9rem 0 0; }
+/* biji: layout zigzag mirror dari tali agar KONSISTEN. Kolom di-mirror (6fr 5fr)
+   supaya frame foto sama lebar dengan tali (selalu 5fr), dan foto pakai tinggi
+   fixed .prod__img yang sama (bukan stretch) → kedua frame identik ukurannya.
+   Foto bukti "Balaraja" mengalir normal di bawah frame. */
+.prod--reverse { grid-template-columns: 6fr 5fr; }   /* teks kiri 6fr · foto kanan 5fr */
+.prod--reverse .prod__media { order: 2; }            /* image on the right */
 .prod__img {
   width: 100%;
   height: clamp(300px, 42vw, 420px);
