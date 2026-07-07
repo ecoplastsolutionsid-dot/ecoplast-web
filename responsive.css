@@ -98,6 +98,9 @@
   .steps { grid-template-columns: 1fr; }
   .foot-cols { grid-template-columns: 1fr; }
   .cta-band .container { flex-direction: column; align-items: flex-start; }
+  /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
+     wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */
+  .hero--banner { min-height: 380px; }
 }
 
 /* --------------------------------------------------------------------------

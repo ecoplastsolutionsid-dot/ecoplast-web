@@ -267,6 +267,18 @@ h1, h2, h3 {
 .hero__lead { color: #CFE7D8; font-size: clamp(1.05rem, 1.9vw, 1.28rem); max-width: 54ch; margin-bottom: 2rem; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 0.85rem; }
 
+/* Banner judul halaman dalam (produk/tentang/kontak): tinggi SERAGAM apa pun panjang
+   lead — konten (eyebrow/H1/lead) di-center vertikal + min-height sama. Padding-block
+   inline ketiganya identik. index.html (hero--factory) TIDAK memakai kelas ini. */
+.hero--banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 340px;
+  padding-block: clamp(1.75rem, 3vw, 2.5rem);   /* identik ketiga halaman; min-height yang menentukan tinggi */
+}
+.hero--banner .hero__lead { margin-bottom: 0; }   /* elemen terakhir di banner — buang jarak bawah agar center rapi */
+
 /* Beranda hero — coded "industrial blueprint" background (no photo):
    factory skyline line-art + rope-coil rings + pellet dots over a dark
    legibility gradient. Overrides .dotted's plain pattern (defined later). */
