@@ -300,7 +300,7 @@ h1, h2, h3 {
   /* satu segmen pendek (90) + gap sepanjang sisa path (910) = pathLength 1000,
      jadi hanya satu berkas cahaya yang tampak dan loop-nya mulus. */
   stroke-dasharray: 90 910;
-  animation: skyline-run 11s linear infinite;
+  animation: skyline-run 20s linear infinite;
 }
 @keyframes skyline-run {
   from { stroke-dashoffset: 1000; }
