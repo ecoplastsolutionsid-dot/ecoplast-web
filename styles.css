@@ -636,9 +636,69 @@ a.crow__val:hover { color: var(--green); }
   background: none;
   border: 0;
   box-shadow: none;
+  /* Efek "signage LED premium": backlight hijau lembut dari BELAKANG lockup
+     (::before) + berkas cahaya menyapu kiri→kanan seperti pantulan akrilik
+     (::after). Aset/warna/font/teks logo TIDAK diubah — efek murni dekoratif di
+     pseudo-element. position:relative + isolation:isolate → backlight (z-index:-1)
+     tetap di dalam konteks lockup: di belakang emblem/huruf tapi di depan latar
+     footer (bukan ikut mundur ke lapisan grain footer). */
+  position: relative;
+  isolation: isolate;
   transition: opacity var(--dur) var(--ease);
 }
 .foot-brand:hover { opacity: 1; }
+/* Backlight LED (di BELAKANG logo): radial hijau lembut + bloom putih tipis.
+   Intensitas rendah (~25%), blur besar → menyebar elegan. "Breathing glow":
+   scale ±5% & opacity ±10% (transform+opacity saja, blur statis — tak dianimasi).
+   Tidak berkedip: ease-in-out, loop mulus. */
+.foot-brand::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 112%; height: 240%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 52% at 50% 50%, rgba(255, 255, 255, .10) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(66% 58% at 50% 50%,
+      rgba(114, 209, 75, .28) 0%,
+      rgba(114, 209, 75, .16) 42%,
+      rgba(114, 209, 75, 0) 72%);
+  filter: blur(16px);
+  animation: foot-led-breathe 5.5s ease-in-out infinite;
+}
+/* Light sweep (kesan pantulan akrilik): pita putih tipis transparan→lembut→
+   transparan menyapu kiri→kanan. background-position dianimasikan → pita otomatis
+   ter-clip di dalam kotak lockup (tak perlu overflow:hidden yang akan memotong
+   backlight). mix-blend-mode:screen → hanya menerangi, TIDAK mengubah warna logo.
+   Linear, ~6s, infinite, opacity rendah, tidak berkedip. */
+.foot-brand::after {
+  content: "";
+  position: absolute;
+  inset: -2px -1px;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background-image: linear-gradient(100deg,
+    rgba(255, 255, 255, 0) 42%,
+    rgba(255, 255, 255, .10) 47%,
+    rgba(255, 255, 255, .22) 50%,
+    rgba(255, 255, 255, .10) 53%,
+    rgba(255, 255, 255, 0) 58%);
+  background-size: 230% 100%;
+  background-repeat: no-repeat;
+  background-position: -70% 0;
+  animation: foot-led-sweep 6s linear infinite;
+}
+@keyframes foot-led-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: .9; }
+  50%      { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+}
+@keyframes foot-led-sweep {
+  0%   { background-position: -70% 0; }
+  100% { background-position: 180% 0; }
+}
 .foot-brand__mark {
   width: auto; height: 36px; display: block; flex: none;
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, .95))
