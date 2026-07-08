@@ -204,10 +204,9 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
   "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
-  penawaran (`.quote-card`, latar hijau gelap) diawali **chip ikon jabat tangan**
-  (`.quote-ico`, inline SVG stroke, 40px, warna `--green-light`, panel putih transparan
-  tipis) di atas judul — mengisi ruang kosong & senada chip `.crow__ico`; hover
-  mengangkatnya sedikit.
+  penawaran (`.quote-card`, latar hijau gelap) sengaja **tanpa chip-ikon** di judul:
+  chip persegi mirip `.crow__ico` bikin bahasa visual dua kartu tercampur/ambigu —
+  biarkan judul + deskripsi + tombol saja.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion` dihormati,
   responsif sampai lebar 360px.
 
