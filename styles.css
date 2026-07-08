@@ -628,18 +628,28 @@ a.crow__val:hover { color: var(--green); }
   text-decoration: none;
   margin-bottom: 1.4rem;
   max-width: 100%;
-  padding: 0.5rem 0.85rem;
-  /* gradasi hijau samar (bukan putih polos) agar panel logo tak kaku;
-     tetap terang supaya warna wordmark (ECO hijau + PLAST navy) terbaca akurat */
-  background: linear-gradient(135deg, #EFF9F1 0%, #DCF0E1 55%, #C4E7CD 100%);
-  border: 1px solid rgba(31, 122, 77, 0.18);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  transition: opacity var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  padding: 0;
+  /* Tanpa kotak/kontainer: "outer glow" (aura putih lembut, ala layer style
+     Photoshop) langsung mengikuti kontur emblem & huruf → tepi membaur ke latar
+     footer gelap, tapi ada backing putih tipis supaya wordmark navy tetap terbaca.
+     Glow ada di masing-masing anak (mark & name), bukan di panel. */
+  background: none;
+  border: 0;
+  box-shadow: none;
+  transition: opacity var(--dur) var(--ease);
 }
-.foot-brand:hover { opacity: 1; box-shadow: var(--shadow-md); }
-.foot-brand__mark { width: auto; height: 36px; display: block; flex: none; }
-.foot-brand__name { font-weight: 800; font-size: 1.2rem; color: var(--brand-navy); font-variation-settings: "wdth" 112; letter-spacing: -0.01em; white-space: nowrap; }
+.foot-brand:hover { opacity: 1; }
+.foot-brand__mark {
+  width: auto; height: 36px; display: block; flex: none;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, .95))
+          drop-shadow(0 0 9px rgba(255, 255, 255, .55));
+}
+.foot-brand__name {
+  font-weight: 800; font-size: 1.2rem; color: var(--brand-navy);
+  font-variation-settings: "wdth" 112; letter-spacing: -0.01em; white-space: nowrap;
+  text-shadow: 0 0 3px #fff, 0 0 6px rgba(255, 255, 255, .95),
+               0 0 12px rgba(255, 255, 255, .7);
+}
 .foot-brand__name .eco { color: var(--brand-green); }   /* "ECO" hijau, sisanya navy — ikut logo */
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */

@@ -173,14 +173,16 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   logo):
   1. **Perusahaan** (`.foot-info`): **logo = lockup yang sama dengan header** —
      `.foot-brand` berisi emblem `logo-mark.png` (`.foot-brand__mark` height 36px) +
-     wordmark `.foot-brand__name`. Karena latar footer gelap, lockup ini diberi
-     **panel terang** (`.foot-brand` = chip **gradasi hijau samar** —
-     `linear-gradient(135deg,#EFF9F1→#DCF0E1→#C4E7CD)` + border hijau tipis,
-     `border-radius: --radius`, `box-shadow: --shadow-sm`, padding) supaya warna
-     wordmark tampil **persis logo asli** (ECO hijau + PLAST/SOLUTIONS navy — lihat
-     "Warna wordmark" di bawah). Gradasi dibuat **cukup terlihat** (bukan putih polos)
-     tapi tetap terang agar navy+hijau wordmark akurat — versi awal `#ffffff→#E4F4E7`
-     terlalu samar sehingga terbaca putih.
+     wordmark `.foot-brand__name`. Karena latar footer gelap, lockup **tidak** pakai
+     panel/kotak (dulu pernah chip putih/gradasi hijau — dianggap mengganggu). Kini
+     pakai **outer glow** (aura putih lembut ala layer style Photoshop) langsung di
+     tiap anak: emblem `.foot-brand__mark` diberi `filter: drop-shadow` putih berlapis,
+     wordmark `.foot-brand__name` diberi `text-shadow` putih berlapis. `.foot-brand`
+     sendiri `background:none; border:0; box-shadow:none; padding:0`. Efeknya tepi
+     membaur ke latar gelap (bukan kotak bersudut), tapi glow memberi backing tipis
+     supaya wordmark **navy** (PLAST/SOLUTIONS) tetap terbaca dan **ECO hijau** tetap
+     pop (lihat "Warna wordmark" di bawah). Kalau glow kurang/kelebihan, atur opacity
+     & radius di `text-shadow`/`drop-shadow` tsb.
      Flush-left, emblem **lurus kiri tepat di atas** teks deskripsi
      (`emblem.left == deskripsi.left`). Lalu deskripsi + **ALAMAT** (`.foot-address`).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
