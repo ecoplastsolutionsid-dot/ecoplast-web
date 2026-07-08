@@ -657,7 +657,7 @@ a.crow__val:hover { color: var(--green); }
   left: 50%; top: 50%;
   width: 112%; height: 240%;
   transform: translate(-50%, -50%) scale(1);
-  z-index: -1;
+  z-index: -2;
   pointer-events: none;
   background:
     radial-gradient(58% 52% at 50% 50%, rgba(255, 255, 255, .10) 0%, rgba(255, 255, 255, 0) 45%),
@@ -668,24 +668,26 @@ a.crow__val:hover { color: var(--green); }
   filter: blur(16px);
   animation: foot-led-breathe 5.5s ease-in-out infinite;
 }
-/* Light sweep (kesan pantulan akrilik): pita putih tipis transparan→lembut→
-   transparan menyapu kiri→kanan. background-position dianimasikan → pita otomatis
-   ter-clip di dalam kotak lockup (tak perlu overflow:hidden yang akan memotong
-   backlight). mix-blend-mode:screen → hanya menerangi, TIDAK mengubah warna logo.
-   Linear, ~6s, infinite, opacity rendah, tidak berkedip. */
+/* Light sweep (LED backlight menyapu): pita cahaya menyapu kiri→kanan DI BELAKANG
+   logo & teks (z-index -1, di atas backlight -2, di bawah emblem/huruf z-0). Saat
+   pita lewat, LATAR di belakang huruf menyala → huruf navy jadi kontras & terbaca
+   sesaat (silhouette + halo), lalu redup lagi — "napas keterbacaan". Pakai warna
+   hijau-keputihan (bukan putih pekat) agar selaras backlight & tak mengubah warna
+   logo. background-position dianimasikan → pita ter-clip di kotak lockup. Linear,
+   ~6s, infinite, tidak berkedip. */
 .foot-brand::after {
   content: "";
   position: absolute;
-  inset: -2px -1px;
-  z-index: 2;
+  inset: -8px -6px;
+  z-index: -1;
   pointer-events: none;
-  mix-blend-mode: screen;
+  filter: blur(6px);
   background-image: linear-gradient(100deg,
-    rgba(255, 255, 255, 0) 42%,
-    rgba(255, 255, 255, .10) 47%,
-    rgba(255, 255, 255, .22) 50%,
-    rgba(255, 255, 255, .10) 53%,
-    rgba(255, 255, 255, 0) 58%);
+    rgba(180, 240, 150, 0) 38%,
+    rgba(200, 245, 175, .22) 46%,
+    rgba(230, 255, 210, .42) 50%,
+    rgba(200, 245, 175, .22) 54%,
+    rgba(180, 240, 150, 0) 62%);
   background-size: 230% 100%;
   background-repeat: no-repeat;
   background-position: -70% 0;
