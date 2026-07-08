@@ -647,10 +647,11 @@ a.crow__val:hover { color: var(--green); }
   transition: opacity var(--dur) var(--ease);
 }
 .foot-brand:hover { opacity: 1; }
-/* Backlight LED (di BELAKANG logo): radial hijau lembut + bloom putih tipis.
-   Intensitas rendah (~25%), blur besar → menyebar elegan. "Breathing glow":
-   scale ±5% & opacity ±10% (transform+opacity saja, blur statis — tak dianimasi).
-   Tidak berkedip: ease-in-out, loop mulus. */
+/* Backlight LED (di BELAKANG logo): radial hijau MURNI (tanpa bloom putih — dulu
+   ada layer rgba(255,255,255,.10) yang terbaca sbg "shadow putih" di latar, kini
+   dibuang). Intensitas rendah (~25%), blur besar → menyebar elegan. "Breathing
+   glow": scale ±5% & opacity ±10% (transform+opacity saja, blur statis — tak
+   dianimasi). Tidak berkedip: ease-in-out, loop mulus. */
 .foot-brand::before {
   content: "";
   position: absolute;
@@ -660,7 +661,6 @@ a.crow__val:hover { color: var(--green); }
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(58% 52% at 50% 50%, rgba(255, 255, 255, .10) 0%, rgba(255, 255, 255, 0) 45%),
     radial-gradient(66% 58% at 50% 50%,
       rgba(114, 209, 75, .28) 0%,
       rgba(114, 209, 75, .16) 42%,
@@ -712,10 +712,14 @@ a.crow__val:hover { color: var(--green); }
 .foot-brand__name {
   font-weight: 800; font-size: 1.2rem; color: var(--brand-navy);
   font-variation-settings: "wdth" 112; letter-spacing: -0.01em; white-space: nowrap;
-  /* Tanpa bloom putih: keterbacaan wordmark diserahkan ke backlight hijau
-     (.foot-brand::before) + light sweep akrilik yang menyapu lockup. */
+  /* Kerangka putih tipis pada "PLAST SOLUTIONS" (navy) → tepi huruf terbaca di
+     latar gelap. paint-order:stroke → outline di BELAKANG fill, jadi navy tak
+     menipis; hanya sisi luar huruf yang bergaris putih halus. Bukan shadow. */
+  -webkit-text-stroke: 0.6px rgba(255, 255, 255, .8);
+  paint-order: stroke fill;
 }
-.foot-brand__name .eco { color: var(--brand-green); }   /* "ECO" hijau, sisanya navy — ikut logo */
+/* "ECO" hijau — ikut logo, TANPA kerangka putih (stroke di-nol-kan). */
+.foot-brand__name .eco { color: var(--brand-green); -webkit-text-stroke: 0; }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */
 .foot-col h3 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; font-variation-settings: normal; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }
