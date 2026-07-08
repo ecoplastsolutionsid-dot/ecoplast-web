@@ -713,9 +713,10 @@ a.crow__val:hover { color: var(--green); }
   font-weight: 800; font-size: 1.2rem; color: var(--brand-navy);
   font-variation-settings: "wdth" 112; letter-spacing: -0.01em; white-space: nowrap;
   /* Kerangka putih tipis pada "PLAST SOLUTIONS" (navy) → tepi huruf terbaca di
-     latar gelap. paint-order:stroke → outline di BELAKANG fill, jadi navy tak
-     menipis; hanya sisi luar huruf yang bergaris putih halus. Bukan shadow. */
-  -webkit-text-stroke: 0.6px rgba(255, 255, 255, .8);
+     latar gelap MESKI sweep belum lewat. paint-order:stroke → outline di BELAKANG
+     fill, jadi navy tak menipis; hanya sisi luar huruf yang bergaris putih halus.
+     0.8px = terbaca saat diam tapi belum "berat"/norak. Bukan shadow. */
+  -webkit-text-stroke: 0.8px rgba(255, 255, 255, .9);
   paint-order: stroke fill;
 }
 /* "ECO" hijau — ikut logo, TANPA kerangka putih (stroke di-nol-kan). */
