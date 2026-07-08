@@ -705,9 +705,8 @@ a.crow__val:hover { color: var(--green); }
 .foot-brand__name {
   font-weight: 800; font-size: 1.2rem; color: var(--brand-navy);
   font-variation-settings: "wdth" 112; letter-spacing: -0.01em; white-space: nowrap;
-  /* Bloom putih dikurangi (dulu 3 lapis pekat) → tinggal aura tipis: cukup untuk
-     keterbacaan navy di latar gelap, tapi seragam dgn emblem yang kini tanpa aura. */
-  text-shadow: 0 0 5px rgba(255, 255, 255, .38), 0 0 10px rgba(255, 255, 255, .18);
+  /* Tanpa bloom putih: keterbacaan wordmark diserahkan ke backlight hijau
+     (.foot-brand::before) + light sweep akrilik yang menyapu lockup. */
 }
 .foot-brand__name .eco { color: var(--brand-green); }   /* "ECO" hijau, sisanya navy — ikut logo */
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
