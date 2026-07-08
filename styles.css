@@ -584,7 +584,12 @@ a.crow__val:hover { color: var(--green); }
   position: relative;
   isolation: isolate;                 /* pseudo depth stays behind content, contained */
   overflow: hidden;
+  /* Echo skyline pabrik (senada hero) sebagai layer paling atas di dasar footer:
+     mengunci halaman (hero di atas, footer di bawah). Samar (stroke-opacity .18),
+     center-bottom, lebar identik hero (min(1180px,150%)); overflow:hidden footer
+     mengklip sisi lebar → tak bikin scroll. Di bawahnya: top-glow + base gradient. */
   background:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%201200%20230%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M0%20214%20H60%20V132%20H150%20V214%20H180%20V162%20L206%20142%20L206%20162%20L232%20142%20L232%20162%20L258%20142%20L258%20162%20L284%20142%20L284%20162%20L310%20142%20L310%20214%20H338%20V78%20H360%20V214%20H400%20V116%20H524%20V214%20H560%20V158%20a22%2020%200%200%201%2044%200%20V214%20H640%20V96%20H704%20V214%20H736%20V150%20L826%20120%20L916%20150%20V214%20H956%20V134%20H1046%20V214%20H1076%20V166%20L1101%20146%20L1101%20166%20L1126%20146%20L1126%20166%20L1151%20146%20L1151%20166%20L1176%20146%20L1176%20214%20H1200%27%20stroke%3D%27%237BE0A6%27%20stroke-width%3D%272%27%20stroke-opacity%3D%270.18%27%2F%3E%3C%2Fsvg%3E") center bottom / min(1180px, 150%) auto no-repeat,
     radial-gradient(70% 55% at 50% 0%, rgba(31,122,77,.10), transparent 72%),
     linear-gradient(180deg, #172C20 0%, var(--ink) 42%);
   color: #C7D3CA;
