@@ -643,8 +643,8 @@ a.crow__val:hover { color: var(--green); }
   padding: 0.5rem 0.85rem;
   /* gradasi hijau samar (bukan putih polos) agar panel logo tak kaku;
      tetap terang supaya warna wordmark (ECO hijau + PLAST navy) terbaca akurat */
-  background: linear-gradient(135deg, #ffffff 0%, #F1FAF3 55%, #E4F4E7 100%);
-  border: 1px solid rgba(31, 122, 77, 0.10);
+  background: linear-gradient(135deg, #EFF9F1 0%, #DCF0E1 55%, #C4E7CD 100%);
+  border: 1px solid rgba(31, 122, 77, 0.18);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   transition: opacity var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
