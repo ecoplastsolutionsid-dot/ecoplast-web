@@ -636,45 +636,12 @@ a.crow__val:hover { color: var(--green); }
   background: none;
   border: 0;
   box-shadow: none;
-  /* Efek "signage LED premium": backlight hijau lembut dari BELAKANG lockup
-     (::before) + berkas cahaya menyapu kiri→kanan seperti pantulan akrilik
-     (::after). Aset/warna/font/teks logo TIDAK diubah — efek murni dekoratif di
-     pseudo-element. position:relative + isolation:isolate → backlight (z-index:-1)
-     tetap di dalam konteks lockup: di belakang emblem/huruf tapi di depan latar
-     footer (bukan ikut mundur ke lapisan grain footer). */
-  position: relative;
-  isolation: isolate;
+  /* Lockup polos: tanpa panel/kotak/glow. Keterbacaan wordmark navy diserahkan ke
+     kerangka putih tipis di .foot-brand__name. (Efek LED — backlight hijau bernafas
+     & light sweep — sudah dihapus atas permintaan.) */
   transition: opacity var(--dur) var(--ease);
 }
 .foot-brand:hover { opacity: 1; }
-/* Backlight LED (di BELAKANG logo): radial hijau MURNI (tanpa bloom putih — dulu
-   ada layer rgba(255,255,255,.10) yang terbaca sbg "shadow putih" di latar, kini
-   dibuang). Intensitas rendah (~25%), blur besar → menyebar elegan. "Breathing
-   glow": scale ±5% & opacity ±10% (transform+opacity saja, blur statis — tak
-   dianimasi). Tidak berkedip: ease-in-out, loop mulus. */
-.foot-brand::before {
-  content: "";
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 112%; height: 240%;
-  transform: translate(-50%, -50%) scale(1);
-  z-index: -2;
-  pointer-events: none;
-  background:
-    radial-gradient(66% 58% at 50% 50%,
-      rgba(114, 209, 75, .28) 0%,
-      rgba(114, 209, 75, .16) 42%,
-      rgba(114, 209, 75, 0) 72%);
-  filter: blur(16px);
-  animation: foot-led-breathe 5.5s ease-in-out infinite;
-}
-/* (Light sweep DIHAPUS: dulu ada .foot-brand::after — panel cahaya berjalan untuk
-   keterbacaan. Kini kerangka putih tipis di wordmark sudah cukup, jadi sweep tak
-   diperlukan. Sisakan backlight hijau bernafas + kerangka putih.) */
-@keyframes foot-led-breathe {
-  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: .9; }
-  50%      { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
-}
 .foot-brand__mark {
   width: auto; height: 36px; display: block; flex: none;
 }
