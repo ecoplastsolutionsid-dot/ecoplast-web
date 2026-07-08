@@ -326,7 +326,7 @@
       els.forEach(function(el){
         var sibs=[].slice.call(el.parentNode.children).filter(function(c){return els.indexOf(c)>-1;});
         var i=sibs.indexOf(el);
-        if(i>0)el.style.transitionDelay=Math.min(i,5)*0.08+"s";
+        if(i>0)el.style.transitionDelay=Math.min(i,5)*0.12+"s";
       });
       var io=new IntersectionObserver(function(ents){
         ents.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});

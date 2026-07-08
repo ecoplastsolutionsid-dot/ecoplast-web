@@ -147,6 +147,7 @@
 
           <!-- Quote card -->
           <div class="card quote-card">
+            <span class="quote-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.83 0l-7.17-7.17A2 2 0 0 1 2.83 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.17 7.17a2 2 0 0 1 0 2.83z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg></span>
             <h3>Minta penawaran harga</h3>
             <p>Sampaikan produk (tali PP / biji PP), spesifikasi, dan jumlah yang dibutuhkan. Kami balas dengan penawaran secepatnya.</p>
             <a class="btn btn--on-dark" href="https://wa.me/6285214401234?text=Halo%20Ecoplast%20Solutions%2C%20saya%20ingin%20minta%20penawaran%20harga%20untuk%3A%0A-%20Produk%20(tali%20PP%2Fbiji%20PP)%3A%0A-%20Spesifikasi%3A%0A-%20Jumlah%3A" target="_blank" rel="noopener">
@@ -283,7 +284,7 @@
       els.forEach(function(el){
         var sibs=[].slice.call(el.parentNode.children).filter(function(c){return els.indexOf(c)>-1;});
         var i=sibs.indexOf(el);
-        if(i>0)el.style.transitionDelay=Math.min(i,5)*0.08+"s";
+        if(i>0)el.style.transitionDelay=Math.min(i,5)*0.12+"s";
       });
       var io=new IntersectionObserver(function(ents){
         ents.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});

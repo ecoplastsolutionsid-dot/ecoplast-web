@@ -35,6 +35,7 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --dur: .22s;
   --dur-slow: .4s;
+  --dur-reveal: 1.1s; /* khusus reveal scroll-in — lambat & elegan (bukan kaku) */
 
   --font-sans: "Archivo", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -525,6 +526,18 @@ h1, h2, h3 {
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
+.quote-ico {
+  width: 52px; height: 52px; flex: none;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .14);
+  color: var(--green-light);
+  margin-bottom: 1.1rem;
+  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.quote-card:hover .quote-ico { transform: translateY(-2px); background: rgba(255, 255, 255, .12); }
+.quote-ico svg { width: 26px; height: 26px; }
 .quote-card h3 { color: #fff; font-size: 1.3rem; margin-bottom: 0.6rem; }
 .quote-card p { color: #CFE7D8; margin-bottom: 1.4rem; }
 .quote-card .btn { margin-top: auto; align-self: flex-start; }
@@ -754,9 +767,10 @@ a.fc-val:hover { color: #fff; }
 .has-js .map-block,
 .has-js .cta-band .container > * {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity var(--dur-slow) var(--ease-out),
-              transform var(--dur-slow) var(--ease-out);
+  transform: translateY(22px);
+  transition: opacity var(--dur-reveal) var(--ease-out),
+              transform var(--dur-reveal) var(--ease-out);
+  will-change: opacity, transform;
 }
 .has-js .hero__inner > *.in,
 .has-js .sec-head.in,
