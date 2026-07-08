@@ -104,15 +104,19 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   tahun):** pola *progressive enhancement* & **anti-flash**:
   - Skrip sinkron di `<head>` (`document.documentElement.classList.add('has-js')`)
     menandai `<html class="has-js">` **sebelum** body render. CSS menyembunyikan
-    target (`opacity:0` + `translateY(18px)`, transisi `--dur-slow`/`--ease-out`)
+    target (`opacity:0` + `translateY(22px)`, transisi `--dur-reveal`/`--ease-out`)
     **hanya** saat `.has-js` aktif → tanpa JS = tak ada `.has-js` = konten tampil
-    normal, tanpa flash.
+    normal, tanpa flash. **Durasi reveal sengaja lambat & elegan**: token khusus
+    `--dur-reveal: 1.1s` (bukan `--dur-slow` yang .4s dipakai hover kartu) supaya
+    kemunculan terasa mengambang, tidak kaku. Kalau mau lebih lambat/cepat, ubah
+    satu angka token ini.
   - Skrip di akhir `<body>` (gabung dengan skrip tahun) menjalankan
     `IntersectionObserver` yang menambah kelas `.in` (→ `opacity:1; transform:none`)
     saat elemen masuk viewport, lalu `unobserve`. **Stagger**: tetangga se-parent
-    yang juga target diberi `transition-delay` `index*0.08s` (maks 5) via inline
-    style → kartu dalam satu grid muncul berurutan. Hero (di atas fold) ter-reveal
-    saat load. Fallback: bila `IntersectionObserver` tak ada → semua langsung `.in`.
+    yang juga target diberi `transition-delay` `index*0.12s` (maks 5) via inline
+    style → kartu dalam satu grid muncul berurutan (dilonggarkan dari 0.08s agar
+    kaskade lebih terasa). Hero (di atas fold) ter-reveal saat load. Fallback: bila
+    `IntersectionObserver` tak ada → semua langsung `.in`.
   - **Daftar selector target ADA DI DUA TEMPAT & wajib sinkron:** blok `.has-js …`
     di `styles.css` **dan** konstanta `SEL` di skrip body tiap HTML. Target:
     `.hero__inner > *`, `.sec-head`, `.pcard`, `.feature`, `.prod`, `.step`,
@@ -187,13 +191,19 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     `::after`, `isolation: isolate` + `z-index:-1` agar di belakang konten).
   - Border-top aksen hijau; divider copyright halus (`rgba(255,255,255,.06)`); baris
     copyright **center full-width** (`.foot-bottom`, di luar grid kolom), tahun otomatis
-    via `.js-year` + `getFullYear()` (fallback `2026`).
+    via `.js-year` + `getFullYear()` (fallback `2026`). Teks: `© <tahun> Ecoplast
+    Solutions. Balaraja, …` — pakai **brand "Ecoplast Solutions"**, bukan nama badan
+    hukum PT (badan hukum tetap tampil di kolom "Perusahaan" & JSON-LD `legalName`).
   - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
     ≤560px **1 kolom** (urutan: logo, deskripsi, alamat, Halaman, Kontak, Media Sosial,
     copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
-  "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**.
+  "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
+  penawaran (`.quote-card`, latar hijau gelap) diawali **chip ikon jabat tangan**
+  (`.quote-ico`, inline SVG stroke, 40px, warna `--green-light`, panel putih transparan
+  tipis) di atas judul — mengisi ruang kosong & senada chip `.crow__ico`; hover
+  mengangkatnya sedikit.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion` dihormati,
   responsif sampai lebar 360px.
 
