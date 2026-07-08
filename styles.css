@@ -678,19 +678,24 @@ a.crow__val:hover { color: var(--green); }
 .foot-brand::after {
   content: "";
   position: absolute;
-  inset: -8px -6px;
+  inset: -10px -8px;
   z-index: -1;
   pointer-events: none;
-  filter: blur(6px);
+  filter: blur(9px);
+  /* Pita cahaya LEBAR dgn plateau terang di tengah → berfungsi seperti "panel
+     cahaya berjalan" (backing): saat menyapu, bagian logo/teks yang dilewati
+     duduk di atas cahaya sehingga terbaca. Tepi tetap lembut (gradasi + blur),
+     bukan kotak keras. Hijau-keputihan agar selaras backlight & tak ubah warna. */
   background-image: linear-gradient(100deg,
-    rgba(180, 240, 150, 0) 38%,
-    rgba(200, 245, 175, .22) 46%,
-    rgba(230, 255, 210, .42) 50%,
-    rgba(200, 245, 175, .22) 54%,
-    rgba(180, 240, 150, 0) 62%);
-  background-size: 230% 100%;
+    rgba(190, 242, 160, 0) 26%,
+    rgba(205, 246, 180, .30) 38%,
+    rgba(232, 255, 214, .58) 47%,
+    rgba(232, 255, 214, .58) 53%,
+    rgba(205, 246, 180, .30) 62%,
+    rgba(190, 242, 160, 0) 74%);
+  background-size: 260% 100%;
   background-repeat: no-repeat;
-  background-position: -70% 0;
+  background-position: -80% 0;
   animation: foot-led-sweep 6s linear infinite;
 }
 @keyframes foot-led-breathe {
@@ -698,8 +703,8 @@ a.crow__val:hover { color: var(--green); }
   50%      { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
 }
 @keyframes foot-led-sweep {
-  0%   { background-position: -70% 0; }
-  100% { background-position: 180% 0; }
+  0%   { background-position: -80% 0; }
+  100% { background-position: 190% 0; }
 }
 .foot-brand__mark {
   width: auto; height: 36px; display: block; flex: none;
