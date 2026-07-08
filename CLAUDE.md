@@ -203,13 +203,11 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
-  "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Ruang
-  kosong kartu penawaran (`.quote-card`, latar hijau gelap) diisi **watermark jabat
-  tangan** (`.quote-watermark`, inline SVG) — `position:absolute` (pojok kanan-bawah,
-  168px, `--green-light` opacity .13) supaya **tidak menambah tinggi/ukuran kontainer**;
-  besar + transparan → terbaca grafis latar, **bukan** chip UI (jangan pakai chip kotak
-  berbingkai mirip `.crow__ico` — pernah bikin dua kartu ambigu). Teks & tombol diberi
-  `z-index:1` agar di atas watermark.
+  "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
+  penawaran (`.quote-card`, latar hijau gelap) = **judul + deskripsi + tombol saja**
+  (tombol rata-bawah via `margin-top:auto`). Pernah dicoba diisi ikon: chip kotak
+  (mirip `.crow__ico`) bikin ambigu, watermark jabat tangan besar terlihat jelek —
+  keduanya **ditolak**; biarkan kartu polos.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion` dihormati,
   responsif sampai lebar 360px.
 

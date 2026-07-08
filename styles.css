@@ -526,20 +526,6 @@ h1, h2, h3 {
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
-/* Watermark jabat tangan — dekoratif, mengisi ruang kosong kartu.
-   position:absolute → TIDAK menambah tinggi/ukuran kontainer sama sekali;
-   besar + opacity rendah → terbaca sebagai grafis latar, bukan chip UI. */
-.quote-watermark {
-  position: absolute;
-  right: 1.4rem;
-  bottom: 4.6rem;
-  width: 168px; height: 168px;
-  color: var(--green-light);
-  opacity: .13;
-  pointer-events: none;
-  z-index: 0;
-}
-.quote-card > h3, .quote-card > p, .quote-card > .btn { position: relative; z-index: 1; }
 .quote-card h3 { color: #fff; font-size: 1.3rem; margin-bottom: 0.6rem; }
 .quote-card p { color: #CFE7D8; margin-bottom: 1.4rem; }
 .quote-card .btn { margin-top: auto; align-self: flex-start; }
