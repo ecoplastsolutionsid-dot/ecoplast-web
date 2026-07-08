@@ -527,17 +527,17 @@ h1, h2, h3 {
   overflow: hidden;
 }
 .quote-ico {
-  width: 52px; height: 52px; flex: none;
+  width: 40px; height: 40px; flex: none;
   display: grid; place-items: center;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, .08);
   border: 1px solid rgba(255, 255, 255, .14);
   color: var(--green-light);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
   transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
 }
 .quote-card:hover .quote-ico { transform: translateY(-2px); background: rgba(255, 255, 255, .12); }
-.quote-ico svg { width: 26px; height: 26px; }
+.quote-ico svg { width: 20px; height: 20px; }
 .quote-card h3 { color: #fff; font-size: 1.3rem; margin-bottom: 0.6rem; }
 .quote-card p { color: #CFE7D8; margin-bottom: 1.4rem; }
 .quote-card .btn { margin-top: auto; align-self: flex-start; }
