@@ -701,8 +701,6 @@ a.crow__val:hover { color: var(--green); }
 }
 .foot-brand__mark {
   width: auto; height: 36px; display: block; flex: none;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, .95))
-          drop-shadow(0 0 9px rgba(255, 255, 255, .55));
 }
 .foot-brand__name {
   font-weight: 800; font-size: 1.2rem; color: var(--brand-navy);
