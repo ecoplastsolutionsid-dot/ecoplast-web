@@ -43,11 +43,15 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
 │  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — dipakai logo header & footer
+│  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
+│  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
-├─ favicon.ico / favicon-32x32.png / apple-touch-icon.png   # favicon + gambar OG
+├─ favicon.ico         # Multi-size 16/32/48 (entri PNG) — EMBLEM saja, bukan lockup
+├─ favicon-32x32.png / favicon-48x48.png / apple-touch-icon.png   # lihat bagian "Favicon & gambar OG"
 ├─ robots.txt          # Allow all + pointer ke sitemap
-├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi)
+├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi) + lastmod
 ├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
+├─ b3f0fc85243d5aabc07151b1c4324fe5.txt   # Kunci IndexNow (Bing/Edge) — JANGAN dihapus/diubah
 ├─ CNAME               # Pengikat custom domain — JANGAN diubah/dihapus
 ├─ README.md
 └─ CLAUDE.md
@@ -225,7 +229,46 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   `search/?api=1&query=LAT,LNG` — itu cuma menjatuhkan pin di titik koordinat (bukan nempel
   ke listing) dan pernah bikin peta meleset ~286 m (longitude salah `106.4415609`).
 - **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 5 URL absolut
-  (beranda, produk, tentang, kontak, kebijakan-privasi).
+  (beranda, produk, tentang, kontak, kebijakan-privasi) + `<lastmod>` per URL.
+- **Meta per halaman (kelima file):** `keywords` (mengandung Indonesia / Tangerang /
+  Balaraja / Banten — permintaan pemilik; mesin pencari besar mengabaikannya, sinyal
+  lokal yang benar-benar dipakai ada di `<title>`/description/JSON-LD/isi halaman),
+  `robots` = `index, follow, max-snippet:-1, max-image-preview:large` (izin snippet &
+  gambar preview besar), `theme-color` + `msapplication-TileColor` = `#12442B`.
+  JSON-LD `LocalBusiness` juga punya properti `keywords`.
+- **Favicon & gambar OG (sumber: `assets/logo-full.png`, logo resmi 500×500 transparan):**
+  - **Favicon = EMBLEM saja** (lingkaran panah + "e" + daun + pellet), di-crop dari blok
+    konten teratas logo (y 41–285 pada kanvas 500px), transparan. Dulu favicon memakai
+    **lockup penuh** (emblem + wordmark + tagline + 4 badge) yang diperkecil ke 16px →
+    tampil sebagai gumpalan hijau tak terbaca di tab Edge/Chrome. **Jangan** kembalikan
+    ke lockup penuh untuk ikon kecil.
+  - `favicon.ico` = **multi-size 16/32/48** (entri ber-payload PNG). Ukuran **48px wajib
+    ada**: Bing & Google hanya menampilkan favicon di hasil pencarian bila tersedia
+    ≥48×48. Sebelumnya ICO cuma 16×16 → favicon tak pernah muncul di hasil pencarian.
+  - `<link rel="icon">` **tidak lagi memakai `sizes="any"`** pada ICO. `sizes="any"`
+    menandai ikon sebagai *scalable* (semantik untuk SVG), jadi Chromium/Edge selalu
+    memilih ICO itu dan mengabaikan PNG yang lebih besar. Sekarang: ICO dideklarasikan
+    `sizes="16x16 32x32 48x48"` + PNG 32 & 48 terdaftar eksplisit.
+  - `apple-touch-icon.png` = emblem 180×180 di atas **putih solid** (iOS/Windows tile
+    tidak menangani alpha dengan baik), padding 10%.
+  - `og:image` = **`assets/og-image.png` 1200×630** + `og:image:width/height/alt` +
+    `twitter:card=summary_large_image`. Dulu `og:image` menunjuk `apple-touch-icon.png`
+    (180×180 persegi) → di bawah minimum 1200×630 yang diminta Facebook/WhatsApp/Bing,
+    preview tampil sebagai kotak kecil. Kartu OG dibuat **dari HTML + screenshot headless
+    1200×630** (cara yang sama dgn verifikasi lokal), bukan digambar manual — sumber
+    kartu ada di riwayat commit; komposisi: emblem kiri, wordmark `ECO` hijau + `PLAST
+    SOLUTIONS` navy, tagline produk, baris mono geo, bar gradasi bawah.
+  - Regenerasi ikon butuh Pillow. Pakai venv sementara (bukan install global), sumber
+    `assets/logo-full.png`; skrip generator ada di riwayat commit.
+- **Bing / Microsoft Edge (terpisah dari Google!)**: Edge memakai indeks **Bing**, dan
+  Bing **tidak** ikut verifikasi Google Search Console. Yang sudah disiapkan di repo:
+  **kunci IndexNow** `b3f0fc85243d5aabc07151b1c4324fe5.txt` di root (isinya = nama
+  kuncinya sendiri) — file ini **JANGAN dihapus/diubah**, kalau hilang seluruh
+  pengiriman IndexNow gagal. Ping Bing setelah konten berubah:
+  `https://api.indexnow.org/indexnow?url=<URL>&key=b3f0fc85243d5aabc07151b1c4324fe5`.
+  Yang **masih perlu dikerjakan manual di dashboard** (tak bisa dari repo): daftarkan
+  situs di **Bing Webmaster Tools** (bing.com/webmasters) — cara tercepat "Import from
+  Google Search Console" karena GSC sudah terverifikasi — lalu submit `sitemap.xml`.
 - **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
   di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
   berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
@@ -252,6 +295,8 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   GitHub Pages. Menghapusnya memutus custom domain.
 - **`google5c4d18bf39fc4ecf.html` JANGAN dihapus** — file verifikasi Google Search
   Console; dihapus = verifikasi dicabut.
+- **`b3f0fc85243d5aabc07151b1c4324fe5.txt` JANGAN dihapus/diubah** — kunci IndexNow
+  (Bing/Edge). Isinya harus tetap sama dengan nama filenya.
 - Jangan mengarang klaim/angka (kapasitas ton, tahun berdiri, jumlah klien, testimoni).
   Konten hanya yang faktual/diberikan.
 - Pertahankan: tanpa build step, tanpa framework, JS hanya seperlunya (kini: skrip
@@ -292,4 +337,6 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   - **Peta Google kosong di headless** (tak ada internet ke Google) — normal; akan
     termuat di live. Tombol "Buka di Google Maps" jadi cadangan.
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
-  `/assets/logo-mark.png`, `/assets/product/*.webp`, favicon.
+  `/assets/logo-mark.png`, `/assets/logo-full.png`, `/assets/og-image.png`,
+  `/assets/product/*.webp`, `favicon.ico`, `favicon-32x32.png`, `favicon-48x48.png`,
+  `apple-touch-icon.png`.

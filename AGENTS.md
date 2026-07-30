@@ -38,11 +38,15 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
 │  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — dipakai logo header & footer
+│  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
+│  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
-├─ favicon.ico / favicon-32x32.png / apple-touch-icon.png   # favicon + gambar OG
+├─ favicon.ico         # Multi-size 16/32/48 — EMBLEM saja, bukan lockup penuh
+├─ favicon-32x32.png / favicon-48x48.png / apple-touch-icon.png   # detail di CLAUDE.md
 ├─ robots.txt          # Allow all + pointer ke sitemap
-├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi)
+├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi) + lastmod
 ├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
+├─ b3f0fc85243d5aabc07151b1c4324fe5.txt   # Kunci IndexNow (Bing/Edge) — JANGAN dihapus/diubah
 ├─ CNAME               # Pengikat custom domain — JANGAN diubah/dihapus
 ├─ README.md
 └─ AGENTS.md
