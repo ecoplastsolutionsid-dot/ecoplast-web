@@ -196,14 +196,18 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
     `h4`, agar urutan heading valid (WCAG 1.3.1, tak melompati level).
   - Depth latar: `--ink` + gradasi lembut + radial light + grain SVG (`::before`/
     `::after`, `isolation: isolate` + `z-index:-1` agar di belakang konten).
-  - **Blok "OFFICE" (`.foot-address`) memakai nama BRAND `ECOPLAST SOLUTIONS`**, bukan
-    nama badan hukum PT — supaya konsisten dengan kartu "Informasi kontak" di
-    `kontak.html`, baris copyright, dan terutama **listing Google Business** yang juga
-    bernama "ECOPLAST SOLUTIONS" (NAP consistency: Google mencocokkan nama bisnis).
-    Nama badan hukum **PT. Mencoba Bertahan Hidup** tetap ada di: JSON-LD `legalName`
-    (`index.html` + `kontak.html`), blok "Alamat" di `tentang.html`, dan
-    `kebijakan-privasi.html` (di sana wajib — badan hukum itu penanggung jawab data).
-    Jangan kembalikan nama PT ke footer.
+  - **Susunan blok alamat footer (`.foot-address`), kelima file — urutannya penting:**
+    1. `PT. Mencoba Bertahan Hidup` — `<span class="foot-address__org">`, tebal &
+       sedikit lebih terang (`#C7D3CA`) supaya jadi baris utama.
+    2. `Kantor Pusat` — `<strong>`, distyle jadi label mono kecil uppercase
+       (`.foot-address strong`). Dulu labelnya berbunyi "Office".
+    3. Alamat + kode pos, diakhiri titik.
+    `<span>`/`<strong>` keduanya `display: block`, jadi **tidak perlu `<br />`** di
+    antara ketiganya — menambahkannya justru memberi baris kosong ekstra.
+    Nama badan hukum **PT** memang dipakai di sini (bukan nama brand). Pernah dicoba
+    diganti `ECOPLAST SOLUTIONS` — **ditolak**, yang salah cuma susunannya.
+    Nama brand tetap muncul di lockup logo footer & baris copyright; `legalName` di
+    JSON-LD (`index.html` + `kontak.html`) tidak berubah.
   - Border-top aksen hijau; divider copyright halus (`rgba(255,255,255,.06)`); baris
     copyright **center full-width** (`.foot-bottom`, di luar grid kolom), tahun otomatis
     via `.js-year` + `getFullYear()` (fallback `2026`).
