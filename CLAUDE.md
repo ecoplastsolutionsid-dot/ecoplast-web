@@ -45,7 +45,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 │  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — dipakai logo header & footer
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
-│  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
+│  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog),
+│                      #   biji1-full.webp (detail biji), biji.webp (bukti Balaraja)
 ├─ favicon.ico         # Multi-size 16/32/48 (entri PNG) — EMBLEM saja, bukan lockup
 ├─ favicon-32x32.png / favicon-48x48.png / apple-touch-icon.png   # lihat bagian "Favicon & gambar OG"
 ├─ robots.txt          # Allow all + pointer ke sitemap
@@ -63,11 +64,38 @@ di tiap file karena tanpa build step). Yang berbeda per halaman:
 - `<title>`, `<meta name="description">`, Open Graph (`og:title/description/url`), `<link rel="canonical">`.
 - Penanda nav aktif: `aria-current="page"` pada link nav halaman itu.
 
-Yang **sama di keempat file** (SEO/GEO): geo meta tags (`geo.region=ID-BT`,
+Yang **sama di kelima file** (SEO/GEO): geo meta tags (`geo.region=ID-BT`,
 `geo.placename`, `geo.position`, `ICBM`) memakai koordinat `-6.2077458;106.4389806`.
-`index.html` & `kontak.html` juga punya **JSON-LD `LocalBusiness`** (nama, badan
-hukum, `PostalAddress`, `GeoCoordinates`, telepon, `openingHoursSpecification`).
 Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
+
+**Structured data (JSON-LD) — satu blok `@graph` per halaman, tepat sebelum skrip
+`has-js` di `<head>`:**
+- `index.html` → `LocalBusiness` + `WebSite` + `WebPage`
+- `produk.html` → `WebSite` + `CollectionPage` + `BreadcrumbList` + `OfferCatalog`
+  (dua `Product`: Tali Plastik PP & Biji Plastik PP)
+- `tentang.html` → `WebSite` + `AboutPage` + `BreadcrumbList`
+- `kontak.html` → `LocalBusiness` + `WebSite` + `ContactPage` + `BreadcrumbList`
+- `kebijakan-privasi.html` → `WebSite` + `WebPage` + `BreadcrumbList`
+
+Aturan penting:
+- **`LocalBusiness` lengkap HANYA ada di `index.html` & `kontak.html`** (satu sumber
+  kebenaran NAP). Halaman lain **merujuk** lewat `{"@id": ".../#business"}` saja, tidak
+  menduplikasi datanya → Google membaca satu entitas, bukan beberapa bisnis terpisah.
+  Kalau NAP berubah, cukup dua file itu (plus alamat yang tampil di footer kelima file).
+- `@id` yang dipakai sebagai jangkar: `#business` (LocalBusiness), `#website` (WebSite),
+  `<url>#webpage`, `<url>#breadcrumb`, `produk.html#katalog`, `produk.html#tali`,
+  `produk.html#biji`. **Jangan** merujuk `@id` yang tak pernah didefinisikan — cek dengan
+  menelusuri seluruh graph kelima file dan mencocokkan `@id` referensi vs definisi.
+- `Product` **sengaja tanpa `offers`/`price`** — tidak ada data harga, jangan dikarang.
+  Konsekuensinya tidak muncul rich snippet harga; data entitasnya tetap terbaca.
+- **`addressLocality` = `"Balaraja"`**, bukan "Kabupaten Tangerang". Di schema.org
+  `addressLocality` itu kota/kota kecil (setara "Mountain View"), dan Balaraja adalah
+  kata kunci lokasi terkuat; "Kab. Tangerang" ikut di `streetAddress` agar tak hilang.
+  `postalCode` = `15610` (dikonfirmasi pemilik). `areaServed` distruktur: `Country`
+  Indonesia + `AdministrativeArea` Banten / DKI Jakarta / Jawa Barat (didukung klaim
+  "distribusi ke Jabodetabek" di `tentang.html` — jangan tambah wilayah tanpa dasar).
+- Alamat yang **tampil** di footer/kartu kontak belum memuat kode pos; kalau kelak
+  ditambahkan, tulis `15610` agar konsisten dengan JSON-LD (NAP consistency).
 
 > Kalau mengedit header/footer/nav, ubah di **kelima** file HTML agar konsisten.
 > Untuk blok identik lintas file, aman pakai skrip Python kecil (lihat riwayat commit).
@@ -220,8 +248,17 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
 ## SEO / GEO (local SEO)
 
 - **Koordinat lokasi (sumber kebenaran): `-6.2077458, 106.4389806`** (dari embed resmi
-  listing Google Business "ECOPLAST SOLUTIONS"). Dipakai di: geo meta tags (4 halaman)
-  dan JSON-LD `GeoCoordinates` (`index.html` + `kontak.html`).
+  listing Google Business "ECOPLAST SOLUTIONS"). Dipakai di: geo meta tags (kelima
+  halaman) dan JSON-LD `GeoCoordinates` (`index.html` + `kontak.html`).
+- **`geo.region` / `geo.placename` / `geo.position` / `ICBM` sebenarnya DIABAIKAN
+  Google & Bing** — tag warisan lama. Tidak merusak, boleh dipertahankan, tapi jangan
+  dianggap fondasi GEO. Yang benar-benar dibaca: JSON-LD, NAP di HTML, Google Business
+  Profile.
+- **Faktor GEO terbesar ada di luar repo:** Google Business Profile (kategori utama &
+  tambahan, foto, jam, area layanan, produk, dan terutama **ulasan**) menentukan sebagian
+  besar peluang masuk "local 3-pack". Listing sudah ada (CID `893561851054800034`), tapi
+  isinya tak bisa diaudit dari repo/CLI — halaman Maps cuma shell JavaScript. Padanan
+  untuk Edge/Bing: **Bing Places for Business** (belum didaftarkan).
 - **Peta = listing bisnis, bukan pin koordinat mentah.** Embed (`kontak.html`) pakai URL
   `maps/embed?pb=...` resmi listing (menampilkan kartu "ECOPLAST SOLUTIONS"). Tombol
   "Buka di Google Maps" + JSON-LD `hasMap` pakai link listing via CID:

@@ -42,36 +42,111 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": "https://ecoplastsolutions.id/#business",
-    "name": "Ecoplast Solutions",
-    "legalName": "PT. Mencoba Bertahan Hidup",
-    "url": "https://ecoplastsolutions.id/",
-    "logo": "https://ecoplastsolutions.id/assets/logo-full.png",
-    "image": "https://ecoplastsolutions.id/assets/og-image.png",
-    "description": "Produsen tali plastik dan biji plastik polypropylene (PP) untuk kebutuhan industri di Balaraja, Kabupaten Tangerang, Banten.",
-    "keywords": "tali plastik PP, biji plastik PP, polypropylene, produsen plastik, Balaraja, Kabupaten Tangerang, Banten, Indonesia",
-    "telephone": "+6285214401234",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Kp. Tobat, Desa Sentul Jaya, Kec. Balaraja",
-      "addressLocality": "Kabupaten Tangerang",
-      "addressRegion": "Banten",
-      "addressCountry": "ID"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": -6.2077458,
-      "longitude": 106.4389806
-    },
-    "hasMap": "https://www.google.com/maps?cid=893561851054800034",
-    "openingHoursSpecification": [{
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-      "opens": "08:00",
-      "closes": "17:00"
-    }],
-    "areaServed": "Indonesia"
+    "@graph": [
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://ecoplastsolutions.id/#business",
+        "name": "Ecoplast Solutions",
+        "legalName": "PT. Mencoba Bertahan Hidup",
+        "url": "https://ecoplastsolutions.id/",
+        "logo": "https://ecoplastsolutions.id/assets/logo-full.png",
+        "image": "https://ecoplastsolutions.id/assets/og-image.png",
+        "description": "Produsen tali plastik dan biji plastik polypropylene (PP) untuk kebutuhan industri di Balaraja, Kabupaten Tangerang, Banten.",
+        "keywords": "tali plastik PP, biji plastik PP, polypropylene, produsen plastik, Balaraja, Kabupaten Tangerang, Banten, Indonesia",
+        "telephone": "+6285214401234",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Kp. Tobat, Desa Sentul Jaya, Kec. Balaraja, Kab. Tangerang",
+          "addressLocality": "Balaraja",
+          "addressRegion": "Banten",
+          "postalCode": "15610",
+          "addressCountry": "ID"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -6.2077458,
+          "longitude": 106.4389806
+        },
+        "hasMap": "https://www.google.com/maps?cid=893561851054800034",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ],
+            "opens": "08:00",
+            "closes": "17:00"
+          }
+        ],
+        "areaServed": [
+          {
+            "@type": "Country",
+            "name": "Indonesia"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "Banten"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "DKI Jakarta"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "Jawa Barat"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://ecoplastsolutions.id/#website",
+        "url": "https://ecoplastsolutions.id/",
+        "name": "Ecoplast Solutions",
+        "inLanguage": "id-ID",
+        "publisher": {
+          "@id": "https://ecoplastsolutions.id/#business"
+        }
+      },
+      {
+        "@type": "ContactPage",
+        "@id": "https://ecoplastsolutions.id/kontak.html#webpage",
+        "url": "https://ecoplastsolutions.id/kontak.html",
+        "name": "Kontak — Ecoplast Solutions",
+        "isPartOf": {
+          "@id": "https://ecoplastsolutions.id/#website"
+        },
+        "about": {
+          "@id": "https://ecoplastsolutions.id/#business"
+        },
+        "inLanguage": "id-ID",
+        "breadcrumb": {
+          "@id": "https://ecoplastsolutions.id/kontak.html#breadcrumb"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://ecoplastsolutions.id/kontak.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Beranda",
+            "item": "https://ecoplastsolutions.id/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Kontak",
+            "item": "https://ecoplastsolutions.id/kontak.html"
+          }
+        ]
+      }
+    ]
   }
   </script>
   <script>document.documentElement.classList.add('has-js');</script>
