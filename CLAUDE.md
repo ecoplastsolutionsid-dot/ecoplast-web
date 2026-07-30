@@ -264,16 +264,19 @@ Aturan penting:
   logo):
   1. **Perusahaan** (`.foot-info`): **logo = lockup yang sama dengan header** —
      `.foot-brand` berisi emblem `logo-mark.png` (`.foot-brand__mark` height 36px) +
-     wordmark `.foot-brand__name`. Karena latar footer gelap, lockup **tidak** pakai
-     panel/kotak (dulu pernah chip putih/gradasi hijau — dianggap mengganggu). Kini
-     pakai **outer glow** (aura putih lembut ala layer style Photoshop) langsung di
-     tiap anak: emblem `.foot-brand__mark` diberi `filter: drop-shadow` putih berlapis,
-     wordmark `.foot-brand__name` diberi `text-shadow` putih berlapis. `.foot-brand`
-     sendiri `background:none; border:0; box-shadow:none; padding:0`. Efeknya tepi
-     membaur ke latar gelap (bukan kotak bersudut), tapi glow memberi backing tipis
-     supaya wordmark **navy** (PLAST/SOLUTIONS) tetap terbaca dan **ECO hijau** tetap
-     pop (lihat "Warna wordmark" di bawah). Kalau glow kurang/kelebihan, atur opacity
-     & radius di `text-shadow`/`drop-shadow` tsb.
+     wordmark `.foot-brand__name`. Karena latar footer gelap, keterbacaan wordmark
+     diselesaikan dengan **kerangka putih tipis**, bukan panel/glow:
+     `-webkit-text-stroke: 0.8px rgba(255,255,255,.9)` + `paint-order: stroke fill`
+     (outline di BELAKANG fill, jadi warna huruf tidak menipis — hanya sisi luarnya
+     bergaris). 0.8px = terbaca saat diam tapi belum "berat"/norak.
+     **ECO ikut berkerangka**, sama seperti PLAST SOLUTIONS: `-webkit-text-stroke-*`
+     dan `paint-order` keduanya properti **inherited**, jadi `.eco` mewarisinya dari
+     `.foot-brand__name` tanpa deklarasi ulang. Reset `-webkit-text-stroke: 0` yang
+     dulu ada di `.eco` sudah dihapus — jangan dikembalikan.
+     `.foot-brand` sendiri polos: `background:none; border:0; box-shadow:none; padding:0`.
+     **Riwayat yang sudah ditolak/dibuang, jangan diulang:** chip putih & gradasi hijau
+     di belakang lockup (mengganggu), outer glow `drop-shadow`/`text-shadow` putih
+     berlapis, serta backlight hijau bernafas + light sweep (efek LED).
      Flush-left, emblem **lurus kiri tepat di atas** teks deskripsi
      (`emblem.left == deskripsi.left`). Lalu deskripsi + **ALAMAT** (`.foot-address`).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
