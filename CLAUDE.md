@@ -21,7 +21,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
   ini, tidak ada JS lain — pertahankan seminimal mungkin.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260730c`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260730d`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -29,7 +29,25 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   baru sementara CSS masih basi → footer sempat merender lockup logo baru dengan
   aturan lama (tinggi 36px, panel putih tak muncul) dan tampak "rusak" berjam-jam.
   Gejalanya: `curl -D -` menunjukkan `last-modified` styles.css **lebih tua** dari
-  HTML dengan `cf-cache-status: HIT`. Hard-refresh browser TIDAK menolong — yang
+  **JEBAKAN — jangan mengambil URL berversi sebelum deploy selesai.** Pernah
+  kejadian dan bikin bingung: `curl .../styles.css?v=X` dijalankan saat GitHub Pages
+  masih men-deploy → request itu mengambil `styles.css` versi **lama** dari origin
+  dan Cloudflare menyimpannya di cache key **baru** `?v=X` selama 4 jam. Cache-buster
+  jadi menunjuk isi basi, dan menaikkan `v` lagi adalah satu-satunya jalan keluar.
+  Gejala waktu itu: HTML sudah tanpa `.brand__name` sementara CSS masih punya
+  `.brand__mark { width:30px; height:30px; object-fit:contain }`, jadi lockup
+  570×124 dimampatkan `contain` menjadi serpihan ±30×6.5px di header.
+  **Cara aman mendeteksi deploy sudah selesai:** pakai query buangan, mis.
+  `curl ".../styles.css?probe=1" | grep "height: 48px"`. Kalau key buangan itu
+  teracuni, tak ada ruginya. Baru setelah cocok, URL `?v=` sungguhan boleh disentuh.
+  **Hal yang sama berlaku untuk ASET** (gambar): mengganti NAMA file berisiko —
+  HTML baru bisa tayang sebelum aset barunya ter-cache, lalu **404-nya** ikut
+  ter-cache (`cf-cache-status: HIT` pada 404) dan tidak sembuh sendiri. Pernah
+  terjadi saat `logo-footer.png` → `logo-lockup.png`: kedua logo pecah di live
+  padahal file ada di origin (probe query acak mengembalikan 200). Karena itu URL
+  logo pun bertanda versi: `/assets/logo-lockup.png?v=1`. Untuk aset baru atau
+  rename, sertakan `?v=` **sejak commit pertama**.
+  Hard-refresh browser TIDAK menolong — yang
   basi ada di edge Cloudflare, bukan di browser. Query string ini membuat URL-nya
   berbeda sehingga edge wajib mengambil ulang.
 - **Dua stylesheet**, dimuat berurutan di tiap halaman:
