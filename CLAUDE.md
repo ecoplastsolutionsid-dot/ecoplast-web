@@ -309,6 +309,14 @@ Aturan penting:
     `h4`, agar urutan heading valid (WCAG 1.3.1, tak melompati level).
   - Depth latar: `--ink` + gradasi lembut + radial light + grain SVG (`::before`/
     `::after`, `isolation: isolate` + `z-index:-1` agar di belakang konten).
+  - **Blok "OFFICE" (`.foot-address`) memakai nama BRAND `ECOPLAST SOLUTIONS`**, bukan
+    nama badan hukum PT — supaya konsisten dengan kartu "Informasi kontak" di
+    `kontak.html`, baris copyright, dan terutama **listing Google Business** yang juga
+    bernama "ECOPLAST SOLUTIONS" (NAP consistency: Google mencocokkan nama bisnis).
+    Nama badan hukum **PT. Mencoba Bertahan Hidup** tetap ada di: JSON-LD `legalName`
+    (`index.html` + `kontak.html`), blok "Alamat" di `tentang.html`, dan
+    `kebijakan-privasi.html` (di sana wajib — badan hukum itu penanggung jawab data).
+    Jangan kembalikan nama PT ke footer.
   - Border-top aksen hijau; divider copyright halus (`rgba(255,255,255,.06)`); baris
     copyright **center full-width** (`.foot-bottom`, di luar grid kolom), tahun otomatis
     via `.js-year` + `getFullYear()` (fallback `2026`). Teks: `© <tahun> Ecoplast
