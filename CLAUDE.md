@@ -54,6 +54,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi) + lastmod
 ├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
 ├─ b3f0fc85243d5aabc07151b1c4324fe5.txt   # Kunci IndexNow (Bing/Edge) — JANGAN dihapus/diubah
+├─ BingSiteAuth.xml   # Verifikasi Bing Webmaster Tools — JANGAN dihapus/diubah
 ├─ CNAME               # Pengikat custom domain — JANGAN diubah/dihapus
 ├─ README.md
 └─ CLAUDE.md
@@ -408,9 +409,14 @@ Aturan penting:
   kuncinya sendiri) — file ini **JANGAN dihapus/diubah**, kalau hilang seluruh
   pengiriman IndexNow gagal. Ping Bing setelah konten berubah:
   `https://api.indexnow.org/indexnow?url=<URL>&key=b3f0fc85243d5aabc07151b1c4324fe5`.
-  Yang **masih perlu dikerjakan manual di dashboard** (tak bisa dari repo): daftarkan
-  situs di **Bing Webmaster Tools** (bing.com/webmasters) — cara tercepat "Import from
-  Google Search Console" karena GSC sudah terverifikasi — lalu submit `sitemap.xml`.
+  **Bing Webmaster Tools** (bing.com/webmasters): situs ditambahkan **manual**, bukan
+  lewat "Import from Google Search Console" — verifikasi kepemilikan pakai metode
+  **XML file**, yaitu `BingSiteAuth.xml` di root (token `3D02D86…`). File ini
+  **JANGAN dihapus/diubah** — sama seperti file verifikasi GSC, kepemilikan dicek
+  ulang berkala; hilang = verifikasi dicabut. Jalur manual dipilih karena login BWT
+  boleh pakai akun apa pun (Microsoft/Google/Facebook) dan tak perlu menyentuh akun
+  Google pemilik GSC; buktinya kontrol atas domain, bukan akun. Setelah verified,
+  submit `sitemap.xml` di menu Sitemaps.
 - **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
   di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
   berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
@@ -437,6 +443,8 @@ Aturan penting:
   GitHub Pages. Menghapusnya memutus custom domain.
 - **`google5c4d18bf39fc4ecf.html` JANGAN dihapus** — file verifikasi Google Search
   Console; dihapus = verifikasi dicabut.
+- **`BingSiteAuth.xml` JANGAN dihapus/diubah** — file verifikasi Bing Webmaster
+  Tools; dihapus = verifikasi dicabut.
 - **`b3f0fc85243d5aabc07151b1c4324fe5.txt` JANGAN dihapus/diubah** — kunci IndexNow
   (Bing/Edge). Isinya harus tetap sama dengan nama filenya.
 - Jangan mengarang klaim/angka (kapasitas ton, tahun berdiri, jumlah klien, testimoni).
