@@ -200,11 +200,37 @@ Aturan penting:
     ke-cache lama (Cloudflare) sementara HTML sudah baru, SVG tak membesar ke default.
 - **Header mobile = drawer hamburger** (≤720px, CSS-only, tanpa JS — checkbox hack
   `.nav-toggle` + label `.nav-burger` + label `.nav-overlay`):
-  - Meniru gaya **centralcats.id**: panel **geser dari kanan** (`.nav__links`,
-    `position: fixed`, `transform: translateX(100%)` → `0`, transisi .35s), background
-    `--green-deep`, lebar `min(74vw, 300px)`.
+  - **Header mobile = brand (kiri) + hamburger (kanan) SAJA.** Dulu `.nav` diberi
+    `display: contents` sehingga tombol WhatsApp (`.nav__cta`, dikecilkan jadi ikon
+    lewat `font-size: 0`) menjadi item header persis di sebelah hamburger — dua
+    kontrol berdempet membuat **hamburger ambigu**. Sekarang tombol WA ikut masuk ke
+    dalam panel. `.container` sudah `justify-content: space-between`, jadi tak perlu
+    `margin-left: auto` / `order`.
+  - Meniru gaya **centralcats.id**: panel **geser dari kanan** — panelnya adalah
+    **`.nav` itu sendiri** (bukan `.nav__links` seperti dulu), supaya isinya daftar
+    link **dan** tombol WhatsApp. `position: fixed`, `transform: translateX(100%)`
+    → `0` lewat `.nav-toggle:checked ~ .nav`, transisi .35s, background
+    `--green-deep`, lebar `min(74vw, 300px)`, `flex-direction: column`.
+    `.nav__links` di dalamnya cuma jadi kolom biasa (tanpa positioning).
+  - **`top: 69px`** = tinggi header mobile sebenarnya (container `min-height: 68px`
+    + border-bottom 1px). Sebelumnya 64px — 5px teratas panel tersembunyi di balik
+    header. Kalau tinggi header diubah, sesuaikan angka ini.
   - `.nav-overlay` = layer gelap; klik untuk menutup. Hamburger 3 garis → X.
+    Overlay diberi **`touch-action: none` + `overscroll-behavior: contain`** =
+    scroll-lock ala CSS-only: menyeret di area overlay tidak menggulir halaman di
+    belakangnya. Panel `.nav` juga `overscroll-behavior: contain` agar gulir di
+    dalam panel tidak merembet keluar.
   - Header mobile mematikan `backdrop-filter` (agar tidak jadi containing block).
+  - **`overflow-x` di `html` & `body` pakai `clip`, BUKAN `hidden`** (`styles.css`):
+    `overflow-x: hidden` + `overflow-y: visible` membuat `overflow-y` ikut jadi
+    `auto`, jadi `body` berubah menjadi scroll container → dua scroller bersarang
+    (html + body). Itu sumber halaman terasa **"bergeser"** saat drawer menggeser
+    masuk, dan bisa mematahkan `position: sticky` header. `clip` mengklip tanpa
+    membuat scroll container. `hidden` disimpan sebagai fallback browser lama —
+    urutannya `overflow-x: hidden;` lalu `overflow-x: clip;`, jangan dibalik.
+  - Reduced-motion tidak perlu diubah: blok `prefers-reduced-motion` hanya menolkan
+    `transition-duration` (drawer terbuka seketika, tetap berfungsi) dan memaksa
+    `transform: none` pada selector hover/reveal tertentu — `.nav` tidak termasuk.
 - **Footer (4 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`)
   berisi 4 kolom yang **semua mulai di baseline atas yang sama** (sejajar tepi atas
   logo):

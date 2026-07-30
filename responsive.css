@@ -26,11 +26,13 @@
   .site-header .container { position: relative; gap: 0.5rem; }
   .brand__mark { width: 24px; height: 24px; }
   .brand__name { font-size: 0.92rem; font-variation-settings: "wdth" 100; }
-  .nav { display: contents; }
-  .brand { order: 0; min-width: 0; }
-  .nav__cta { order: 1; margin-left: auto; flex: none; font-size: 0; gap: 0; padding: 8px; }
-  .nav__cta .wa-ico { width: 20px; height: 20px; }
-  .nav-burger { display: inline-flex; order: 2; flex: none; }
+  /* Header mobile = brand (kiri) + hamburger (kanan) SAJA. Tombol WhatsApp
+     pindah ke dalam drawer: dulu `.nav { display: contents }` membuat .nav__cta
+     jadi item header persis di sebelah hamburger — dua kontrol berdempet bikin
+     hamburger ambigu (tidak jelas mana yang membuka menu).
+     `.container` sudah justify-content: space-between, jadi tak perlu margin auto. */
+  .brand { min-width: 0; }
+  .nav-burger { display: inline-flex; flex: none; }
 
   /* Overlay gelap di belakang drawer — klik untuk menutup (label → checkbox). */
   .nav-overlay {
@@ -43,29 +45,41 @@
     visibility: hidden;
     transition: opacity .3s ease, visibility .3s;
     cursor: pointer;
+    /* Scroll-lock ala CSS-only: menyeret di area overlay tidak menggulir halaman
+       di belakangnya (tanpa ini halaman terasa "geser" saat menu terbuka). */
+    touch-action: none;
+    overscroll-behavior: contain;
   }
   .nav-toggle:checked ~ .nav-overlay { opacity: 1; visibility: visible; }
 
-  /* Drawer geser dari kanan (gaya centralcats.id) — panel hijau, slide .35s. */
-  .nav__links {
-    order: 3;
+  /* Drawer geser dari kanan (gaya centralcats.id) — panel hijau, slide .35s.
+     Panelnya = `.nav` itu sendiri, jadi isinya daftar link DAN tombol WhatsApp.
+     `top: 69px` = tinggi header mobile sebenarnya (container 68px + border 1px);
+     sebelumnya 64px sehingga 5px teratas panel tersembunyi di balik header. */
+  .nav {
     position: fixed;
-    top: 64px;
+    top: 69px;
     right: 0;
     bottom: 0;
     width: min(74vw, 300px);
     z-index: 46;
+    display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 2px;
+    gap: 1.15rem;
     background: var(--green-deep);
     padding: 1.4rem 1.35rem 2rem;
     box-shadow: -14px 0 36px rgba(0, 0, 0, .3);
     transform: translateX(100%);
     transition: transform .35s ease;
     overflow-y: auto;
+    overscroll-behavior: contain;   /* gulir di dalam panel tidak merembet ke halaman */
   }
-  .nav-toggle:checked ~ .nav .nav__links { transform: translateX(0); }
+  .nav-toggle:checked ~ .nav { transform: translateX(0); }
+  .nav__links { flex-direction: column; align-items: stretch; gap: 2px; }
+  /* Tombol WA di dalam panel: teks penuh (di header dulu font-size:0 → ikon saja). */
+  .nav__cta { justify-content: center; font-size: 0.98rem; gap: 0.5rem; padding: 0.85em 1.1em; }
+  .nav__cta .wa-ico { width: 20px; height: 20px; }
   .nav__link {
     display: block;
     color: #EAF6EE;

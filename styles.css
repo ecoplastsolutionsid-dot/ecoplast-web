@@ -44,7 +44,12 @@
 /* ---- Reset ---- */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;   /* lihat catatan di body — `clip`, JANGAN `hidden` (sticky header) */
+}
 
 body {
   font-family: var(--font-sans);
@@ -54,7 +59,15 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;               /* safety net against accidental horizontal scroll */
+  /* Jaring pengaman scroll horizontal. Pakai `clip`, BUKAN `hidden`:
+     `overflow-x: hidden` + `overflow-y: visible` membuat overflow-y ikut jadi
+     `auto`, jadi body berubah menjadi scroll container → ada dua scroller
+     bersarang (html + body). Itu sumber halaman terasa "bergeser" saat drawer
+     mobile menggeser masuk, dan bisa mematahkan `position: sticky` header.
+     `clip` mengklip tanpa membuat scroll container. `hidden` disimpan sebagai
+     fallback untuk browser yang belum mengenal `clip`. */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img { max-width: 100%; display: block; }
