@@ -656,7 +656,11 @@ a.crow__val:hover { color: var(--green); }
   align-items: center;
   gap: 0.6rem;
   text-decoration: none;
-  margin-bottom: 1.4rem;
+  /* Jarak lockup → blok alamat. Dulu 1.4rem (22.4px), dari zaman masih ada paragraf
+     deskripsi di antaranya; setelah paragraf itu dihapus, alamat langsung menempel
+     ke lockup sehingga 22.4px + half-leading baris pertama terasa menggantung.
+     0.5rem = 8px margin → jarak visual logo↔"PT. Mencoba Bertahan Hidup" ±14px. */
+  margin-bottom: 0.5rem;
   max-width: 100%;
   padding: 0;
   /* Tanpa kotak/kontainer: "outer glow" (aura putih lembut, ala layer style
