@@ -668,8 +668,11 @@ a.crow__val:hover { color: var(--green); }
   -webkit-text-stroke: 0.8px rgba(255, 255, 255, .9);
   paint-order: stroke fill;
 }
-/* "ECO" hijau — ikut logo, TANPA kerangka putih (stroke di-nol-kan). */
-.foot-brand__name .eco { color: var(--brand-green); -webkit-text-stroke: 0; }
+/* "ECO" hijau — ikut logo. Kerangka putih 0.8px DIWARISI dari .foot-brand__name
+   (`-webkit-text-stroke-*` dan `paint-order` keduanya properti inherited), jadi
+   ECO diperlakukan sama dengan PLAST SOLUTIONS. Dulu di sini ada
+   `-webkit-text-stroke: 0` yang mematikan kerangka pada ECO — sudah dihapus. */
+.foot-brand__name .eco { color: var(--brand-green); }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */
 .foot-col h3 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; font-variation-settings: normal; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }
