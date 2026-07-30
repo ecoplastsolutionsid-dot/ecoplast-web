@@ -648,13 +648,18 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Logo footer = lockup identik header (emblem + wordmark). Karena latar footer
-   gelap, lockup diberi PANEL TERANG (chip putih, rounded) supaya warna wordmark
-   tampil PERSIS seperti logo asli: ECO hijau + PLAST/SOLUTIONS navy. */
+/* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-footer.png`) di dalam
+   PANEL PUTIH — pola yang dipakai centralcats.id (`.footer-brand .logo-link`).
+   Wordmark ikut di dalam gambar, jadi TIDAK ada teks HTML di sini: elemen
+   `.foot-brand__name` (+ `.eco`, `-webkit-text-stroke`, `paint-order`) sudah
+   DIHAPUS bersama seluruh trik keterbacaannya — panel putih menyelesaikan masalah
+   yang dulu ditambal kerangka putih pada huruf. Jangan dikembalikan.
+   Panel di sini SAH (dulu chip putih pernah ditolak) karena kini wordmark navy
+   ada di dalam bitmap: tanpa backing terang ia tak terbaca di footer gelap. */
 .foot-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  width: fit-content;
   text-decoration: none;
   /* Jarak lockup → blok alamat. Dulu 1.4rem (22.4px), dari zaman masih ada paragraf
      deskripsi di antaranya; setelah paragraf itu dihapus, alamat langsung menempel
@@ -662,38 +667,25 @@ a.crow__val:hover { color: var(--green); }
      0.5rem = 8px margin → jarak visual logo↔"PT. Mencoba Bertahan Hidup" ±14px. */
   margin-bottom: 0.5rem;
   max-width: 100%;
-  padding: 0;
-  /* Tanpa kotak/kontainer: "outer glow" (aura putih lembut, ala layer style
-     Photoshop) langsung mengikuti kontur emblem & huruf → tepi membaur ke latar
-     footer gelap, tapi ada backing putih tipis supaya wordmark navy tetap terbaca.
-     Glow ada di masing-masing anak (mark & name), bukan di panel. */
-  background: none;
+  /* Aset di-crop rapat (emblem menyentuh tepi atas & bawah), jadi padding panel
+     harus lebih lega dari centralcats (6px 10px) supaya logo tak terasa terjepit. */
+  padding: 8px 14px;
+  background: #fff;
   border: 0;
-  box-shadow: none;
-  /* Lockup polos: tanpa panel/kotak/glow. Keterbacaan wordmark navy diserahkan ke
-     kerangka putih tipis di .foot-brand__name. (Efek LED — backlight hijau bernafas
-     & light sweep — sudah dihapus atas permintaan.) */
-  transition: opacity var(--dur) var(--ease);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur) var(--ease);
 }
-.foot-brand:hover { opacity: 1; }
+/* Hover = angkat elevasi saja, TANPA transform/scale → tak perlu entri baru di blok
+   prefers-reduced-motion. */
+.foot-brand:hover { box-shadow: var(--shadow-md); }
 .foot-brand__mark {
-  width: auto; height: 36px; display: block; flex: none;
+  /* 52px (naik dari emblem 36px yang lama) — pada rasio aset 570x124 ini membuat
+     "ECOPLAST" tampil 20px & "SOLUTIONS" 8.8px, keduanya masih terbaca. Aset 2.4x
+     ukuran tampil → tetap tajam di layar retina. Kalau tinggi ini diubah, cek ulang
+     SOLUTIONS jangan sampai < 8px. */
+  width: auto; height: 52px; display: block; flex: none;
 }
-.foot-brand__name {
-  font-weight: 800; font-size: 1.2rem; color: var(--brand-navy);
-  font-variation-settings: "wdth" 112; letter-spacing: -0.01em; white-space: nowrap;
-  /* Kerangka putih tipis pada "PLAST SOLUTIONS" (navy) → tepi huruf terbaca di
-     latar gelap MESKI sweep belum lewat. paint-order:stroke → outline di BELAKANG
-     fill, jadi navy tak menipis; hanya sisi luar huruf yang bergaris putih halus.
-     0.8px = terbaca saat diam tapi belum "berat"/norak. Bukan shadow. */
-  -webkit-text-stroke: 0.8px rgba(255, 255, 255, .9);
-  paint-order: stroke fill;
-}
-/* "ECO" hijau — ikut logo. Kerangka putih 0.8px DIWARISI dari .foot-brand__name
-   (`-webkit-text-stroke-*` dan `paint-order` keduanya properti inherited), jadi
-   ECO diperlakukan sama dengan PLAST SOLUTIONS. Dulu di sini ada
-   `-webkit-text-stroke: 0` yang mematikan kerangka pada ECO — sudah dihapus. */
-.foot-brand__name .eco { color: var(--brand-green); }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */
 .foot-col h3 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; font-variation-settings: normal; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }

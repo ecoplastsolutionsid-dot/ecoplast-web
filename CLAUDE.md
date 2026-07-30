@@ -42,8 +42,11 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem asli (248x218, transparan) — logo header & footer;
+│  ├─ logo-mark.png    # Emblem asli (248x218, transparan) — logo HEADER saja;
 │                      #   dipotong dari logo-full.png blok y 70-287
+│  ├─ logo-footer.png  # Lockup MENDATAR 570x124 transparan (emblem + ECOPLAST/SOLUTIONS
+│                      #   bertumpuk) — logo FOOTER, dipakai di panel putih .foot-brand.
+│                      #   Disusun dari potongan logo-full.png; resep di bagian Footer.
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog),
@@ -127,13 +130,15 @@ Aturan penting:
     PLAST median `#0B2A51`, gradasi p5 `#0B203D` → p95 `#163C63` → token `#173B5C`
     berada di **ujung terang rentang itu**; dipertahankan karena sengaja — makin gelap
     makin sulit terbaca di footer. Emblem biru median `#0D2F58`.
-  - Markup wordmark (header & footer, kelima file):
-    `<span class="eco">ECO</span>PLAST SOLUTIONS` — base `.brand__name`/
-    `.foot-brand__name` = navy, `.eco` = hijau. **Ada spasi** antara PLAST & SOLUTIONS
-  (dulu mendempet "ECOPLASTSOLUTIONS" + SOLUTIONS hijau; kini ikut struktur dua-kata
-  logo). Header di latar terang → warna logo langsung; footer di latar gelap → lockup
-  dibungkus panel putih (lihat bagian Footer) supaya warna logo tetap tampil apa adanya.
-  Kalau logo/warna brand berubah, perbarui kedua token ini.
+  - Markup wordmark **hanya di HEADER** (kelima file):
+    `<span class="eco">ECO</span>PLAST SOLUTIONS` — base `.brand__name` = navy,
+    `.eco` = hijau. **Ada spasi** antara PLAST & SOLUTIONS (dulu mendempet
+    "ECOPLASTSOLUTIONS" + SOLUTIONS hijau; kini ikut struktur dua-kata logo).
+    Header di latar terang → warna logo dipakai langsung, tanpa backing.
+    **Footer tidak lagi memakai teks HTML** — wordmark-nya ikut di dalam gambar
+    `assets/logo-footer.png` di panel putih (lihat bagian Footer). Jadi kedua token ini
+    kini hanya memengaruhi header; kalau logo/warna brand berubah, perbarui token
+    **dan** regenerasi `logo-footer.png` + `og-image.png`.
 - **Token elevation & motion (fondasi polish premium — pakai token ini, jangan
   hard-code):**
   - Radius: `--radius 14px` (default), `--radius-lg 20px` (bingkai media besar:
@@ -283,23 +288,49 @@ Aturan penting:
 - **Footer (4 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`)
   berisi 4 kolom yang **semua mulai di baseline atas yang sama** (sejajar tepi atas
   logo):
-  1. **Perusahaan** (`.foot-info`): **logo = lockup yang sama dengan header** —
-     `.foot-brand` berisi emblem `logo-mark.png` (`.foot-brand__mark` height 36px) +
-     wordmark `.foot-brand__name`. Karena latar footer gelap, keterbacaan wordmark
-     diselesaikan dengan **kerangka putih tipis**, bukan panel/glow:
-     `-webkit-text-stroke: 0.8px rgba(255,255,255,.9)` + `paint-order: stroke fill`
-     (outline di BELAKANG fill, jadi warna huruf tidak menipis — hanya sisi luarnya
-     bergaris). 0.8px = terbaca saat diam tapi belum "berat"/norak.
-     **ECO ikut berkerangka**, sama seperti PLAST SOLUTIONS: `-webkit-text-stroke-*`
-     dan `paint-order` keduanya properti **inherited**, jadi `.eco` mewarisinya dari
-     `.foot-brand__name` tanpa deklarasi ulang. Reset `-webkit-text-stroke: 0` yang
-     dulu ada di `.eco` sudah dihapus — jangan dikembalikan.
-     `.foot-brand` sendiri polos: `background:none; border:0; box-shadow:none; padding:0`.
-     **Riwayat yang sudah ditolak/dibuang, jangan diulang:** chip putih & gradasi hijau
-     di belakang lockup (mengganggu), outer glow `drop-shadow`/`text-shadow` putih
-     berlapis, serta backlight hijau bernafas + light sweep (efek LED).
-     Flush-left, emblem **lurus kiri tepat di atas** teks di bawahnya
-     (`emblem.left == alamat.left`). Di bawah lockup **langsung ALAMAT**
+  1. **Perusahaan** (`.foot-info`): **logo footer ≠ logo header.** Footer memakai
+     **satu gambar** lockup mendatar `assets/logo-footer.png` (570×124, transparan)
+     di dalam **PANEL PUTIH** — meniru `.footer-brand .logo-link` di centralcats.id.
+     Wordmark ikut di dalam bitmap, jadi **tidak ada teks HTML** di footer:
+     `.foot-brand` = `<a>` + satu `<img class="foot-brand__mark">`, titik.
+     - **`.foot-brand__name`, `.eco`, `-webkit-text-stroke`, `paint-order` di footer
+       sudah DIHAPUS** beserta seluruh trik keterbacaannya (kerangka putih 0.8px pada
+       huruf). Panel putih menyelesaikan masalah yang dulu ditambal kerangka itu.
+       `.eco` & `.brand__name` **masih dipakai di header** — jangan ikut dihapus.
+     - **Panel putih di sini SAH, walau chip putih pernah ditolak.** Yang ditolak dulu
+       adalah chip di belakang emblem + *teks HTML* (mengganggu, karena teksnya bisa
+       diwarnai langsung). Sekarang wordmark navy ada di dalam bitmap → tanpa backing
+       terang ia tak terbaca di footer gelap. Jangan "perbaiki" ini balik ke lockup
+       polos. Yang **tetap ditolak**: gradasi hijau di belakang lockup, outer glow
+       `drop-shadow`/`text-shadow` putih berlapis, backlight hijau bernafas + light
+       sweep (efek LED).
+     - CSS panel: `padding: 8px 14px` (lebih lega dari centralcats `6px 10px` karena
+       aset di-crop rapat — emblem menyentuh tepi atas & bawah), `background: #fff`,
+       `border-radius: var(--radius-sm)`, `box-shadow: var(--shadow-sm)`,
+       `width: fit-content`. Hover cuma menaikkan elevasi ke `--shadow-md`, **tanpa
+       transform** → sengaja, supaya tak perlu entri baru di blok
+       `prefers-reduced-motion`.
+     - `.foot-brand__mark { height: 52px }` (naik dari emblem 36px yang lama, atas
+       permintaan pemilik "logo agak diperbesar"). Pada rasio 570×124 itu memberi
+       "ECOPLAST" 20px & "SOLUTIONS" 8.8px. **Kalau tinggi ini diubah, cek SOLUTIONS
+       jangan sampai < 8px** — di bawah itu tak terbaca. Aset 2.4× ukuran tampil →
+       tetap tajam di retina.
+     - **Cara meregenerasi `logo-footer.png`** (Pillow, sumber `assets/logo-full.png`):
+       crop dua band lalu susun mendatar. Emblem = `(134,71,382,288)` → 248×217;
+       wordmark ECOPLAST+SOLUTIONS = **satu unit** `(58,300,448,383)` → 390×83 (spasi
+       antar-baris & garis samping SOLUTIONS sudah benar dari aslinya, jangan disusun
+       manual). Emblem diskalakan ke `1.5 ×` tinggi wordmark (→ 124px, wordmark tetap
+       **native** supaya tak di-upscale), gap **38px**, wordmark ditaruh di `y=27`.
+       Band tagline (`y 399–423`) **dibuang** — cuma 3% tinggi lockup, jadi bubur.
+       Angka 1.5× itu kompromi: di logo asli emblem 2,6× lebih tinggi dari wordmark,
+       kalau rasio itu dipertahankan "SOLUTIONS" jatuh ke ±5px dan hilang.
+       `y=27` dipilih setelah merender 3 varian (bbox-center 21, tengah 27,
+       ink-centroid 34) dan **melihat**-nya: 21 menggantung ke atas, 34 terlalu turun.
+       Titik berat optis emblem ada di 52,4% tingginya (ekor swoosh menarik ke bawah),
+       wordmark di 37,5% (ECOPLAST berat di atas) — makanya bbox-center saja kurang pas.
+     Flush-left: **panel** yang lurus kiri dengan teks di bawahnya
+     (`panel.left == alamat.left`; dulu `emblem.left`, kini emblem masuk ±14px karena
+     padding panel — itu benar, bukan bug). Di bawah lockup **langsung ALAMAT**
      (`.foot-address`) — **tanpa paragraf deskripsi.** Kalimat "Jasa produksi tali
      plastik & biji plastik PP untuk kebutuhan industri." dulu ada di antara keduanya,
      **sudah dihapus atas permintaan pemilik — jangan dikembalikan.**
@@ -508,6 +539,7 @@ Aturan penting:
   - **Peta Google kosong di headless** (tak ada internet ke Google) — normal; akan
     termuat di live. Tombol "Buka di Google Maps" jadi cadangan.
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
-  `/assets/logo-mark.png`, `/assets/logo-full.png`, `/assets/og-image.png`,
+  `/assets/logo-mark.png`, `/assets/logo-footer.png`, `/assets/logo-full.png`,
+  `/assets/og-image.png`,
   `/assets/product/*.webp`, `favicon.ico`, `favicon-32x32.png`, `favicon-48x48.png`,
   `apple-touch-icon.png`.
