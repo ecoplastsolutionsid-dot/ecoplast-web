@@ -297,8 +297,16 @@ Aturan penting:
      **Riwayat yang sudah ditolak/dibuang, jangan diulang:** chip putih & gradasi hijau
      di belakang lockup (mengganggu), outer glow `drop-shadow`/`text-shadow` putih
      berlapis, serta backlight hijau bernafas + light sweep (efek LED).
-     Flush-left, emblem **lurus kiri tepat di atas** teks deskripsi
-     (`emblem.left == deskripsi.left`). Lalu deskripsi + **ALAMAT** (`.foot-address`).
+     Flush-left, emblem **lurus kiri tepat di atas** teks di bawahnya
+     (`emblem.left == alamat.left`). Di bawah lockup **langsung ALAMAT**
+     (`.foot-address`) — **tanpa paragraf deskripsi.** Kalimat "Jasa produksi tali
+     plastik & biji plastik PP untuk kebutuhan industri." dulu ada di antara keduanya,
+     **sudah dihapus atas permintaan pemilik — jangan dikembalikan.** Karena
+     `.foot-brand` punya `margin-bottom: 1.4rem` dan `.foot-address`
+     `margin-top: 1rem`, penghapusan itu menumpuk jarak jadi 2.4rem; ditambal dengan
+     `.foot-brand + .foot-address { margin-top: 0 }` di `styles.css` → jarak
+     logo→alamat kembali **22px** (terukur, sama seperti sebelumnya) dan keempat kolom
+     tetap mulai di baseline atas yang sama.
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
   3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
   4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
@@ -327,7 +335,7 @@ Aturan penting:
     Solutions. Balaraja, …` — pakai **brand "Ecoplast Solutions"**, bukan nama badan
     hukum PT (badan hukum tetap tampil di kolom "Perusahaan" & JSON-LD `legalName`).
   - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
-    ≤560px **1 kolom** (urutan: logo, deskripsi, alamat, Halaman, Kontak, Media Sosial,
+    ≤560px **1 kolom** (urutan: logo, alamat, Halaman, Kontak, Media Sosial,
     copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu

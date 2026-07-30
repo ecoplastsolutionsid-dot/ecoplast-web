@@ -716,6 +716,11 @@ a.crow__val:hover { color: var(--green); }
 
 /* Footer address block */
 .foot-address { font-size: 0.86rem; line-height: 1.7; color: #A9B8AE; margin-top: 1rem; }
+/* Alamat kini menempel langsung di bawah lockup (paragraf deskripsi "Jasa produksi…"
+   sudah dihapus atas permintaan). Tanpa reset ini, margin-bottom 1.4rem milik
+   .foot-brand + margin-top 1rem di atas akan menumpuk jadi 2.4rem → kolom
+   "Perusahaan" menggantung terlalu jauh dari logo dibanding 3 kolom lainnya. */
+.foot-brand + .foot-address { margin-top: 0; }
 .foot-address strong { display: block; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: .14em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 0.35rem; }
 /* Nama badan hukum, baris pertama blok alamat — sedikit lebih terang & tebal dari
    baris jalan supaya hierarkinya jelas: nama PT → label "KANTOR PUSAT" → alamat. */
