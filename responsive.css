@@ -24,8 +24,12 @@
      tepat di bawah header. */
   .site-header { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .site-header .container { position: relative; gap: 0.5rem; }
-  .brand__mark { width: 24px; height: 24px; }
-  .brand__name { font-size: 0.92rem; font-variation-settings: "wdth" 100; }
+  /* Lockup dikecilkan agar brand + hamburger nyaman dalam satu baris header.
+     Konsekuensi yang disengaja: pada 40px baris "SOLUTIONS" jadi ±6.8px — di bawah
+     ambang baca, jadi ia berfungsi sebagai bentuk/tekstur, bukan teks. "ECOPLAST"
+     tetap ±15px dan itu yang menanggung pengenalan brand. Jangan "perbaiki" dengan
+     membesarkan lockup di mobile tanpa mengukur ulang sisa ruang ke hamburger. */
+  .brand__mark { height: 40px; }
   /* Header mobile = brand (kiri) + hamburger (kanan) SAJA — dulu tombol WhatsApp
      duduk persis di sebelah hamburger sehingga hamburger jadi ambigu.
      Tombol WA sekarang TIDAK ada di header maupun di dalam drawer: jadi FAB
@@ -143,7 +147,7 @@
    -------------------------------------------------------------------------- */
 @media (max-width: 360px) {
   :root { --space: 3rem; }
-  .brand__name { font-size: 0.86rem; }
+  .brand__mark { height: 36px; }
   .btn { font-size: 0.92rem; padding: 0.8em 1.15em; }
   .nav__cta { padding: 7px; }
 }

@@ -166,19 +166,26 @@ h1, h2, h3 {
   min-height: 68px;
 }
 
+/* Brand header = ASET YANG SAMA dengan footer (`assets/logo-lockup.png`) supaya
+   susunan DAN tipografi wordmark konsisten di kedua tempat. Sebelumnya header
+   memakai emblem `logo-mark.png` + teks HTML ber-font Archivo satu baris, sementara
+   footer memakai huruf logo asli bertumpuk — dua wordmark yang jelas beda.
+   Tidak ada lagi teks wordmark HTML di situs ini: `.brand__name` & `.eco` sudah
+   DIHAPUS dari styles.css dan responsive.css. Nama aksesibel tetap ada lewat
+   `aria-label` pada `<a class="brand">` + `alt` pada gambarnya.
+   Header berlatar TERANG (`--bg`), jadi TIDAK perlu panel putih seperti di footer. */
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
   text-decoration: none;
-  font-weight: 800;
-  letter-spacing: -0.01em;
   transition: opacity .15s ease;
 }
 .brand:hover { opacity: 0.82; }
-.brand__mark { width: 30px; height: 30px; object-fit: contain; }
-.brand__name { font-size: 1.12rem; color: var(--brand-navy); font-variation-settings: "wdth" 112; }
-.brand__name .eco { color: var(--brand-green); }   /* "ECO" hijau, sisanya (PLAST SOLUTIONS) navy — ikut logo */
+/* 48px pada rasio aset 570x124 → "SOLUTIONS" 8.1px, ambang bawah keterbacaan.
+   Jangan dinaikkan tanpa menaikkan `min-height` header (kini 68px, sisa ruang
+   10px atas-bawah) — dan kalau tinggi header diubah, `top` panel drawer di
+   responsive.css harus ikut disesuaikan. */
+.brand__mark { width: auto; height: 48px; display: block; flex: none; }
 
 /* Nav */
 .nav { display: flex; align-items: center; gap: clamp(0.5rem, 2vw, 1.75rem); }
@@ -648,7 +655,8 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-footer.png`) di dalam
+/* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-lockup.png`, aset yang
+   SAMA dengan header — lihat `.brand` di atas) di dalam
    PANEL PUTIH — pola yang dipakai centralcats.id (`.footer-brand .logo-link`).
    Wordmark ikut di dalam gambar, jadi TIDAK ada teks HTML di sini: elemen
    `.foot-brand__name` (+ `.eco`, `-webkit-text-stroke`, `paint-order`) sudah

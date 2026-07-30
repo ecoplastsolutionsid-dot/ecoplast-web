@@ -21,7 +21,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
   ini, tidak ada JS lain — pertahankan seminimal mungkin.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260730b`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260730c`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -54,11 +54,14 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem asli (248x218, transparan) — logo HEADER saja;
-│                      #   dipotong dari logo-full.png blok y 70-287
-│  ├─ logo-footer.png  # Lockup MENDATAR 570x124 transparan (emblem + ECOPLAST/SOLUTIONS
-│                      #   bertumpuk) — logo FOOTER, dipakai di panel putih .foot-brand.
-│                      #   Disusun dari potongan logo-full.png; resep di bagian Footer.
+│  ├─ logo-lockup.png  # Lockup MENDATAR 570x124 transparan (emblem + ECOPLAST/SOLUTIONS
+│                      #   bertumpuk) — SATU-SATUNYA logo yang dipakai halaman, di
+│                      #   HEADER (.brand, 48px) DAN FOOTER (.foot-brand, 52px, panel
+│                      #   putih). Disusun dari potongan logo-full.png; resep di
+│                      #   bagian Footer. Dulu bernama logo-footer.png.
+│  ├─ logo-mark.png    # Emblem asli (248x218, transparan) — SUDAH TIDAK dipakai di
+│                      #   halaman mana pun sejak header ikut memakai logo-lockup.png.
+│                      #   Disimpan sebagai acuan crop emblem & pembanding audit OG.
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog),
@@ -142,15 +145,25 @@ Aturan penting:
     PLAST median `#0B2A51`, gradasi p5 `#0B203D` → p95 `#163C63` → token `#173B5C`
     berada di **ujung terang rentang itu**; dipertahankan karena sengaja — makin gelap
     makin sulit terbaca di footer. Emblem biru median `#0D2F58`.
-  - Markup wordmark **hanya di HEADER** (kelima file):
-    `<span class="eco">ECO</span>PLAST SOLUTIONS` — base `.brand__name` = navy,
-    `.eco` = hijau. **Ada spasi** antara PLAST & SOLUTIONS (dulu mendempet
-    "ECOPLASTSOLUTIONS" + SOLUTIONS hijau; kini ikut struktur dua-kata logo).
-    Header di latar terang → warna logo dipakai langsung, tanpa backing.
-    **Footer tidak lagi memakai teks HTML** — wordmark-nya ikut di dalam gambar
-    `assets/logo-footer.png` di panel putih (lihat bagian Footer). Jadi kedua token ini
-    kini hanya memengaruhi header; kalau logo/warna brand berubah, perbarui token
-    **dan** regenerasi `logo-footer.png` + `og-image.png`.
+  - **TIDAK ADA lagi teks wordmark HTML di situs ini.** Header **dan** footer
+    memakai gambar yang sama, `assets/logo-lockup.png`, sehingga susunan
+    (`ECOPLAST` di atas `SOLUTIONS`) dan **tipografinya** identik di keduanya.
+    Ini permintaan pemilik: "susunan teks logo pada header samakan dengan footer
+    agar konsisten". Sebelumnya header memakai emblem + `<span class="brand__name">`
+    ber-font **Archivo** satu baris sementara footer memakai huruf **logo asli**
+    bertumpuk — dua wordmark yang jelas beda.
+    - Yang **sudah dihapus, jangan dihidupkan lagi**: `.brand__name`,
+      `.foot-brand__name`, `.eco` (di styles.css & responsive.css) beserta markup
+      `<span class="eco">ECO</span>PLAST SOLUTIONS`. Nama aksesibel ditanggung
+      `aria-label` pada `<a class="brand">`/`<a class="foot-brand">` + `alt` gambar.
+    - Header berlatar **terang** (`--bg`) → gambar langsung, **tanpa panel**.
+      Footer berlatar **gelap** → gambar di dalam **panel putih** (lihat bagian
+      Footer). Itu satu-satunya perbedaan perlakuan antar keduanya.
+    - Tinggi: header `48px` (mobile ≤720px `40px`, ≤360px `36px`), footer `52px`.
+    - Token `--brand-green`/`--brand-navy` kini **tidak lagi mewarnai apa pun yang
+      tampil** — keduanya tinggal jadi acuan warna brand & dipakai memverifikasi
+      aset. Kalau logo/warna brand berubah, perbarui token **dan** regenerasi
+      `logo-lockup.png` + `og-image.png` + ikon.
 - **Token elevation & motion (fondasi polish premium — pakai token ini, jangan
   hard-code):**
   - Radius: `--radius 14px` (default), `--radius-lg 20px` (bingkai media besar:
@@ -232,6 +245,13 @@ Aturan penting:
     ke-cache lama (Cloudflare) sementara HTML sudah baru, SVG tak membesar ke default.
 - **Header mobile = drawer hamburger** (≤720px, CSS-only, tanpa JS — checkbox hack
   `.nav-toggle` + label `.nav-burger` + label `.nav-overlay`):
+  - **Ruang brand vs hamburger (terukur, iframe lebar sungguhan).** Sejak header
+    memakai lockup mendatar (bukan emblem kecil + teks), brand jadi jauh lebih lebar
+    — jadi ini wajib diukur ulang tiap kali tinggi `.brand__mark` diubah:
+    **360px** → brand 165×36, hamburger 44×44, **sisa 111px**;
+    **400px** → brand 184×40, **sisa 132px**. Tinggi header tetap **68px** di
+    keduanya, jadi `top: 69px` panel drawer TIDAK perlu diubah. Kalau lockup mobile
+    dibesarkan, cek ulang angka-angka ini sebelum commit.
   - **Header mobile = brand (kiri) + hamburger (kanan) SAJA.** Dulu `.nav` diberi
     `display: contents` sehingga tombol WhatsApp (`.nav__cta`, dikecilkan jadi ikon
     lewat `font-size: 0`) menjadi item header persis di sebelah hamburger — dua
@@ -301,14 +321,15 @@ Aturan penting:
   berisi 4 kolom yang **semua mulai di baseline atas yang sama** (sejajar tepi atas
   logo):
   1. **Perusahaan** (`.foot-info`): **logo footer ≠ logo header.** Footer memakai
-     **satu gambar** lockup mendatar `assets/logo-footer.png` (570×124, transparan)
+     **satu gambar** lockup mendatar `assets/logo-lockup.png` (570×124, transparan)
      di dalam **PANEL PUTIH** — meniru `.footer-brand .logo-link` di centralcats.id.
      Wordmark ikut di dalam bitmap, jadi **tidak ada teks HTML** di footer:
      `.foot-brand` = `<a>` + satu `<img class="foot-brand__mark">`, titik.
      - **`.foot-brand__name`, `.eco`, `-webkit-text-stroke`, `paint-order` di footer
        sudah DIHAPUS** beserta seluruh trik keterbacaannya (kerangka putih 0.8px pada
        huruf). Panel putih menyelesaikan masalah yang dulu ditambal kerangka itu.
-       `.eco` & `.brand__name` **masih dipakai di header** — jangan ikut dihapus.
+       `.brand__name` & `.eco` **juga sudah dihapus** dari header (lihat di bawah) —
+       tidak ada teks wordmark HTML di situs ini lagi.
      - **Panel putih di sini SAH, walau chip putih pernah ditolak.** Yang ditolak dulu
        adalah chip di belakang emblem + *teks HTML* (mengganggu, karena teksnya bisa
        diwarnai langsung). Sekarang wordmark navy ada di dalam bitmap → tanpa backing
@@ -327,7 +348,7 @@ Aturan penting:
        "ECOPLAST" 20px & "SOLUTIONS" 8.8px. **Kalau tinggi ini diubah, cek SOLUTIONS
        jangan sampai < 8px** — di bawah itu tak terbaca. Aset 2.4× ukuran tampil →
        tetap tajam di retina.
-     - **Cara meregenerasi `logo-footer.png`** (Pillow, sumber `assets/logo-full.png`):
+     - **Cara meregenerasi `logo-lockup.png`** (Pillow, sumber `assets/logo-full.png`):
        crop dua band lalu susun mendatar. Emblem = `(134,71,382,288)` → 248×217;
        wordmark ECOPLAST+SOLUTIONS = **satu unit** `(58,300,448,383)` → 390×83 (spasi
        antar-baris & garis samping SOLUTIONS sudah benar dari aslinya, jangan disusun
@@ -559,7 +580,7 @@ Aturan penting:
   - **Peta Google kosong di headless** (tak ada internet ke Google) — normal; akan
     termuat di live. Tombol "Buka di Google Maps" jadi cadangan.
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
-  `/assets/logo-mark.png`, `/assets/logo-footer.png`, `/assets/logo-full.png`,
+  `/assets/logo-lockup.png`, `/assets/logo-full.png`,
   `/assets/og-image.png`,
   `/assets/product/*.webp`, `favicon.ico`, `favicon-32x32.png`, `favicon-48x48.png`,
   `apple-touch-icon.png`.
