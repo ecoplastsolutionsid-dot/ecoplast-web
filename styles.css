@@ -212,7 +212,24 @@ h1, h2, h3 {
 
 /* Hamburger (CSS-only, no JS) — hidden on desktop, shown ≤720px.
    Gaya centralcats: 3 garis tanpa kotak, jadi X saat menu terbuka. */
-.nav-toggle { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* Checkbox tersembunyi. `position: fixed`, BUKAN `absolute` — ini penting:
+   dengan `absolute` ia berada di dalam `.site-header` yang `position: sticky`,
+   jadi secara visual menempel di puncak layar TAPI posisi layout-nya tetap jauh
+   di bawah dokumen (sticky tidak ikut dihitung). Saat label hamburger disentuh,
+   browser memfokuskan checkbox ini lalu men-scroll-into-view "supaya terlihat" —
+   padahal sudah terlihat — sehingga halaman MELOMPAT (terukur 388px, dan
+   `scroll-padding-top: 84px` ikut memengaruhi perhitungannya). Elemen `fixed`
+   dianggap selalu di dalam viewport, jadi scroll-into-view jadi no-op.
+   Jangan kembalikan ke `absolute`. */
+.nav-toggle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 .nav-burger {
   display: none;
   flex-direction: column;

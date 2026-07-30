@@ -249,6 +249,26 @@ Aturan penting:
     belakangnya. Panel `.nav__links` juga `overscroll-behavior: contain` agar gulir
     di dalam panel tidak merembet keluar.
   - Header mobile mematikan `backdrop-filter` (agar tidak jadi containing block).
+  - **`.nav-toggle` WAJIB `position: fixed; top:0; left:0`, JANGAN `absolute`.**
+    Ini bug yang pernah terjadi: dengan `absolute`, checkbox berada di dalam
+    `.site-header` yang `position: sticky` — secara visual menempel di puncak layar
+    (`viewportTop=34`) tapi posisi **layout**-nya tetap jauh di bawah dokumen
+    (`docTop=934` saat `scrollY=900`), karena offset sticky tidak ikut dihitung.
+    Begitu label hamburger disentuh, browser memfokuskan checkbox itu lalu
+    men-*scroll-into-view* "supaya terlihat" — padahal sudah terlihat — sehingga
+    **halaman melompat**; terukur **388px** ke atas dan tidak kembali saat menu
+    ditutup (`scroll-padding-top: 84px` ikut memengaruhi perhitungan). Elemen `fixed`
+    dianggap selalu di dalam viewport, jadi scroll-into-view jadi no-op.
+    Setelah diperbaiki: `dy=0` diuji dari `scrollY` 0, 900, dan 2000.
+  - **Cara mengukur gejala "halaman bergeser" (jangan pakai mata):** muat halaman di
+    dalam `<iframe width="375">` (viewport iframe = 375px sungguhan, tak terkena clamp
+    ~504px Edge headless), suntik
+    `html{scroll-behavior:auto !important}*{transition:none !important}` — **wajib**,
+    karena `scroll-behavior: smooth` membuat `scrollTo` beranimasi dan di bawah
+    `--virtual-time-budget` animasi itu tak pernah maju sehingga `scrollY` selalu
+    terbaca 0 (ini yang dulu membuat bug-nya tampak "tak bisa direproduksi").
+    Lalu `scrollTo` ke posisi tertentu → catat `scrollX/scrollY` → `.nav-burger.click()`
+    → catat ulang. Selisihnya harus 0.
   - **`overflow-x` di `html` & `body` pakai `clip`, BUKAN `hidden`** (`styles.css`):
     `overflow-x: hidden` + `overflow-y: visible` membuat `overflow-y` ikut jadi
     `auto`, jadi `body` berubah menjadi scroll container → dua scroller bersarang
