@@ -302,12 +302,19 @@ Aturan penting:
      (`emblem.left == alamat.left`). Di bawah lockup **langsung ALAMAT**
      (`.foot-address`) — **tanpa paragraf deskripsi.** Kalimat "Jasa produksi tali
      plastik & biji plastik PP untuk kebutuhan industri." dulu ada di antara keduanya,
-     **sudah dihapus atas permintaan pemilik — jangan dikembalikan.** Karena
-     `.foot-brand` punya `margin-bottom: 1.4rem` dan `.foot-address`
-     `margin-top: 1rem`, penghapusan itu menumpuk jarak jadi 2.4rem; ditambal dengan
-     `.foot-brand + .foot-address { margin-top: 0 }` di `styles.css` → jarak
-     logo→alamat kembali **22px** (terukur, sama seperti sebelumnya) dan keempat kolom
-     tetap mulai di baseline atas yang sama.
+     **sudah dihapus atas permintaan pemilik — jangan dikembalikan.**
+     **Jarak lockup → alamat dikendalikan `.foot-brand { margin-bottom }` saja**,
+     kini **`0.5rem` = 8px** (terukur). Riwayat angka ini, supaya tidak diputar balik:
+     `1.4rem` (22.4px) itu nilai warisan dari zaman paragraf deskripsi masih ada;
+     `.foot-address` sendiri punya `margin-top: 1rem`, jadi setelah paragraf dihapus
+     keduanya menumpuk jadi 2.4rem → ditambal `.foot-brand + .foot-address
+     { margin-top: 0 }` (**tetap perlu, jangan dihapus**) yang mengembalikannya ke
+     22.4px, lalu pemilik menilai itu **masih terlalu jauh** → margin-bottom
+     diturunkan ke `0.5rem`. Perhatikan `.foot-brand` = `display: inline-flex`, jadi
+     margin-bottom-nya menambah tinggi *line box*; jarak **visual** ke baris "PT.
+     Mencoba Bertahan Hidup" ±14px karena half-leading `line-height: 1.7` di
+     `.foot-address` menambah ±6px yang tak terhitung di angka gap.
+     Keempat kolom tetap mulai di baseline atas yang sama (terukur `colTops` identik).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
   3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
   4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
@@ -403,6 +410,20 @@ Aturan penting:
     **Emblem = blok konten teratas logo, y 70–287 pada kanvas 500px** (blok di
     bawahnya = wordmark, tagline, 4 badge — semuanya tak terbaca di ukuran ikon).
     Render kartu OG dengan `--disable-lcd-text` supaya teks tak dapat fringe subpixel.
+  - **`og-image.png` sudah diaudit ulang & LOLOS — tak perlu diperiksa lagi tanpa
+    alasan baru.** Metodenya (kalau kelak asetnya diregenerasi): sampling **median
+    piksel inti** per kelompok warna, sama seperti verifikasi token brand. Hasil:
+    wordmark ECO `#3E9B37` & PLAST/SOLUTIONS `#173B5C` = **jarak 0.0** ke
+    `--brand-green`/`--brand-navy` (pixel-exact); emblem hijau `#489E31` = **jarak
+    0.0** ke `assets/logo-mark.png`, navy `#10325A` vs `#0F3058` = jarak 3.0 (selisih
+    resampling). Arc navy + pellet navy + "e"/daun hijau semuanya ada → yang dipakai
+    **logo asli**, bukan varian `ecoplast logo.png`. **Jangan** pixel-diff kartu OG
+    vs `logo-mark.png` pakai crop yang ditebak — skala/offset tak presisi memberi
+    mean-diff besar (pernah terbaca 77/255) yang MENYESATKAN, seolah emblemnya beda.
+    Bandingkan warna inti, bukan piksel per piksel.
+  - Kalau `og-image.png` diganti, ingat cache **di luar repo**: Facebook/WhatsApp
+    menyimpan preview per URL, jadi kartu lama bisa tetap tampil sampai di-refresh
+    manual lewat Facebook Sharing Debugger. Bukan bug yang bisa dibetulkan dari repo.
 - **Bing / Microsoft Edge (terpisah dari Google!)**: Edge memakai indeks **Bing**, dan
   Bing **tidak** ikut verifikasi Google Search Console. Yang sudah disiapkan di repo:
   **kunci IndexNow** `b3f0fc85243d5aabc07151b1c4324fe5.txt` di root (isinya = nama
