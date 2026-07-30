@@ -20,6 +20,18 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
      jagopijat.com). Detail di bagian "Reveal scroll-in" pada Sistem desain.
   Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
   ini, tidak ada JS lain — pertahankan seminimal mungkin.
+- **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
+  `/responsive.css?v=<versi>` (kini `v=20260730b`, sama di kelima file).
+  **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
+  perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
+  Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
+  (10 menit) tapi CSS `max-age=14400` (**4 jam**), jadi setelah push HTML sudah
+  baru sementara CSS masih basi → footer sempat merender lockup logo baru dengan
+  aturan lama (tinggi 36px, panel putih tak muncul) dan tampak "rusak" berjam-jam.
+  Gejalanya: `curl -D -` menunjukkan `last-modified` styles.css **lebih tua** dari
+  HTML dengan `cf-cache-status: HIT`. Hard-refresh browser TIDAK menolong — yang
+  basi ada di edge Cloudflare, bukan di browser. Query string ini membuat URL-nya
+  berbeda sehingga edge wajib mengambil ulang.
 - **Dua stylesheet**, dimuat berurutan di tiap halaman:
   - `styles.css` — sistem desain + layout **desktop/base**.
   - `responsive.css` — **semua `@media`** (breakpoint mobile/tablet + preferensi
@@ -507,11 +519,19 @@ Aturan penting:
 
 ## Deploy
 
-1. `git add -A && git commit -m "..."` lalu `git push origin main`.
-2. GitHub Pages rebuild otomatis; live dalam **±1 menit**.
-3. Domain lewat **Cloudflare** (di depan GitHub Pages) → ada cache. Setelah push,
+1. **Kalau `styles.css`/`responsive.css` diubah: naikkan `?v=` di link stylesheet
+   kelima file HTML** (lihat bagian Stack). Lupa langkah ini = perubahan CSS tak
+   tampil di live sampai 4 jam.
+2. `git add -A && git commit -m "..."` lalu `git push origin main`.
+3. GitHub Pages rebuild otomatis; live dalam **±1 menit**.
+4. Domain lewat **Cloudflare** (di depan GitHub Pages) → ada cache. Setelah push,
    **hard-refresh** (`Ctrl+Shift+R`). Banyak "keluhan tampilan" ternyata cache lama —
    selalu hard-refresh dulu. Jika perlu, purge cache di dashboard Cloudflare.
+5. **Cara memastikan yang live benar-benar sudah baru (jangan pakai mata):**
+   `curl -s -o /dev/null -D - <url> | grep -iE "last-modified|cf-cache-status|age"`.
+   Bandingkan `last-modified` HTML vs CSS vs aset — kalau CSS lebih tua, itu edge
+   cache basi, bukan bug CSS. Cek isinya langsung dengan
+   `curl -s https://ecoplastsolutions.id/styles.css | grep -A6 "^\.foot-brand {"`.
 
 ## Verifikasi lokal (cara yang dipakai)
 
