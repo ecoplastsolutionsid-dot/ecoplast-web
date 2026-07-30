@@ -42,7 +42,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — dipakai logo header & footer
+│  ├─ logo-mark.png    # Emblem resmi (268x245, transparan) — logo header & footer.
+│                      #   DIPOTONG dari logo-full.png; dulu emblem versi LAMA (biru)
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog),
@@ -109,16 +110,29 @@ Aturan penting:
 - CSS variables warna: `--bg #F4F6F1`, `--ink #14271D`, `--green #1F7A4D`,
   `--green-deep #12442B`, `--blue #2B5CB8`, `--muted #5C6B60`, `--line #D9E0D6`,
   `--green-light #7BE0A6` (highlight di background gelap).
-- **Warna wordmark "Ecoplast Solutions" (kiblat = LOGO ASLI):** logo memenggal warna
-  **ECO = hijau** + **PLAST = navy**, dan **SOLUTIONS = navy** (sama dgn PLAST). Token:
-  `--brand-green #3E9B37` (ECO) & `--brand-navy #173B5C` (PLAST + SOLUTIONS) — di-eyedrop
-  dari file logo (`ECOPLAST SOLUTION.jpeg`). Markup wordmark (header & footer, kelima
-  file): `<span class="eco">ECO</span>PLAST SOLUTIONS` — base `.brand__name`/
-  `.foot-brand__name` = navy, `.eco` = hijau. **Ada spasi** antara PLAST & SOLUTIONS
-  (dulu mendempet "ECOPLASTSOLUTIONS" + SOLUTIONS hijau; kini ikut struktur dua-kata
-  logo). Header di latar terang → warna logo langsung; footer di latar gelap → lockup
-  dibungkus panel putih (lihat bagian Footer) supaya warna logo tetap tampil apa adanya.
-  Kalau logo/warna brand berubah, perbarui kedua token ini.
+- **Warna wordmark "Ecoplast Solutions" (kiblat = `assets/logo-full.png`):** logo
+  memenggal warna **ECO = hijau** + **PLAST SOLUTIONS = teal SANGAT gelap**. Token:
+  `--brand-green #3E9B37` (ECO) & `--brand-dark #053039` (PLAST + SOLUTIONS).
+  - **Token `--brand-navy #173B5C` yang lama KELIRU** — warna biru itu di-eyedrop dari
+    **logo versi LAMA** (lingkarannya biru, tanpa panah). Logo resmi **tidak punya warna
+    biru sama sekali** (34 piksel dari 250.000 = noise anti-alias). Jangan kembalikan.
+  - Diverifikasi dengan mengukur median piksel inti stroke (bukan piksel tepi):
+    ECO `#4B943A` dengan gradasi p5 `#348D33` → p95 `#5AA13B`, jadi token `#3E9B37`
+    **ada di dalam** rentang gradasi logo → sudah benar, tidak perlu diubah.
+    PLAST solid (bukan gradasi): p5 `#062C2D` → median `#053039` → p95 `#0D363C`.
+  - **Footer memakai versi REVERSE**, bukan warna logo: `#053039` di atas footer gelap
+    praktis tak terbaca, dan dipaksakan dengan kerangka putih 0.8px hasilnya huruf
+    tampak **berongga**. Jadi `.foot-brand__name` = **putih**, `.eco` tetap
+    `--brand-green` (kontras 4.46:1 di atas `--ink`, lolos untuk teks bold 19px).
+    Kerangka putih & semua trik panel/glow sudah dihapus.
+  - Markup wordmark (header & footer, kelima file):
+    `<span class="eco">ECO</span>PLAST SOLUTIONS` — base `.brand__name` = `--brand-dark`,
+    `.foot-brand__name` = **putih** (reverse), `.eco` = `--brand-green` di keduanya.
+    **Ada spasi** antara PLAST & SOLUTIONS (dulu mendempet "ECOPLASTSOLUTIONS" +
+    SOLUTIONS hijau; kini ikut struktur dua-kata logo).
+  - Kalau logo/warna brand berubah: ukur ulang dari `assets/logo-full.png` dengan
+    **median piksel inti stroke**, jangan piksel tepi — sampling naif kena anti-alias
+    dan itu yang dulu menghasilkan token navy yang salah.
 - **Token elevation & motion (fondasi polish premium — pakai token ini, jangan
   hard-code):**
   - Radius: `--radius 14px` (default), `--radius-lg 20px` (bingkai media besar:
@@ -250,16 +264,15 @@ Aturan penting:
   logo):
   1. **Perusahaan** (`.foot-info`): **logo = lockup yang sama dengan header** —
      `.foot-brand` berisi emblem `logo-mark.png` (`.foot-brand__mark` height 36px) +
-     wordmark `.foot-brand__name`. Karena latar footer gelap, lockup **tidak** pakai
-     panel/kotak (dulu pernah chip putih/gradasi hijau — dianggap mengganggu). Kini
-     pakai **outer glow** (aura putih lembut ala layer style Photoshop) langsung di
-     tiap anak: emblem `.foot-brand__mark` diberi `filter: drop-shadow` putih berlapis,
-     wordmark `.foot-brand__name` diberi `text-shadow` putih berlapis. `.foot-brand`
-     sendiri `background:none; border:0; box-shadow:none; padding:0`. Efeknya tepi
-     membaur ke latar gelap (bukan kotak bersudut), tapi glow memberi backing tipis
-     supaya wordmark **navy** (PLAST/SOLUTIONS) tetap terbaca dan **ECO hijau** tetap
-     pop (lihat "Warna wordmark" di bawah). Kalau glow kurang/kelebihan, atur opacity
-     & radius di `text-shadow`/`drop-shadow` tsb.
+     wordmark `.foot-brand__name`. Karena latar footer gelap, wordmark memakai
+     **versi REVERSE**: `PLAST SOLUTIONS` **putih**, `ECO` tetap `--brand-green`.
+     `.foot-brand` polos — `background:none; border:0; box-shadow:none; padding:0`.
+     **Riwayat yang sudah ditolak/dibuang, jangan diulang:** chip putih & gradasi hijau
+     di belakang lockup (mengganggu), outer glow `drop-shadow`/`text-shadow` putih
+     berlapis, backlight hijau bernafas + light sweep (efek LED), dan kerangka putih
+     `-webkit-text-stroke: 0.8px` pada wordmark gelap — yang terakhir ini membuat huruf
+     tampak **berongga** begitu warna wordmark dikoreksi ke warna logo resmi yang jauh
+     lebih gelap. Versi reverse menyelesaikannya tanpa efek tambahan apa pun.
      Flush-left, emblem **lurus kiri tepat di atas** teks deskripsi
      (`emblem.left == deskripsi.left`). Lalu deskripsi + **ALAMAT** (`.foot-address`).
   2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
@@ -339,7 +352,10 @@ Aturan penting:
     preview tampil sebagai kotak kecil. Kartu OG dibuat **dari HTML + screenshot headless
     1200×630** (cara yang sama dgn verifikasi lokal), bukan digambar manual — sumber
     kartu ada di riwayat commit; komposisi: emblem kiri, wordmark `ECO` hijau + `PLAST
-    SOLUTIONS` navy, tagline produk, baris mono geo, bar gradasi bawah.
+    SOLUTIONS` teal gelap, tagline produk, baris mono geo, bar gradasi bawah.
+    **Render dengan `--disable-lcd-text`** — tanpa itu Chromium memakai subpixel AA dan
+    teks dapat fringe biru/oranye (pernah 1618 piksel biru di area tagline); dengan flag
+    itu jadi 0.
   - Regenerasi ikon butuh Pillow. Pakai venv sementara (bukan install global), sumber
     `assets/logo-full.png`; skrip generator ada di riwayat commit.
 - **Bing / Microsoft Edge (terpisah dari Google!)**: Edge memakai indeks **Bing**, dan
