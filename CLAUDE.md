@@ -94,8 +94,11 @@ Aturan penting:
   `postalCode` = `15610` (dikonfirmasi pemilik). `areaServed` distruktur: `Country`
   Indonesia + `AdministrativeArea` Banten / DKI Jakarta / Jawa Barat (didukung klaim
   "distribusi ke Jabodetabek" di `tentang.html` — jangan tambah wilayah tanpa dasar).
-- Alamat yang **tampil** di footer/kartu kontak belum memuat kode pos; kalau kelak
-  ditambahkan, tulis `15610` agar konsisten dengan JSON-LD (NAP consistency).
+- **Kode pos `15610` ikut tampil** di alamat footer (kelima file, baris
+  `Kab. Tangerang, Banten 15610`) dan di kartu "Informasi kontak" (`.crow__val`
+  di `kontak.html`) — sengaja, agar NAP yang tampil konsisten dengan `postalCode`
+  di JSON-LD. Blok "Alamat" di `tentang.html` dan alamat di `kebijakan-privasi.html`
+  **belum** memuatnya; kalau ditambahkan, pakai format yang sama.
 
 > Kalau mengedit header/footer/nav, ubah di **kelima** file HTML agar konsisten.
 > Untuk blok identik lintas file, aman pakai skrip Python kecil (lihat riwayat commit).
