@@ -115,23 +115,37 @@ Kalau data bisnis/koordinat berubah, perbarui JSON-LD **dan** geo meta tags.
   - **Header mobile = brand (kiri) + hamburger (kanan) SAJA.** Dulu `.nav` diberi
     `display: contents` sehingga tombol WhatsApp (`.nav__cta`, dikecilkan jadi ikon
     lewat `font-size: 0`) menjadi item header persis di sebelah hamburger — dua
-    kontrol berdempet membuat **hamburger ambigu**. Sekarang tombol WA ikut masuk ke
-    dalam panel. `.container` sudah `justify-content: space-between`, jadi tak perlu
-    `margin-left: auto` / `order`.
-  - Meniru gaya **centralcats.id**: panel **geser dari kanan** — panelnya adalah
-    **`.nav` itu sendiri** (bukan `.nav__links` seperti dulu), supaya isinya daftar
-    link **dan** tombol WhatsApp. `position: fixed`, `transform: translateX(100%)`
-    → `0` lewat `.nav-toggle:checked ~ .nav`, transisi .35s, background
-    `--green-deep`, lebar `min(74vw, 300px)`, `flex-direction: column`.
-    `.nav__links` di dalamnya cuma jadi kolom biasa (tanpa positioning).
+    kontrol berdempet membuat **hamburger ambigu**. Sempat dicoba memindahkan WA ke
+    **dalam** panel drawer, tapi ditolak karena tombol WA jadi tak terlihat sebelum
+    menu dibuka. Solusi final: **WA = FAB mengambang** (lihat poin berikutnya), dan
+    **tidak ada tombol WA di header maupun di dalam drawer**.
+  - **`.nav` tetap `display: contents`** di mobile → kedua anaknya jadi item header,
+    lalu masing-masing keluar dari alur: `.nav__links` → panel drawer
+    (`position: fixed`), `.nav__cta` → FAB (`position: fixed`). Sisa item dalam alur
+    hanya brand + hamburger, dan `.container` sudah `justify-content: space-between`,
+    jadi **tak perlu** `order` / `margin-left: auto` (dulu perlu).
+  - **FAB WhatsApp** (`.nav__cta` di ≤720px): `position: fixed`, bulat 56×56px,
+    `right: 1rem`, `bottom: calc(1rem + env(safe-area-inset-bottom, 0px))` (aman dari
+    home-indicator iOS), `z-index: 48`, ikon saja (`font-size: 0`; `.wa-ico` diberi
+    **26px eksplisit** karena defaultnya `em` — akan kolaps kalau ikut `font-size: 0`).
+    Nama aksesibelnya tetap "WhatsApp" karena teks masih ada di DOM. **Disembunyikan
+    saat drawer terbuka** (`.nav-toggle:checked ~ .nav .nav__cta`) supaya tidak
+    menutupi menu / salah sentuh. `position: fixed` di sini benar-benar menempel
+    viewport karena tak ada ancestor ber-transform/filter/backdrop-filter — header
+    mobile sengaja mematikan `backdrop-filter`. Sudah dicek: di dasar halaman FAB
+    tidak menutupi teks apa pun (baris copyright center berakhir jauh di kirinya).
+  - Meniru gaya **centralcats.id**: panel **geser dari kanan** = `.nav__links`,
+    `position: fixed`, `transform: translateX(100%)` → `0` lewat
+    `.nav-toggle:checked ~ .nav .nav__links`, transisi .35s, background
+    `--green-deep`, lebar `min(74vw, 300px)`, kolom. **Isinya daftar link saja.**
   - **`top: 69px`** = tinggi header mobile sebenarnya (container `min-height: 68px`
     + border-bottom 1px). Sebelumnya 64px — 5px teratas panel tersembunyi di balik
     header. Kalau tinggi header diubah, sesuaikan angka ini.
   - `.nav-overlay` = layer gelap; klik untuk menutup. Hamburger 3 garis → X.
     Overlay diberi **`touch-action: none` + `overscroll-behavior: contain`** =
     scroll-lock ala CSS-only: menyeret di area overlay tidak menggulir halaman di
-    belakangnya. Panel `.nav` juga `overscroll-behavior: contain` agar gulir di
-    dalam panel tidak merembet keluar.
+    belakangnya. Panel `.nav__links` juga `overscroll-behavior: contain` agar gulir
+    di dalam panel tidak merembet keluar.
   - Header mobile mematikan `backdrop-filter` (agar tidak jadi containing block).
   - **`overflow-x` di `html` & `body` pakai `clip`, BUKAN `hidden`** (`styles.css`):
     `overflow-x: hidden` + `overflow-y: visible` membuat `overflow-y` ikut jadi
