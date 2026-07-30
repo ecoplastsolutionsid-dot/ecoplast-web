@@ -37,8 +37,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
 ├─ assets/
-│  ├─ logo-mark.png    # Emblem resmi (268x245, transparan) — logo header & footer.
-│                      #   DIPOTONG dari logo-full.png; dulu emblem versi LAMA (biru)
+│  ├─ logo-mark.png    # Emblem daun "e" (164x140, transparan) — dipakai logo header & footer
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog), biji.webp (bukti Balaraja)
