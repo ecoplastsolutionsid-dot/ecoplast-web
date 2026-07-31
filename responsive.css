@@ -30,16 +30,13 @@
      tetap ±15px dan itu yang menanggung pengenalan brand. Jangan "perbaiki" dengan
      membesarkan lockup di mobile tanpa mengukur ulang sisa ruang ke hamburger. */
   .brand__mark { height: 40px; }
-  /* Logo footer DISAMAKAN dengan logo header di mobile (permintaan pemilik: "agar
-     serasi") — di desktop footer sengaja 52px, tapi di layar sempit selisih 40 vs
-     52px membuat lockup footer tampak lebih besar sendiri. Panel putihnya TETAP:
-     yang disamakan hanya tingginya, bukan perlakuan latarnya (footer gelap butuh
-     backing terang, lihat catatan Footer di CLAUDE.md).
-     Konsekuensi yang disengaja & sudah diketahui pemilik: pada 40px baris
-     "SOLUTIONS" jadi ±6.8px, di bawah ambang baca ±8px — sama seperti di header,
-     jadi ia berfungsi sebagai bentuk, bukan teks. Nama aksesibel tetap ditanggung
-     aria-label + alt, jadi tak ada informasi yang hilang. */
-  .foot-brand__mark { height: 40px; }
+  /* TIDAK ADA override tinggi .foot-brand__mark di sini lagi. Dulu ada
+     `height: 40px` (menyamakan lockup footer dengan lockup header di mobile), tapi
+     sejak panel footer jadi PLAKAT ber-`max-width: 200px` gambarnya dikendalikan
+     lebar (`width:100%; height:auto`) — memberi tinggi tetap = width & height
+     sama-sama definite = rasio diabaikan browser = logo GEPENG. Ukurannya kini
+     sama di semua breakpoint (±160x34.8px), jadi override ini juga tak diperlukan
+     lagi untuk keserasian. Lihat .foot-brand__mark di styles.css. */
   /* Header mobile = brand (kiri) + hamburger (kanan) SAJA — dulu tombol WhatsApp
      duduk persis di sebelah hamburger sehingga hamburger jadi ambigu.
      Tombol WA sekarang TIDAK ada di header maupun di dalam drawer: jadi FAB
@@ -147,22 +144,23 @@
   .gallery { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
   .foot-cols { grid-template-columns: 1fr; }
-  /* Footer mobile (1 kolom): SATU tepi kiri teks untuk semua blok, memakai teks
-     WhatsApp sebagai acuan (permintaan pemilik "simetris dengan teks WhatsApp").
-     46px = lebar chip ikon .fc-ico (34px) + gap .fc-row (0.75rem = 12px), jadi
-     label/nilai di kolom Kontak mulai 46px dari tepi kolom. Terukur di 504px:
-     sebelum ini Halaman di x=20, alamat di x=34, WhatsApp di x=66.
-     Judul kolom (h3) sengaja TETAP di tepi kolom — kolom Kontak & Media Sosial
-     memang sudah begitu sejak awal, jadi Halaman kini konsisten dengan keduanya.
-     LOCKUP TIDAK ikut indent ini. Pemilik minta logo footer sejajar dengan logo
-     HEADER, sementara blok alamat tetap di 46px ("teks PT nya jangan"). Terukur di
-     504px: gambar logo header mulai di x=20 (= padding .container). Panel putih
-     punya padding kiri 14px, jadi panel digeser -14px agar GAMBAR-nya — bukan tepi
-     panelnya — mendarat tepat di 20. Konsekuensi yang disengaja: panel menjorok
-     14px ke kiri dari kolom, jadi tepi putihnya 6px dari tepi layar. */
+  /* Footer mobile (1 kolom) — dua tepi kiri, sengaja:
+     (a) 46px = lebar chip ikon .fc-ico (34px) + gap .fc-row (0.75rem = 12px), yaitu
+         titik mulai TEKS di kolom Kontak. Dipakai daftar "Halaman".
+     (b) 0 = tepi kolom, yaitu titik mulai IKON (.fc-ico) di kolom Kontak. Dipakai
+         blok alamat.
+     Blok alamat DULU ikut (a) ("simetris dengan teks WhatsApp"), lalu pemilik
+     mengubahnya: alamat harus sejajar dengan LOGO WhatsApp, bukan teksnya — jadi
+     margin-left-nya 0 dan ia lurus dengan chip ikon Kontak & Media Sosial.
+     Daftar "Halaman" sengaja DITINGGAL di 46px: pemilik hanya menyebut blok alamat.
+     Judul kolom (h3) juga tetap di tepi kolom, seperti sejak awal.
+     LOCKUP: geser -14px yang lama SUDAH DIHAPUS. Dulu itu membuat GAMBAR logo footer
+     mendarat di x=20 (sejajar logo header) dengan konsekuensi tepi panel putih di
+     x=6. Sejak panel jadi plakat bersudut 20px + padding 20px, geseran itu menaruh
+     tepi plakat tepat di x=0 — menempel bibir layar dan merusak kesan "plakat".
+     Sekarang plakat duduk rata kolom (x=20), gambar logonya di x=40. */
   .foot-cols { --foot-mobile-indent: 46px; }
-  .foot-brand { margin-left: calc(-1 * var(--foot-panel-pad-x)); }
-  .foot-address { margin-left: var(--foot-mobile-indent); }
+  .foot-address { margin-left: 0; }
   /* :not(.foot-social) WAJIB — daftar Media Sosial juga <ul> di dalam .foot-col,
      tapi item-nya sudah punya chip ikon sendiri. Tanpa pengecualian ini ia
      tergeser DOBEL (terukur teksnya lompat dari x=65.2 ke x=111.2). */
@@ -179,7 +177,7 @@
 @media (max-width: 360px) {
   :root { --space: 3rem; }
   .brand__mark { height: 36px; }
-  .foot-brand__mark { height: 36px; }   /* ikut header, lihat catatan di blok ≤720px */
+  /* .foot-brand__mark sengaja TANPA override — lihat catatan di blok ≤720px. */
   .btn { font-size: 0.92rem; padding: 0.8em 1.15em; }
   .nav__cta { padding: 7px; }
 }

@@ -702,10 +702,11 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Padding mendatar panel putih lockup. Dipakai DUA kali — oleh .foot-brand (padding
-   panel) dan .foot-address (indent teks) — supaya blok alamat lurus tepat di bawah
-   GAMBAR logo, bukan di bawah tepi panelnya. Satu angka, jangan dipisah. */
-.foot-info { --foot-panel-pad-x: 14px; }
+/* Padding panel putih lockup (kini SEMUA sisi, plakat simetris). Dipakai DUA kali —
+   oleh .foot-brand (padding panel) dan .foot-address (indent teks) — supaya blok
+   alamat lurus tepat di bawah GAMBAR logo, bukan di bawah tepi panelnya. Satu angka,
+   jangan dipisah. Naik dari 14px ke 20px saat panel dijadikan "plakat lembut". */
+.foot-info { --foot-panel-pad-x: 20px; }
 /* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-lockup.png`, aset yang
    SAMA dengan header — lihat `.brand` di atas) di dalam
    PANEL PUTIH — pola yang dipakai centralcats.id (`.footer-brand .logo-link`).
@@ -716,39 +717,51 @@ a.crow__val:hover { color: var(--green); }
    Panel di sini SAH (dulu chip putih pernah ditolak) karena kini wordmark navy
    ada di dalam bitmap: tanpa backing terang ia tak terbaca di footer gelap. */
 .foot-brand {
-  display: inline-flex;
+  /* PLAKAT, bukan kotak kaku: kotak putih simetris (padding sama di keempat sisi),
+     sudut besar, lebar dikunci 200px, logo di-tengah. Sebelumnya panel "membungkus
+     rapat" lockup (fit-content + padding 8px/14px) sehingga bentuknya sangat pipih
+     dan sudut 10px terasa kaku. */
+  display: flex;
   align-items: center;
-  width: fit-content;
+  justify-content: center;
+  width: 100%;
+  max-width: 200px;
   text-decoration: none;
   /* Jarak lockup → blok alamat. Dulu 1.4rem (22.4px), dari zaman masih ada paragraf
      deskripsi di antaranya; setelah paragraf itu dihapus, alamat langsung menempel
      ke lockup sehingga 22.4px + half-leading baris pertama terasa menggantung.
      0.5rem = 8px margin → jarak visual logo↔"PT. Mencoba Bertahan Hidup" ±14px. */
   margin-bottom: 0.5rem;
-  max-width: 100%;
-  /* Aset di-crop rapat (emblem menyentuh tepi atas & bawah), jadi padding panel
-     harus lebih lega dari centralcats (6px 10px) supaya logo tak terasa terjepit. */
-  padding: 8px var(--foot-panel-pad-x);
+  /* Padding LEGA & SAMA di keempat sisi — aset di-crop rapat (emblem menyentuh tepi
+     atas & bawah), jadi ruang napas ini yang membuatnya terbaca sebagai plakat. */
+  padding: var(--foot-panel-pad-x);
   background: #fff;
+  /* Pemisah dari footer gelap = SHADOW, bukan border. Border rgba(255,255,255,.15)
+     di sini justru kotor: garisnya menimpa tepi panel yang sudah putih, hasil
+     komposit 15% putih + 85% latar gelap = rim KEABU-ABUAN yang lebih gelap dari
+     panelnya sendiri — malah menegaskan sudut, kebalikan dari kesan lembut.
+     Shadow berlapis low-opacity mendaratkan plakat tanpa menggambar garis. */
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--dur) var(--ease);
 }
 /* Hover = angkat elevasi saja, TANPA transform/scale → tak perlu entri baru di blok
    prefers-reduced-motion. */
 .foot-brand:hover { box-shadow: var(--shadow-md); }
-.foot-brand__mark {
-  /* 52px (naik dari emblem 36px yang lama) — pada rasio aset 570x124 ini membuat
-     "ECOPLAST" tampil 20px & "SOLUTIONS" 8.8px, keduanya masih terbaca. Aset 2.4x
-     ukuran tampil → tetap tajam di layar retina. Kalau tinggi ini diubah, cek ulang
-     SOLUTIONS jangan sampai < 8px.
-     CATATAN: di MOBILE angka ini di-override agar sama persis dengan logo header
-     (40px ≤720px, 36px ≤360px) — lihat responsive.css. Di sana SOLUTIONS memang
-     turun ke ±6.8px, dan itu disengaja: keserasian header↔footer diprioritaskan,
-     sama seperti kompromi yang sudah berlaku di header mobile. */
-  width: auto; height: 52px; display: block; flex: none;
-}
+/* Logo mengisi lebar-dalam plakat, TINGGI IKUT RASIO (height:auto) → tidak pernah
+   gepeng. Ukuran kini diturunkan oleh `max-width` plakat, bukan oleh tinggi tetap:
+   200px − (2 × 20px padding) = 160px lebar → 160 / (570/124) = 34.8px tinggi, SAMA
+   di semua breakpoint (karena itu override tinggi mobile di responsive.css dihapus —
+   width + height sama-sama definite = rasio diabaikan browser, persis jebakan yang
+   pernah kena di .gshot__img).
+   Aset 570px ditampilkan 160px = downscale 3.6x → tajam di retina, tidak blur.
+   KONSEKUENSI YANG DIKETAHUI: "ECOPLAST" ±13.4px & "SOLUTIONS" ±5.9px, jadi
+   SOLUTIONS ada di bawah ambang baca ±8px yang dulu dijaga saat lockup 52px. Ini
+   ikut dari `max-width: 200px` yang diminta pemilik; kalau kelak SOLUTIONS harus
+   terbaca lagi, naikkan max-width plakat (±260px → lockup kembali ke ±48px),
+   JANGAN kembalikan tinggi tetap pada gambar. */
+.foot-brand__mark { width: 100%; height: auto; display: block; }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */
 .foot-col h3 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; font-variation-settings: normal; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1rem; }
