@@ -21,7 +21,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
   ini, tidak ada JS lain — pertahankan seminimal mungkin.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260731a`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260731b`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -410,7 +410,8 @@ Aturan penting:
        ink-centroid 34) dan **melihat**-nya: 21 menggantung ke atas, 34 terlalu turun.
        Titik berat optis emblem ada di 52,4% tingginya (ekor swoosh menarik ke bawah),
        wordmark di 37,5% (ECOPLAST berat di atas) — makanya bbox-center saja kurang pas.
-     Flush-left: **teks alamat lurus dengan GAMBAR logo**, bukan dengan tepi panel
+     Flush-left **(DESKTOP saja — di mobile aturannya lain, lihat "Footer mobile"
+     di bawah)**: teks alamat lurus dengan **GAMBAR logo**, bukan dengan tepi panel
      (`alamat.left == logoImg.left`, terukur selisih 0.0). Dulu `panel.left ==
      alamat.left` sehingga logo di dalam panel tampak menjorok ±14px ke kanan
      sendirian; **pemilik minta diubah** ("teks … tepat di bawah logo"). Angkanya
@@ -468,11 +469,20 @@ Aturan penting:
   - **Footer mobile = SATU tepi kiri teks (`--foot-mobile-indent: 46px`).** Permintaan
     pemilik: daftar Halaman & blok alamat "simetris dengan teks WhatsApp". 46px =
     chip ikon `.fc-ico` 34px + gap `.fc-row` 12px, yaitu titik mulai label/nilai di
-    kolom Kontak. Yang digeser di blok ≤560px: `.foot-address`, `.foot-col
-    ul:not(.foot-social)`, dan `.foot-brand` (digeser `46 − 14 = 32px` supaya GAMBAR
-    logo ikut mendarat di 46px — kalau lockup tidak ikut, alamat tak lagi lurus di
-    bawah logo). Terukur di 504px: logo, alamat, Halaman, WhatsApp, Media Sosial
+    kolom Kontak. Yang digeser di blok ≤560px: `.foot-address` dan `.foot-col
+    ul:not(.foot-social)`. Terukur di 504px: alamat, Halaman, WhatsApp, Media Sosial
     semua di `x = 66.0`.
+    - **`.foot-brand` TIDAK ikut indent 46px itu.** Sempat ikut (digeser +32px)
+      supaya alamat lurus di bawah logo, lalu **pemilik mengubah keputusannya**:
+      logo footer harus sejajar dengan **logo HEADER**, sedangkan blok alamat tetap
+      di 46px ("teks PT nya jangan"). Jadi di mobile alamat **sengaja tidak lagi**
+      lurus di bawah logo — beda dengan desktop. Terukur di 504px: gambar logo
+      header **dan** footer sama-sama di `x = 20.0`.
+      Angkanya `margin-left: calc(-1 * var(--foot-panel-pad-x))` = −14px: gambar
+      logo header mulai di 20 (= padding `.container`), dan panel putih punya
+      padding kiri 14px, jadi panel harus duduk di 6 agar **gambar**-nya mendarat di
+      20. Konsekuensi yang disengaja & sudah dilihat pemilik: tepi panel putih jadi
+      6px dari tepi layar, menjorok 14px ke kiri dari kolom.
     - **`:not(.foot-social)` WAJIB** — daftar Media Sosial juga `<ul>` di dalam
       `.foot-col` tapi item-nya sudah punya chip ikon sendiri; tanpa pengecualian ia
       tergeser dobel (terukur lompat 65.2 → 111.2).

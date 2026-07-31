@@ -154,11 +154,14 @@
      sebelum ini Halaman di x=20, alamat di x=34, WhatsApp di x=66.
      Judul kolom (h3) sengaja TETAP di tepi kolom — kolom Kontak & Media Sosial
      memang sudah begitu sejak awal, jadi Halaman kini konsisten dengan keduanya.
-     Lockup ikut digeser (46 - padding panel 14 = 32px) supaya GAMBAR logo mendarat
-     di 46px juga — kalau tidak, alamat tak lagi lurus di bawah logo seperti yang
-     diminta sebelumnya. Ubah keduanya bersamaan, jangan salah satu saja. */
+     LOCKUP TIDAK ikut indent ini. Pemilik minta logo footer sejajar dengan logo
+     HEADER, sementara blok alamat tetap di 46px ("teks PT nya jangan"). Terukur di
+     504px: gambar logo header mulai di x=20 (= padding .container). Panel putih
+     punya padding kiri 14px, jadi panel digeser -14px agar GAMBAR-nya — bukan tepi
+     panelnya — mendarat tepat di 20. Konsekuensi yang disengaja: panel menjorok
+     14px ke kiri dari kolom, jadi tepi putihnya 6px dari tepi layar. */
   .foot-cols { --foot-mobile-indent: 46px; }
-  .foot-brand { margin-left: calc(var(--foot-mobile-indent) - var(--foot-panel-pad-x)); }
+  .foot-brand { margin-left: calc(-1 * var(--foot-panel-pad-x)); }
   .foot-address { margin-left: var(--foot-mobile-indent); }
   /* :not(.foot-social) WAJIB — daftar Media Sosial juga <ul> di dalam .foot-col,
      tapi item-nya sudah punya chip ikon sendiri. Tanpa pengecualian ini ia
