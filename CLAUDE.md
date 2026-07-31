@@ -11,15 +11,39 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ## Stack
 
 - **HTML + CSS statis murni.** TANPA build step, TANPA framework.
-- **JavaScript minimal & progressive-enhancement** (dua fungsi, keduanya di
-  **satu** `<script>` inline di akhir `<body>` tiap halaman):
+- **JavaScript minimal & progressive-enhancement** (tiga fungsi, semuanya di
+  **satu** `<script>` inline di akhir `<body>` tiap halaman, **identik di kelima
+  file**):
   1. **Tahun copyright** — mengisi `.js-year` via `getFullYear()` (fallback teks
      `2026` bila JS mati) agar tahun tidak di-hardcode.
-  2. **Reveal saat masuk layar (scroll-in)** — `IntersectionObserver` menambah
+  2. **Tutup drawer saat kembali dari riwayat** — lihat butir berikutnya.
+  3. **Reveal saat masuk layar (scroll-in)** — `IntersectionObserver` menambah
      kelas `.in` ke elemen target saat masuk viewport (fade + geser naik, ala
      jagopijat.com). Detail di bagian "Reveal scroll-in" pada Sistem desain.
-  Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
-  ini, tidak ada JS lain — pertahankan seminimal mungkin.
+  Di luar ketiga hal ini, tidak ada JS lain — pertahankan seminimal mungkin.
+- **Menu hamburger: buka/tutupnya tetap murni CSS** (checkbox hack, tanpa JS).
+  Yang butuh JS **hanya** pemulihan state saat navigasi riwayat:
+  - **Gejala yang dilaporkan pemilik:** di mobile, buka hamburger → pilih
+    "Tentang Kami" → tekan **Back**; halaman sebelumnya muncul dengan **drawer
+    sudah terbuka**, seolah hamburger membuka sendiri.
+  - **Sebabnya:** browser MEMULIHKAN state checkbox pada navigasi riwayat.
+    Karena menunya checkbox CSS-only, memulihkan `checked` = membuka drawer.
+  - **Perlu DUA lapis, mekanismenya memang dua:**
+    1. `autocomplete="off"` pada `<input id="nav-toggle">` mematikan pemulihan
+       state form biasa — dan ini jalan **walau JS mati**.
+    2. **bfcache** mengembalikan DOM apa adanya, jadi atribut itu tidak menolong;
+       handler `pageshow` yang menanganinya (`t.checked=false`).
+    Ada juga `t.checked=false` di luar handler, supaya drawer sudah tertutup
+    sebelum cat pertama pada pemulihan non-bfcache (tanpa kedipan).
+  - **Terbukti lewat uji berkontrol** (harness iframe: buka drawer → pindah
+    halaman → `history.back()` → baca `checked`). Versi lama `setelahBack:true`
+    (bug tereproduksi), versi baru `setelahBack:false`. Kalau kelak menyentuh
+    bagian ini, jalankan ulang uji berkontrol — tanpa kontrol, hasil "false"
+    tidak membuktikan apa pun.
+  - **Catatan harness:** JANGAN pakai `requestAnimationFrame` atau menunggu event
+    `load` pada iframe — di bawah `--virtual-time-budget` rAF tak maju dan `load`
+    tak terpicu setelah `history.back()`; pakai polling `readyState` +
+    `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
   `/responsive.css?v=<versi>` (kini `v=20260731b`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
@@ -616,8 +640,8 @@ Aturan penting:
 - Jangan mengarang klaim/angka (kapasitas ton, tahun berdiri, jumlah klien, testimoni).
   Konten hanya yang faktual/diberikan.
 - Pertahankan: tanpa build step, tanpa framework, JS hanya seperlunya (kini: skrip
-  tahun + reveal `IntersectionObserver`, keduanya progressive-enhancement).
-  `@media` hanya di `responsive.css`.
+  tahun + tutup drawer saat kembali dari riwayat + reveal `IntersectionObserver`,
+  ketiganya progressive-enhancement). `@media` hanya di `responsive.css`.
 
 ## Deploy
 

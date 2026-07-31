@@ -99,7 +99,7 @@
       <a class="brand" href="/" aria-label="Ecoplast Solutions — Beranda">
         <img class="brand__mark" src="/assets/logo-lockup.png?v=1" width="570" height="124" alt="Ecoplast Solutions" />
       </a>
-      <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Buka menu navigasi" />
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Buka menu navigasi" autocomplete="off" />
       <label class="nav-burger" for="nav-toggle"><span></span><span></span><span></span></label>
       <label class="nav-overlay" for="nav-toggle" aria-hidden="true"></label>
       <nav class="nav" aria-label="Navigasi utama">
@@ -271,6 +271,22 @@
 
   <script>
     document.querySelectorAll(".js-year").forEach(function(e){e.textContent=new Date().getFullYear();});
+    /* Tutup drawer saat halaman dipulihkan dari RIWAYAT (tombol Back).
+       Menu = checkbox CSS-only, dan browser memulihkan state checkbox saat navigasi
+       riwayat -> halaman sebelumnya muncul dengan drawer sudah terbuka, seolah
+       hamburger membuka sendiri. Perlu DUA lapis karena mekanismenya dua:
+       (1) autocomplete="off" di <input> mematikan pemulihan state form biasa, dan
+           itu jalan walau JS mati;
+       (2) bfcache mengembalikan DOM apa adanya sehingga atribut itu TIDAK menolong
+           -> pageshow yang menanganinya.
+       Baris t.checked=false di luar handler menutup drawer sebelum cat pertama
+       pada pemulihan non-bfcache, supaya tak ada kedipan. */
+    (function(){
+      var t=document.getElementById("nav-toggle");
+      if(!t)return;
+      t.checked=false;
+      window.addEventListener("pageshow",function(){t.checked=false;});
+    })();
     /* Reveal saat masuk layar. Daftar SEL harus sama dgn selector .has-js di styles.css. */
     (function(){
       var SEL=".hero__inner > *, .sec-head, .pcard, .feature, .prod, .step, .card, .gshot, .map-block, .cta-band .container > *";
