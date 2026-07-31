@@ -21,7 +21,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   Menu hamburger tetap **murni CSS** (checkbox hack, tanpa JS). Di luar dua hal
   ini, tidak ada JS lain — pertahankan seminimal mungkin.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260730d`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260731a`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -66,7 +66,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 /
 ├─ index.html          # Beranda (hero industri, ringkasan produk, 4 keunggulan, CTA band)
 ├─ produk.html         # #tali (Tali Plastik PP), #biji (Biji Plastik PP), alur produksi 4 tahap
-├─ tentang.html        # Profil + lokasi
+├─ tentang.html        # Profil + galeri mesin/fasilitas + lokasi
 ├─ kontak.html         # Kartu info kontak, kartu penawaran, blok peta (embed Google Maps)
 ├─ kebijakan-privasi.html   # Kebijakan privasi (tautan di footer, di luar nav utama)
 ├─ styles.css          # Base + desktop (TANPA @media)
@@ -82,6 +82,10 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 │                      #   Disimpan sebagai acuan crop emblem & pembanding audit OG.
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
+│  ├─ mesin/           # Foto mesin & area produksi (.webp) untuk galeri di
+│                      #   tentang.html: mesin-1..4.webp. mesin-1/2/4 potret
+│                      #   1086x1448, mesin-3 lanskap 1448x1086. Sumber: foto
+│                      #   pemilik. Dipakai dengan `?v=1` (aturan aset baru).
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog),
 │                      #   biji1-full.webp (detail biji), biji.webp (bukti Balaraja)
 ├─ favicon.ico         # Multi-size 16/32/48 (entri PNG) — EMBLEM saja, bukan lockup
@@ -258,6 +262,26 @@ Aturan penting:
     + matting lembut (gradasi putih) → produk tampil UTUH tak terpotong untuk tampilan
     detail. Pakai file foto yang sama.
   - Frasa highlight judul dijaga `white-space: nowrap` agar tidak terpecah antar-baris.
+- **Galeri mesin (`.gallery` + `.gshot`, hanya di `tentang.html`)** — section
+  "Fasilitas", di antara Profil dan Lokasi. Tiap item `<figure class="gshot">` =
+  `<a class="gshot__link">` membungkus `<img class="gshot__img">` + `<figcaption>`.
+  - **Tanpa lightbox JS.** `<a>` menuju file fotonya langsung
+    (`target="_blank" rel="noopener"`) → foto bisa dilihat ukuran penuh tanpa skrip
+    ketiga. Situs ini sengaja cuma punya dua skrip; jangan tambah.
+  - **Rasio tile `4/3`**, grid 2 kolom → 1 kolom di ≤560px. Rasio dipilih setelah
+    merender center-crop `1/1` vs `4/3` keempat foto dan **melihat**-nya: pada 4/3
+    keempat mesin tetap terbaca penuh dan foto lanskap tak kehilangan panel
+    kontrolnya; pada 1/1 panel itu terpotong.
+  - **`.gshot__img` WAJIB `height: auto`.** Atribut `width`/`height` di `<img>`
+    (dipasang untuk mencegah layout shift) masuk sebagai presentational hint
+    width+height; kalau **keduanya definite, `aspect-ratio` DIABAIKAN** browser.
+    Ini pernah kejadian: foto ter-render `516×1448` (tinggi asli), bukan 4:3.
+  - Caption sengaja **netral** — mendeskripsikan apa yang terlihat di foto, tanpa
+    menyebut jenis/merek/kapasitas mesin. Pemilik memilih ini agar tak ada klaim
+    yang bisa salah. **Jangan** menambah nama mesin tanpa konfirmasi pemilik.
+  - `.gshot` termasuk target reveal → ada di **tiga** tempat: blok `.has-js` di
+    `styles.css`, konstanta `SEL` di skrip body **kelima** HTML, dan blok
+    `prefers-reduced-motion` di `responsive.css`.
   - **Ikon inline SVG dekoratif** (mis. `.feature__ico`) wajib punya atribut
     `width`/`height` eksplisit **selain** ukuran via CSS — jaga-jaga bila `styles.css`
     ke-cache lama (Cloudflare) sementara HTML sudah baru, SVG tak membesar ke default.
@@ -366,6 +390,13 @@ Aturan penting:
        "ECOPLAST" 20px & "SOLUTIONS" 8.8px. **Kalau tinggi ini diubah, cek SOLUTIONS
        jangan sampai < 8px** — di bawah itu tak terbaca. Aset 2.4× ukuran tampil →
        tetap tajam di retina.
+       **Di MOBILE tinggi ini di-override agar SAMA PERSIS dengan logo header**
+       (`responsive.css`: 40px ≤720px, 36px ≤360px) — permintaan pemilik "logo
+       footer samakan dengan logo header agar serasi". Terukur di 504px: header &
+       footer sama-sama 183.9×40.0. Konsekuensi yang disengaja: SOLUTIONS turun ke
+       ±6.8px, di bawah ambang 8px di atas — sama seperti kompromi yang sudah
+       berlaku di header mobile, jadi ia berfungsi sebagai bentuk, bukan teks.
+       Panel putihnya TETAP; yang disamakan hanya tingginya.
      - **Cara meregenerasi `logo-lockup.png`** (Pillow, sumber `assets/logo-full.png`):
        crop dua band lalu susun mendatar. Emblem = `(134,71,382,288)` → 248×217;
        wordmark ECOPLAST+SOLUTIONS = **satu unit** `(58,300,448,383)` → 390×83 (spasi
@@ -379,9 +410,16 @@ Aturan penting:
        ink-centroid 34) dan **melihat**-nya: 21 menggantung ke atas, 34 terlalu turun.
        Titik berat optis emblem ada di 52,4% tingginya (ekor swoosh menarik ke bawah),
        wordmark di 37,5% (ECOPLAST berat di atas) — makanya bbox-center saja kurang pas.
-     Flush-left: **panel** yang lurus kiri dengan teks di bawahnya
-     (`panel.left == alamat.left`; dulu `emblem.left`, kini emblem masuk ±14px karena
-     padding panel — itu benar, bukan bug). Di bawah lockup **langsung ALAMAT**
+     Flush-left: **teks alamat lurus dengan GAMBAR logo**, bukan dengan tepi panel
+     (`alamat.left == logoImg.left`, terukur selisih 0.0). Dulu `panel.left ==
+     alamat.left` sehingga logo di dalam panel tampak menjorok ±14px ke kanan
+     sendirian; **pemilik minta diubah** ("teks … tepat di bawah logo"). Angkanya
+     dipegang satu variabel `--foot-panel-pad-x: 14px` di `.foot-info`, dipakai dua
+     kali: padding mendatar `.foot-brand` **dan** `margin-left` `.foot-address`.
+     **Harus `margin-left`, bukan `padding-left`** — blok alamat kena
+     `max-width: 34ch` (dari `.site-footer p`) + `box-sizing: border-box`, jadi
+     padding memotong lebar teks; terukur baris "Kp. Tobat, …" pecah dari 1 baris
+     jadi 2. Di bawah lockup **langsung ALAMAT**
      (`.foot-address`) — **tanpa paragraf deskripsi.** Kalimat "Jasa produksi tali
      plastik & biji plastik PP untuk kebutuhan industri." dulu ada di antara keduanya,
      **sudah dihapus atas permintaan pemilik — jangan dikembalikan.**
@@ -427,6 +465,21 @@ Aturan penting:
   - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
     ≤560px **1 kolom** (urutan: logo, alamat, Halaman, Kontak, Media Sosial,
     copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
+  - **Footer mobile = SATU tepi kiri teks (`--foot-mobile-indent: 46px`).** Permintaan
+    pemilik: daftar Halaman & blok alamat "simetris dengan teks WhatsApp". 46px =
+    chip ikon `.fc-ico` 34px + gap `.fc-row` 12px, yaitu titik mulai label/nilai di
+    kolom Kontak. Yang digeser di blok ≤560px: `.foot-address`, `.foot-col
+    ul:not(.foot-social)`, dan `.foot-brand` (digeser `46 − 14 = 32px` supaya GAMBAR
+    logo ikut mendarat di 46px — kalau lockup tidak ikut, alamat tak lagi lurus di
+    bawah logo). Terukur di 504px: logo, alamat, Halaman, WhatsApp, Media Sosial
+    semua di `x = 66.0`.
+    - **`:not(.foot-social)` WAJIB** — daftar Media Sosial juga `<ul>` di dalam
+      `.foot-col` tapi item-nya sudah punya chip ikon sendiri; tanpa pengecualian ia
+      tergeser dobel (terukur lompat 65.2 → 111.2).
+    - `.fsoc` gap dinaikkan `0.7rem` → **`0.75rem`** agar sama dengan `.fc-row`;
+      tanpa itu teks Media Sosial meleset 0.8px dari teks Kontak.
+    - Judul kolom (`h3`) sengaja **tetap** di tepi kolom — kolom Kontak & Media
+      Sosial memang sudah begitu sejak awal, jadi Halaman kini konsisten.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
   "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
@@ -600,5 +653,6 @@ Aturan penting:
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
   `/assets/logo-lockup.png`, `/assets/logo-full.png`,
   `/assets/og-image.png`,
-  `/assets/product/*.webp`, `favicon.ico`, `favicon-32x32.png`, `favicon-48x48.png`,
+  `/assets/product/*.webp`, `/assets/mesin/mesin-1..4.webp`,
+  `favicon.ico`, `favicon-32x32.png`, `favicon-48x48.png`,
   `apple-touch-icon.png`.

@@ -30,6 +30,16 @@
      tetap ±15px dan itu yang menanggung pengenalan brand. Jangan "perbaiki" dengan
      membesarkan lockup di mobile tanpa mengukur ulang sisa ruang ke hamburger. */
   .brand__mark { height: 40px; }
+  /* Logo footer DISAMAKAN dengan logo header di mobile (permintaan pemilik: "agar
+     serasi") — di desktop footer sengaja 52px, tapi di layar sempit selisih 40 vs
+     52px membuat lockup footer tampak lebih besar sendiri. Panel putihnya TETAP:
+     yang disamakan hanya tingginya, bukan perlakuan latarnya (footer gelap butuh
+     backing terang, lihat catatan Footer di CLAUDE.md).
+     Konsekuensi yang disengaja & sudah diketahui pemilik: pada 40px baris
+     "SOLUTIONS" jadi ±6.8px, di bawah ambang baca ±8px — sama seperti di header,
+     jadi ia berfungsi sebagai bentuk, bukan teks. Nama aksesibel tetap ditanggung
+     aria-label + alt, jadi tak ada informasi yang hilang. */
+  .foot-brand__mark { height: 40px; }
   /* Header mobile = brand (kiri) + hamburger (kanan) SAJA — dulu tombol WhatsApp
      duduk persis di sebelah hamburger sehingga hamburger jadi ambigu.
      Tombol WA sekarang TIDAK ada di header maupun di dalam drawer: jadi FAB
@@ -134,8 +144,26 @@
 @media (max-width: 560px) {
   .grid--2 { grid-template-columns: 1fr; }
   .grid--4 { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
   .foot-cols { grid-template-columns: 1fr; }
+  /* Footer mobile (1 kolom): SATU tepi kiri teks untuk semua blok, memakai teks
+     WhatsApp sebagai acuan (permintaan pemilik "simetris dengan teks WhatsApp").
+     46px = lebar chip ikon .fc-ico (34px) + gap .fc-row (0.75rem = 12px), jadi
+     label/nilai di kolom Kontak mulai 46px dari tepi kolom. Terukur di 504px:
+     sebelum ini Halaman di x=20, alamat di x=34, WhatsApp di x=66.
+     Judul kolom (h3) sengaja TETAP di tepi kolom — kolom Kontak & Media Sosial
+     memang sudah begitu sejak awal, jadi Halaman kini konsisten dengan keduanya.
+     Lockup ikut digeser (46 - padding panel 14 = 32px) supaya GAMBAR logo mendarat
+     di 46px juga — kalau tidak, alamat tak lagi lurus di bawah logo seperti yang
+     diminta sebelumnya. Ubah keduanya bersamaan, jangan salah satu saja. */
+  .foot-cols { --foot-mobile-indent: 46px; }
+  .foot-brand { margin-left: calc(var(--foot-mobile-indent) - var(--foot-panel-pad-x)); }
+  .foot-address { margin-left: var(--foot-mobile-indent); }
+  /* :not(.foot-social) WAJIB — daftar Media Sosial juga <ul> di dalam .foot-col,
+     tapi item-nya sudah punya chip ikon sendiri. Tanpa pengecualian ini ia
+     tergeser DOBEL (terukur teksnya lompat dari x=65.2 ke x=111.2). */
+  .foot-col ul:not(.foot-social) { margin-left: var(--foot-mobile-indent); }
   .cta-band .container { flex-direction: column; align-items: flex-start; }
   /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
      wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */
@@ -148,6 +176,7 @@
 @media (max-width: 360px) {
   :root { --space: 3rem; }
   .brand__mark { height: 36px; }
+  .foot-brand__mark { height: 36px; }   /* ikut header, lihat catatan di blok ≤720px */
   .btn { font-size: 0.92rem; padding: 0.8em 1.15em; }
   .nav__cta { padding: 7px; }
 }
@@ -162,8 +191,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .btn:hover, .pcard:hover, .feature:hover,
-  .pcard:hover .pcard__img, .step:hover .step__n { transform: none; }
+  .btn:hover, .pcard:hover, .feature:hover, .gshot:hover,
+  .pcard:hover .pcard__img, .gshot:hover .gshot__img,
+  .step:hover .step__n { transform: none; }
   /* Cahaya berjalan mati total → sisakan siluet skyline statis (background CSS). */
   .hero__skyline { display: none; }
   /* Reveal scroll-in: jangan sembunyikan apa pun → paksa tampil tanpa gerak. */
@@ -174,6 +204,7 @@
   .has-js .prod,
   .has-js .step,
   .has-js .card,
+  .has-js .gshot,
   .has-js .map-block,
   .has-js .cta-band .container > * {
     opacity: 1 !important;

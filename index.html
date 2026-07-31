@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=20260730d" />
-  <link rel="stylesheet" href="/responsive.css?v=20260730d" />
+  <link rel="stylesheet" href="/styles.css?v=20260731a" />
+  <link rel="stylesheet" href="/responsive.css?v=20260731a" />
 
   <script type="application/ld+json">
   {
@@ -380,7 +380,7 @@
     document.querySelectorAll(".js-year").forEach(function(e){e.textContent=new Date().getFullYear();});
     /* Reveal saat masuk layar. Daftar SEL harus sama dgn selector .has-js di styles.css. */
     (function(){
-      var SEL=".hero__inner > *, .sec-head, .pcard, .feature, .prod, .step, .card, .map-block, .cta-band .container > *";
+      var SEL=".hero__inner > *, .sec-head, .pcard, .feature, .prod, .step, .card, .gshot, .map-block, .cta-band .container > *";
       var els=[].slice.call(document.querySelectorAll(SEL));
       if(!els.length)return;
       if(!("IntersectionObserver" in window)){els.forEach(function(el){el.classList.add("in");});return;}

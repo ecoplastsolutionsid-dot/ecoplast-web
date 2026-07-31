@@ -459,6 +459,53 @@ h1, h2, h3 {
 }
 
 /* ==========================================================================
+   Galeri foto (mesin & area produksi — tentang.html)
+   Tiap item = <figure class="gshot"> berisi <a> pembungkus <img> + <figcaption>.
+   Pembungkus <a> menuju file fotonya langsung (target="_blank") supaya foto bisa
+   dilihat ukuran penuh TANPA lightbox JS — situs ini sengaja hanya punya dua
+   skrip (tahun + reveal), jangan tambah yang ketiga.
+   RASIO 4/3 dipilih setelah merender center-crop 1/1 vs 4/3 keempat foto dan
+   MELIHATnya: 3 foto potret (1086x1448) + 1 lanskap (1448x1086) harus muat di
+   grid seragam. Pada 4/3 keempat mesin tetap terbaca penuh dan foto lanskap
+   tidak kehilangan panel kontrolnya; pada 1/1 panel itu terpotong. Kalau kelak
+   menambah foto, cek ulang crop-nya sebelum mengubah rasio ini.
+   ========================================================================== */
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1rem, 2.2vw, 1.5rem); }
+.gshot {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;                    /* sudut foto ikut membulat */
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.gshot:hover { transform: translateY(-4px); border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
+.gshot__link { display: block; }
+.gshot__img {
+  width: 100%;
+  /* height:auto WAJIB. Atribut width/height di <img> (dipasang untuk mencegah
+     layout shift) masuk sebagai presentational hint width+height; kalau KEDUANYA
+     definite, `aspect-ratio` DIABAIKAN browser. Tanpa baris ini foto ter-render
+     setinggi atribut aslinya (terukur 516x1448, bukan 4:3). */
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background: #EDF1EA;                 /* placeholder saat lazy-load, tanpa lompatan layout */
+  transition: transform var(--dur-slow) var(--ease-out), filter var(--dur) var(--ease);
+}
+.gshot:hover .gshot__img { transform: scale(1.035); filter: saturate(1.06); }
+.gshot figcaption {
+  padding: 0.85rem var(--card-pad) 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* ==========================================================================
    Product page — detail rows
    ========================================================================== */
 .prod {
@@ -655,6 +702,10 @@ a.crow__val:hover { color: var(--green); }
    (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
    bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
+/* Padding mendatar panel putih lockup. Dipakai DUA kali — oleh .foot-brand (padding
+   panel) dan .foot-address (indent teks) — supaya blok alamat lurus tepat di bawah
+   GAMBAR logo, bukan di bawah tepi panelnya. Satu angka, jangan dipisah. */
+.foot-info { --foot-panel-pad-x: 14px; }
 /* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-lockup.png`, aset yang
    SAMA dengan header — lihat `.brand` di atas) di dalam
    PANEL PUTIH — pola yang dipakai centralcats.id (`.footer-brand .logo-link`).
@@ -677,7 +728,7 @@ a.crow__val:hover { color: var(--green); }
   max-width: 100%;
   /* Aset di-crop rapat (emblem menyentuh tepi atas & bawah), jadi padding panel
      harus lebih lega dari centralcats (6px 10px) supaya logo tak terasa terjepit. */
-  padding: 8px 14px;
+  padding: 8px var(--foot-panel-pad-x);
   background: #fff;
   border: 0;
   border-radius: var(--radius-sm);
@@ -691,7 +742,11 @@ a.crow__val:hover { color: var(--green); }
   /* 52px (naik dari emblem 36px yang lama) — pada rasio aset 570x124 ini membuat
      "ECOPLAST" tampil 20px & "SOLUTIONS" 8.8px, keduanya masih terbaca. Aset 2.4x
      ukuran tampil → tetap tajam di layar retina. Kalau tinggi ini diubah, cek ulang
-     SOLUTIONS jangan sampai < 8px. */
+     SOLUTIONS jangan sampai < 8px.
+     CATATAN: di MOBILE angka ini di-override agar sama persis dengan logo header
+     (40px ≤720px, 36px ≤360px) — lihat responsive.css. Di sana SOLUTIONS memang
+     turun ke ±6.8px, dan itu disengaja: keserasian header↔footer diprioritaskan,
+     sama seperti kompromi yang sudah berlaku di header mobile. */
   width: auto; height: 52px; display: block; flex: none;
 }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
@@ -719,7 +774,14 @@ a.crow__val:hover { color: var(--green); }
 .foot-col ul a:hover::before { opacity: 1; width: 1.1em; transform: translateX(0); }
 
 /* Footer address block */
-.foot-address { font-size: 0.86rem; line-height: 1.7; color: #A9B8AE; margin-top: 1rem; }
+/* margin-left = padding panel lockup → baris "PT. Mencoba Bertahan Hidup" dst.
+   lurus tepat di bawah GAMBAR logo (permintaan pemilik). Sebelumnya alamat lurus
+   dengan tepi PANEL, sehingga logo di dalamnya tampak menjorok 14px ke kanan
+   sendirian. Jangan kembalikan ke 0 tanpa permintaan baru.
+   HARUS margin, BUKAN padding: blok ini kena `max-width: 34ch` dari `.site-footer p`
+   dan box-sizing border-box, jadi padding-left memotong lebar TEKS — terukur baris
+   "Kp. Tobat, …" pecah dari 1 baris jadi 2. margin menggeser tanpa menyempitkan. */
+.foot-address { font-size: 0.86rem; line-height: 1.7; color: #A9B8AE; margin-top: 1rem; margin-left: var(--foot-panel-pad-x); }
 /* Alamat kini menempel langsung di bawah lockup (paragraf deskripsi "Jasa produksi…"
    sudah dihapus atas permintaan). Tanpa reset ini, margin-bottom 1.4rem milik
    .foot-brand + margin-top 1rem di atas akan menumpuk jadi 2.4rem → kolom
@@ -749,7 +811,10 @@ a.fc-val:hover { color: #fff; }
 .fc-divider { border: 0; border-top: 1px solid rgba(255, 255, 255, .06); margin: 0; }
 /* Media Sosial — placeholder, siap untuk tautan sosial di masa depan */
 .foot-social { list-style: none; display: grid; gap: 0.85rem; }
-.fsoc { display: flex; align-items: center; gap: 0.7rem; opacity: .6; transition: opacity var(--dur) var(--ease); }
+/* gap DISAMAKAN dengan .fc-row (0.75rem). Chip ikon kedua baris sama-sama 34px,
+   jadi gap yang sama membuat teks Media Sosial & teks Kontak mulai di x yang persis
+   sama — terukur 65.2 → 66.0 di mobile, sejajar dgn Halaman & alamat. */
+.fsoc { display: flex; align-items: center; gap: 0.75rem; opacity: .6; transition: opacity var(--dur) var(--ease); }
 .fsoc:hover { opacity: .85; }
 .fsoc-ico {
   width: 34px; height: 34px; flex: none;
@@ -813,6 +878,7 @@ a.fc-val:hover { color: #fff; }
 .has-js .prod,
 .has-js .step,
 .has-js .card,
+.has-js .gshot,
 .has-js .map-block,
 .has-js .cta-band .container > * {
   opacity: 0;
@@ -828,6 +894,7 @@ a.fc-val:hover { color: #fff; }
 .has-js .prod.in,
 .has-js .step.in,
 .has-js .card.in,
+.has-js .gshot.in,
 .has-js .map-block.in,
 .has-js .cta-band .container > *.in {
   opacity: 1;

@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=20260730d" />
-  <link rel="stylesheet" href="/responsive.css?v=20260730d" />
+  <link rel="stylesheet" href="/styles.css?v=20260731a" />
+  <link rel="stylesheet" href="/responsive.css?v=20260731a" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -179,6 +179,43 @@
       </div>
     </section>
 
+    <!-- Galeri mesin & area produksi -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="sec-head">
+          <span class="eyebrow">Fasilitas</span>
+          <h2>Mesin dan area produksi</h2>
+          <p>Sebagian mesin dan area kerja di pabrik kami di Balaraja, Kab. Tangerang. Klik foto untuk melihat ukuran penuh.</p>
+        </div>
+        <div class="gallery">
+          <figure class="gshot">
+            <a class="gshot__link" href="/assets/mesin/mesin-1.webp?v=1" target="_blank" rel="noopener">
+              <img class="gshot__img" src="/assets/mesin/mesin-1.webp?v=1" width="1086" height="1448" loading="lazy" decoding="async" alt="Mesin berbadan biru dengan saluran blower dan panel kontrol, dioperasikan dua pekerja di area bahan baku pabrik Ecoplast Solutions." />
+            </a>
+            <figcaption>Pengolahan bahan baku di area terbuka pabrik.</figcaption>
+          </figure>
+          <figure class="gshot">
+            <a class="gshot__link" href="/assets/mesin/mesin-2.webp?v=1" target="_blank" rel="noopener">
+              <img class="gshot__img" src="/assets/mesin/mesin-2.webp?v=1" width="1086" height="1448" loading="lazy" decoding="async" alt="Unit mesin berangka biru dengan bagian atas kuning di dalam gedung produksi Ecoplast Solutions." />
+            </a>
+            <figcaption>Unit mesin di dalam gedung produksi.</figcaption>
+          </figure>
+          <figure class="gshot">
+            <a class="gshot__link" href="/assets/mesin/mesin-3.webp?v=1" target="_blank" rel="noopener">
+              <img class="gshot__img" src="/assets/mesin/mesin-3.webp?v=1" width="1448" height="1086" loading="lazy" decoding="async" alt="Lini mesin memanjang dengan hopper hijau dan lemari panel kontrol di gedung produksi Ecoplast Solutions." />
+            </a>
+            <figcaption>Lini mesin dengan panel kontrol produksi.</figcaption>
+          </figure>
+          <figure class="gshot">
+            <a class="gshot__link" href="/assets/mesin/mesin-4.webp?v=1" target="_blank" rel="noopener">
+              <img class="gshot__img" src="/assets/mesin/mesin-4.webp?v=1" width="1086" height="1448" loading="lazy" decoding="async" alt="Mesin penggulung tali plastik PP berangka biru dengan roll tali jadi di pabrik Ecoplast Solutions." />
+            </a>
+            <figcaption>Area produksi tali PP dan hasil gulungannya.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <!-- Lokasi -->
     <section class="section" style="padding-top:0">
       <div class="container">
@@ -315,7 +352,7 @@
     document.querySelectorAll(".js-year").forEach(function(e){e.textContent=new Date().getFullYear();});
     /* Reveal saat masuk layar. Daftar SEL harus sama dgn selector .has-js di styles.css. */
     (function(){
-      var SEL=".hero__inner > *, .sec-head, .pcard, .feature, .prod, .step, .card, .map-block, .cta-band .container > *";
+      var SEL=".hero__inner > *, .sec-head, .pcard, .feature, .prod, .step, .card, .gshot, .map-block, .cta-band .container > *";
       var els=[].slice.call(document.querySelectorAll(SEL));
       if(!els.length)return;
       if(!("IntersectionObserver" in window)){els.forEach(function(el){el.classList.add("in");});return;}
