@@ -143,28 +143,47 @@
   .grid--4 { grid-template-columns: 1fr; }
   .gallery { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
-  .foot-cols { grid-template-columns: 1fr; }
-  /* Footer mobile (1 kolom) — dua tepi kiri, sengaja:
-     (a) 46px = lebar chip ikon .fc-ico (34px) + gap .fc-row (0.75rem = 12px), yaitu
-         titik mulai TEKS di kolom Kontak. Dipakai daftar "Halaman".
-     (b) 0 = tepi kolom, yaitu titik mulai IKON (.fc-ico) di kolom Kontak. Dipakai
-         blok alamat.
-     Blok alamat DULU ikut (a) ("simetris dengan teks WhatsApp"), lalu pemilik
-     mengubahnya: alamat harus sejajar dengan LOGO WhatsApp, bukan teksnya — jadi
-     margin-left-nya 0 dan ia lurus dengan chip ikon Kontak & Media Sosial.
-     Daftar "Halaman" sengaja DITINGGAL di 46px: pemilik hanya menyebut blok alamat.
-     Judul kolom (h3) juga tetap di tepi kolom, seperti sejak awal.
+  /* Footer mobile = SATU kolom, dan kini SATU tepi kiri: x=20 (padding .container).
+     Terukur di 504px — plakat logo, blok alamat, chip Kontak, dan chip Media Sosial
+     semuanya mulai di x=20,0.
+     Dulu ada DUA tepi: 0 untuk alamat & judul kolom, 46px untuk daftar "Halaman"
+     (46 = chip .fc-ico 34px + gap .fc-row 0.75rem/12px = titik mulai TEKS di kolom
+     Kontak). Sejak kolom "Halaman" disembunyikan di mobile (lihat .foot-col--pages
+     di bawah), tepi 46px itu tak punya penghuni yang tampak lagi — variabel
+     `--foot-mobile-indent` beserta aturan pemakainya SUDAH DIHAPUS dari blok ini.
+     KALAU kolom "Halaman" kelak dimunculkan lagi di mobile, kembalikan DUA baris ini:
+       .foot-cols { --foot-mobile-indent: 46px; }
+       .foot-col ul:not(.foot-social) { margin-left: var(--foot-mobile-indent); }
+     `:not(.foot-social)` WAJIB ada di situ — daftar Media Sosial juga <ul> di dalam
+     .foot-col tapi item-nya sudah punya chip ikon sendiri; tanpa pengecualian itu ia
+     tergeser DOBEL (dulu terukur teksnya lompat dari x=65.2 ke x=111.2).
+     Blok alamat `margin-left: 0` = sejajar dengan LOGO WhatsApp (chip .fc-ico), bukan
+     dengan teksnya — permintaan pemilik; jangan kembalikan ke 46px tanpa permintaan.
+     Judul kolom (h3) memang selalu di tepi kolom, seperti sejak awal.
      LOCKUP: geser -14px yang lama SUDAH DIHAPUS. Dulu itu membuat GAMBAR logo footer
      mendarat di x=20 (sejajar logo header) dengan konsekuensi tepi panel putih di
-     x=6. Sejak panel jadi plakat bersudut 20px + padding 20px, geseran itu menaruh
-     tepi plakat tepat di x=0 — menempel bibir layar dan merusak kesan "plakat".
-     Sekarang plakat duduk rata kolom (x=20), gambar logonya di x=40. */
-  .foot-cols { --foot-mobile-indent: 46px; }
+     x=6. Sejak panel jadi plakat bersudut 20px, geseran itu menaruh tepi plakat tepat
+     di x=0 — menempel bibir layar dan merusak kesan "plakat". Sekarang plakat duduk
+     rata kolom (x=20), gambar logonya di x=40. */
+  .foot-cols { grid-template-columns: 1fr; }
   .foot-address { margin-left: 0; }
-  /* :not(.foot-social) WAJIB — daftar Media Sosial juga <ul> di dalam .foot-col,
-     tapi item-nya sudah punya chip ikon sendiri. Tanpa pengecualian ini ia
-     tergeser DOBEL (terukur teksnya lompat dari x=65.2 ke x=111.2). */
-  .foot-col ul:not(.foot-social) { margin-left: var(--foot-mobile-indent); }
+  /* Kolom "Halaman" DISEMBUNYIKAN di mobile atas permintaan pemilik — keempat
+     tautannya (Beranda/Produk/Tentang Kami/Kontak) sudah ada di drawer hamburger,
+     jadi di layar sempit kolom ini cuma mengulang menu yang sama dan memanjangkan
+     footer. Sengaja `display: none` di CSS, BUKAN dihapus dari HTML: desktop masih
+     memakainya, markup footer tetap identik di kelima file, dan tautannya tetap
+     ada di DOM sehingga crawler (yang mengindeks versi mobile) tetap membacanya.
+     Efek samping yang menguntungkan: setelah kolom ini hilang, `Halaman` tak lagi
+     jadi satu-satunya blok di tepi teks 46px — semua blok mobile yang tersisa rata
+     di x=20 (lihat catatan tepi kiri di atas). */
+  .foot-col--pages { display: none; }
+  /* Tautan Kebijakan Privasi HANYA muncul di mobile, menempel di baris copyright.
+     Alasannya: halaman itu ditaut dari kolom "Halaman" saja — tidak ada di nav utama
+     maupun drawer — jadi menyembunyikan kolomnya membuat kebijakan privasi TIDAK
+     BISA dicapai sama sekali dari layar mobile. Di desktop tetap disembunyikan
+     karena kolom "Halaman" sudah memuatnya (lihat .foot-bottom__privacy di
+     styles.css yang menyetel display:none sebagai default). */
+  .foot-bottom__privacy { display: inline; }
   .cta-band .container { flex-direction: column; align-items: flex-start; }
   /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
      wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */

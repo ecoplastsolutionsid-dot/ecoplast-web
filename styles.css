@@ -698,14 +698,16 @@ a.crow__val:hover { color: var(--green); }
   z-index: -1;
 }
 .site-footer .container { position: relative; }
-/* Logo = elemen dekoratif di atas; tiga kolom di bawahnya berbagi baseline yang sama
-   (align-items:start) — jadi awal teks "Jasa produksi…", "Halaman", "Kontak" sejajar,
-   bukan sejajar dengan puncak logo. Jarak di bawah ini murni spasi logo→konten. */
+/* EMPAT kolom: Perusahaan (.foot-info) · Halaman · Kontak · Media Sosial.
+   `align-items: start` membuat keempatnya mulai di baseline atas yang SAMA — terukur
+   `top` identik di keempatnya. Jadi puncak plakat logo sejajar dengan judul "HALAMAN",
+   "KONTAK", dan "MEDIA SOSIAL", bukan dengan teks di bawah logo. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Padding panel putih lockup (kini SEMUA sisi, plakat simetris). Dipakai DUA kali —
-   oleh .foot-brand (padding panel) dan .foot-address (indent teks) — supaya blok
+/* Padding KIRI-KANAN panel putih lockup. Atas-bawah TIDAK memakai angka ini (lihat
+   `padding` di .foot-brand) — hanya sisi horizontal, karena angka ini dipakai DUA kali:
+   oleh .foot-brand (padding kiri-kanan) dan .foot-address (margin-left), supaya blok
    alamat lurus tepat di bawah GAMBAR logo, bukan di bawah tepi panelnya. Satu angka,
-   jangan dipisah. Naik dari 14px ke 20px saat panel dijadikan "plakat lembut". */
+   jangan dipisah. Riwayat: 14px → 20px saat panel dijadikan "plakat lembut". */
 .foot-info { --foot-panel-pad-x: 20px; }
 /* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-lockup.png`, aset yang
    SAMA dengan header — lihat `.brand` di atas) di dalam
@@ -717,24 +719,37 @@ a.crow__val:hover { color: var(--green); }
    Panel di sini SAH (dulu chip putih pernah ditolak) karena kini wordmark navy
    ada di dalam bitmap: tanpa backing terang ia tak terbaca di footer gelap. */
 .foot-brand {
-  /* PLAKAT, bukan kotak kaku: kotak putih simetris (padding sama di keempat sisi),
-     sudut besar, lebar dikunci 200px, logo di-tengah. Sebelumnya panel "membungkus
-     rapat" lockup (fit-content + padding 8px/14px) sehingga bentuknya sangat pipih
-     dan sudut 10px terasa kaku. */
+  /* PLAKAT, bukan kotak kaku: kotak putih bersudut besar, lebar dikunci 200px, logo
+     di-tengah. Paddingnya sengaja TIDAK simetris — alasannya di komentar `padding`
+     di bawah. Sebelum jadi plakat, panel "membungkus rapat" lockup (fit-content +
+     padding 8px/14px) sehingga bentuknya sangat pipih dan sudut 10px terasa kaku. */
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   max-width: 200px;
   text-decoration: none;
-  /* Jarak lockup → blok alamat. Dulu 1.4rem (22.4px), dari zaman masih ada paragraf
+  /* Jarak plakat → blok alamat. Dulu 1.4rem (22.4px), dari zaman masih ada paragraf
      deskripsi di antaranya; setelah paragraf itu dihapus, alamat langsung menempel
      ke lockup sehingga 22.4px + half-leading baris pertama terasa menggantung.
-     0.5rem = 8px margin → jarak visual logo↔"PT. Mencoba Bertahan Hidup" ±14px. */
+     Sekarang 0.5rem = 8px. TERUKUR (1280px): tepi bawah plakat → atas blok alamat
+     8,0px; tepi bawah GAMBAR logo → baris "PT. Mencoba Bertahan Hidup" 20,0px
+     (= 12px padding-bottom plakat + 8px margin ini). Angka kedua itu tadinya 28,0px
+     dan turun sendiri saat padding vertikal plakat dipangkas 20px → 12px. */
   margin-bottom: 0.5rem;
-  /* Padding LEGA & SAMA di keempat sisi — aset di-crop rapat (emblem menyentuh tepi
-     atas & bawah), jadi ruang napas ini yang membuatnya terbaca sebagai plakat. */
-  padding: var(--foot-panel-pad-x);
+  /* Padding TIDAK simetris, dan itu disengaja. Dulu 20px keempat sisi; terukur plakat
+     jadi 200x74.8 sementara logonya cuma 160x34.8 — logo hanya mengisi 37% luas
+     plakat, 63% sisanya putih kosong, dan pemilik menilainya kebesaran. Sebabnya:
+     lockup itu strip 4.60:1, jadi 20px di kiri/kanan = 25% lebar logo tapi 20px di
+     atas/bawah = 115% TINGGI logo. Plakat ikut termampat jadi 2.67:1 dan terbaca
+     sebagai bongkahan, bukan badge yang memeluk lockup.
+     Sekarang 12px atas/bawah → plakat 200x58.8 (rasio 3.40:1, isi 47%), tinggi turun
+     24%. Sisi kiri/kanan WAJIB tetap var(--foot-panel-pad-x): angka itu dipakai ulang
+     sebagai margin-left .foot-address supaya alamat lurus di bawah GAMBAR logo, jadi
+     mengubahnya = menggeser perataan footer. Mengecilkan panel lewat `max-width`
+     JANGAN dipakai — itu ikut mengecilkan logo, padahal "SOLUTIONS" sudah di ±5.9px,
+     di bawah ambang baca ±8px. */
+  padding: 12px var(--foot-panel-pad-x);
   background: #fff;
   /* Pemisah dari footer gelap = SHADOW, bukan border. Border rgba(255,255,255,.15)
      di sini justru kotor: garisnya menimpa tepi panel yang sudah putih, hasil
@@ -814,19 +829,22 @@ a.crow__val:hover { color: var(--green); }
   border-radius: 9px;
   background: rgba(31, 122, 77, .2);
   color: var(--green-light);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .fc-ico svg { width: 17px; height: 17px; }
 .fc-label { display: block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: .12em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1px; }
 .fc-val { font-size: 0.95rem; font-weight: 600; color: #EAF1EB; text-decoration: none; white-space: nowrap; transition: color var(--dur) var(--ease); }
 a.fc-val:hover { color: #fff; }
-.fc-ico { transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
 .fc-row:hover .fc-ico { background: rgba(31,122,77,.35); color: #fff; }
 .fc-divider { border: 0; border-top: 1px solid rgba(255, 255, 255, .06); margin: 0; }
 /* Media Sosial — placeholder, siap untuk tautan sosial di masa depan */
 .foot-social { list-style: none; display: grid; gap: 0.85rem; }
-/* gap DISAMAKAN dengan .fc-row (0.75rem). Chip ikon kedua baris sama-sama 34px,
-   jadi gap yang sama membuat teks Media Sosial & teks Kontak mulai di x yang persis
-   sama — terukur 65.2 → 66.0 di mobile, sejajar dgn Halaman & alamat. */
+/* gap `.fsoc` DISAMAKAN dengan `.fc-row` (0.75rem) — jangan dipisah. Chip ikon kedua
+   baris sama-sama 34px, jadi gap yang sama membuat TEKS Media Sosial dan TEKS Kontak
+   mulai di x yang persis sama (34 + 12 = 46px dari tepi kolom). Dulu 0.7rem dan
+   melesetkan Media Sosial 0.8px dari Kontak — terukur 65.2 vs 66.0 di mobile.
+   Catatan: `.foot-social` di atas punya `gap: 0.85rem` sendiri, itu jarak VERTIKAL
+   antar baris sosial — beda hal, tidak perlu disamakan dengan angka ini. */
 .fsoc { display: flex; align-items: center; gap: 0.75rem; opacity: .6; transition: opacity var(--dur) var(--ease); }
 .fsoc:hover { opacity: .85; }
 .fsoc-ico {
@@ -852,6 +870,22 @@ a.fc-val:hover { color: #fff; }
   text-align: center;
 }
 .foot-bottom .js-year { color: inherit; }   /* tahun ikut warna copyright, tak tersembunyi */
+/* Tautan Kebijakan Privasi di baris copyright — default MATI. Ia hanya dinyalakan di
+   blok ≤560px (responsive.css), tempat kolom "Halaman" disembunyikan; tanpa itu
+   kebijakan privasi tak punya tautan sama sekali di mobile. Di desktop kolom
+   "Halaman" masih memuatnya, jadi menampilkannya di sini cuma jadi duplikat. */
+.foot-bottom__privacy {
+  display: none;
+  color: inherit;
+  text-decoration: none;
+  /* Tanpa ini frasanya pecah di tengah ("Kebijakan" / "Privasi") saat baris copyright
+     wrap di layar sempit — terukur di 504px. nowrap memindahkan tautan utuh ke
+     baris berikutnya. */
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease);
+}
+.foot-bottom__privacy::before { content: " · "; }
+.foot-bottom__privacy:hover { color: #C7D3CA; text-decoration: underline; }
 
 /* ==========================================================================
    Accessibility helpers
