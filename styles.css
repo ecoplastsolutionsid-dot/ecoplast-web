@@ -703,12 +703,21 @@ a.crow__val:hover { color: var(--green); }
    `top` identik di keempatnya. Jadi puncak plakat logo sejajar dengan judul "HALAMAN",
    "KONTAK", dan "MEDIA SOSIAL", bukan dengan teks di bawah logo. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Padding KIRI-KANAN panel putih lockup. Atas-bawah TIDAK memakai angka ini (lihat
-   `padding` di .foot-brand) — hanya sisi horizontal, karena angka ini dipakai DUA kali:
-   oleh .foot-brand (padding kiri-kanan) dan .foot-address (margin-left), supaya blok
-   alamat lurus tepat di bawah GAMBAR logo, bukan di bawah tepi panelnya. Satu angka,
-   jangan dipisah. Riwayat: 14px → 20px saat panel dijadikan "plakat lembut". */
-.foot-info { --foot-panel-pad-x: 20px; }
+/* Padding KIRI-KANAN panel putih lockup = jarak logo ke tepi plakat. Atas-bawah TIDAK
+   memakai angka ini (lihat `padding` di .foot-brand) — hanya sisi horizontal, karena
+   angka ini dipakai DUA kali: oleh .foot-brand (padding kiri-kanan) dan .foot-address
+   (margin-left), supaya blok alamat lurus tepat di bawah GAMBAR logo, bukan di bawah
+   tepi panelnya. Satu angka, jangan dipisah.
+   Riwayat: 14px → 20px (saat panel dijadikan "plakat lembut") → 8px (pemilik: "jarak
+   logo dengan kontener pada bagian kanan dan kiri perlu dipangkas").
+   BERLAKU DI SEMUA LEBAR. Sempat ada override khusus mobile di responsive.css waktu
+   pemangkasan ini baru diterapkan di mobile saja; begitu desktop ikut disamakan,
+   override itu DIHAPUS supaya angkanya cuma hidup di satu tempat. Jangan hidupkan
+   lagi kecuali desktop & mobile memang harus beda.
+   Menurunkannya ke 8px TIDAK merusak perataan: plakat tetap rata tepi kolom (x=90.5
+   di 1280px), gambar logo dan blok alamat sama-sama bergeser ke x=98.5, jadi selisih
+   "alamat vs gambar logo" tetap 0.0 — sudah diukur. */
+.foot-info { --foot-panel-pad-x: 8px; }
 /* Logo footer = SATU GAMBAR lockup mendatar (`assets/logo-lockup.png`, aset yang
    SAMA dengan header — lihat `.brand` di atas) di dalam
    PANEL PUTIH — pola yang dipakai centralcats.id (`.footer-brand .logo-link`).
@@ -719,15 +728,19 @@ a.crow__val:hover { color: var(--green); }
    Panel di sini SAH (dulu chip putih pernah ditolak) karena kini wordmark navy
    ada di dalam bitmap: tanpa backing terang ia tak terbaca di footer gelap. */
 .foot-brand {
-  /* PLAKAT, bukan kotak kaku: kotak putih bersudut besar, lebar dikunci 200px, logo
+  /* PLAKAT, bukan kotak kaku: kotak putih bersudut besar, lebar dikunci, logo
      di-tengah. Paddingnya sengaja TIDAK simetris — alasannya di komentar `padding`
      di bawah. Sebelum jadi plakat, panel "membungkus rapat" lockup (fit-content +
-     padding 8px/14px) sehingga bentuknya sangat pipih dan sudut 10px terasa kaku. */
+     padding 8px/14px) sehingga bentuknya sangat pipih dan sudut 10px terasa kaku.
+     max-width TERIKAT ke --foot-panel-pad-x: 176 = 160 (lebar logo yang dipertahankan)
+     + 2 × 8. Kalau salah satu diubah, hitung ulang yang lain — kalau tidak, lebar logo
+     ikut berubah dan "SOLUTIONS" (sudah ±5.9px) makin tak terbaca.
+     Riwayat lebar: 200px (padding 20px) → 176px (padding 8px), logo tetap 160px. */
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 200px;
+  max-width: 176px;
   text-decoration: none;
   /* Jarak plakat → blok alamat. Dulu 1.4rem (22.4px), dari zaman masih ada paragraf
      deskripsi di antaranya; setelah paragraf itu dihapus, alamat langsung menempel
@@ -743,12 +756,21 @@ a.crow__val:hover { color: var(--green); }
      lockup itu strip 4.60:1, jadi 20px di kiri/kanan = 25% lebar logo tapi 20px di
      atas/bawah = 115% TINGGI logo. Plakat ikut termampat jadi 2.67:1 dan terbaca
      sebagai bongkahan, bukan badge yang memeluk lockup.
-     Sekarang 12px atas/bawah → plakat 200x58.8 (rasio 3.40:1, isi 47%), tinggi turun
-     24%. Sisi kiri/kanan WAJIB tetap var(--foot-panel-pad-x): angka itu dipakai ulang
-     sebagai margin-left .foot-address supaya alamat lurus di bawah GAMBAR logo, jadi
-     mengubahnya = menggeser perataan footer. Mengecilkan panel lewat `max-width`
-     JANGAN dipakai — itu ikut mengecilkan logo, padahal "SOLUTIONS" sudah di ±5.9px,
-     di bawah ambang baca ±8px. */
+     Sekarang 12px atas/bawah, 8px kiri/kanan → plakat 176x58.8, logo mengisi 53.8%
+     luasnya (dari 37% waktu masih 200x74.8). Tinggi turun 24% dan pita putih di
+     samping logo turun dari 20px ke 8px.
+     8px adalah BATAS BAWAH sisi, dipilih setelah merender 12/10/8/6 dan melihatnya:
+     di 6px plakat mulai terbaca sebagai PIL dan emblem mepet ke lengkung sudut. Di 8px
+     masih aman — dengan border-radius 20px, tepi atas plakat pada x=8 ada di y=4
+     (20 − √(20² − 12²)), jadi tersisa 8px kelonggaran ke tepi atas logo di y=12.
+     Kalau mau lebih rapat lagi, RADIUS-nya yang harus ikut diturunkan, bukan cuma
+     paddingnya.
+     Sisi kiri/kanan WAJIB tetap var(--foot-panel-pad-x): angka itu dipakai ulang
+     sebagai margin-left .foot-address supaya alamat lurus di bawah GAMBAR logo.
+     Mengecilkan plakat lewat `max-width` SAJA jangan dipakai — itu ikut mengecilkan
+     logo, padahal "SOLUTIONS" sudah di ±5.9px, di bawah ambang baca ±8px. Yang benar
+     adalah menurunkan padding DAN max-width bersamaan supaya lebar logo tetap 160px,
+     persis yang dilakukan di sini. */
   padding: 12px var(--foot-panel-pad-x);
   background: #fff;
   /* Pemisah dari footer gelap = SHADOW, bukan border. Border rgba(255,255,255,.15)
@@ -759,23 +781,31 @@ a.crow__val:hover { color: var(--green); }
   border: 0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--dur) var(--ease);
+  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
-/* Hover = angkat elevasi saja, TANPA transform/scale → tak perlu entri baru di blok
-   prefers-reduced-motion. */
-.foot-brand:hover { box-shadow: var(--shadow-md); }
+/* Hover = plakat TERANGKAT: naik 2px + bayangan mendalam, bahasa gerak yang sama
+   dengan kartu (.pcard/.feature). Sebelumnya hover cuma menaikkan elevasi tanpa
+   transform — nyaris tak terasa di footer gelap karena bayangan hijau-gelap di atas
+   latar gelap memang samar.
+   PENTING: karena sekarang memakai transform, `.foot-brand:hover` WAJIB ikut masuk
+   blok prefers-reduced-motion di responsive.css (sudah ditambahkan) — itu aturan
+   proyek untuk setiap transform hover baru.
+   Naik 2px saja, bukan 4px: plakat ini duduk tepat di atas blok alamat dengan jarak
+   8px, jadi angkatan besar akan terlihat menabrak teks di bawahnya. */
+.foot-brand:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.foot-brand:active { transform: translateY(0); box-shadow: var(--shadow-md); }
 /* Logo mengisi lebar-dalam plakat, TINGGI IKUT RASIO (height:auto) → tidak pernah
    gepeng. Ukuran kini diturunkan oleh `max-width` plakat, bukan oleh tinggi tetap:
-   200px − (2 × 20px padding) = 160px lebar → 160 / (570/124) = 34.8px tinggi, SAMA
+   176px − (2 × 8px padding) = 160px lebar → 160 / (570/124) = 34.8px tinggi, SAMA
    di semua breakpoint (karena itu override tinggi mobile di responsive.css dihapus —
    width + height sama-sama definite = rasio diabaikan browser, persis jebakan yang
    pernah kena di .gshot__img).
    Aset 570px ditampilkan 160px = downscale 3.6x → tajam di retina, tidak blur.
    KONSEKUENSI YANG DIKETAHUI: "ECOPLAST" ±13.4px & "SOLUTIONS" ±5.9px, jadi
    SOLUTIONS ada di bawah ambang baca ±8px yang dulu dijaga saat lockup 52px. Ini
-   ikut dari `max-width: 200px` yang diminta pemilik; kalau kelak SOLUTIONS harus
-   terbaca lagi, naikkan max-width plakat (±260px → lockup kembali ke ±48px),
-   JANGAN kembalikan tinggi tetap pada gambar. */
+   ikut dari plakat yang sengaja dikecilkan atas permintaan pemilik; kalau kelak
+   SOLUTIONS harus terbaca lagi, naikkan max-width plakat (±237px dengan padding 8px
+   → lockup kembali ke ±48px tinggi), JANGAN kembalikan tinggi tetap pada gambar. */
 .foot-brand__mark { width: 100%; height: auto; display: block; }
 .site-footer p { font-size: 0.92rem; max-width: 34ch; }
 /* h3 (bukan h4) agar urutan heading valid; properti disamakan supaya tampilan identik */

@@ -167,6 +167,11 @@
      rata kolom (x=20), gambar logonya di x=40. */
   .foot-cols { grid-template-columns: 1fr; }
   .foot-address { margin-left: 0; }
+  /* TIDAK ADA override ukuran plakat di sini. Jarak logo→tepi plakat (8px) dan
+     max-width (176px) sempat ditulis khusus mobile waktu pemangkasan itu baru
+     diminta untuk mobile; begitu desktop ikut disamakan, keduanya dipindah ke
+     styles.css supaya angkanya hidup di SATU tempat. Lihat --foot-panel-pad-x dan
+     .foot-brand di sana. */
   /* Kolom "Halaman" DISEMBUNYIKAN di mobile atas permintaan pemilik — keempat
      tautannya (Beranda/Produk/Tentang Kami/Kontak) sudah ada di drawer hamburger,
      jadi di layar sempit kolom ini cuma mengulang menu yang sama dan memanjangkan
@@ -213,7 +218,11 @@
   }
   .btn:hover, .pcard:hover, .feature:hover, .gshot:hover,
   .pcard:hover .pcard__img, .gshot:hover .gshot__img,
-  .step:hover .step__n { transform: none; }
+  .step:hover .step__n,
+  /* .foot-brand baru memakai transform sejak hover-nya jadi "terangkat" (dulu cuma
+     box-shadow, jadi tak perlu ada di sini). Bayangannya tetap berubah — yang
+     dimatikan cuma geraknya. */
+  .foot-brand:hover { transform: none; }
   /* Cahaya berjalan mati total → sisakan siluet skyline statis (background CSS). */
   .hero__skyline { display: none; }
   /* Reveal scroll-in: jangan sembunyikan apa pun → paksa tampil tanpa gerak. */
