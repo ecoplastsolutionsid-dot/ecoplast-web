@@ -802,7 +802,10 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   **TIDAK BENAR** — langkah "Add site" tidak pernah tuntas, dan karena itu
   `sitemap.xml` juga tidak pernah disubmit ke Bing.
   Yang **memang sudah** ada: `BingSiteAuth.xml` di root, token
-  `3D02D86CE61816B19DD75DA3934E5333`, terverifikasi dilayani `200` di live. File
+  `982BBCFB7442C111D78753E1CCF0CABC`, dilayani `200` di live. **Token lama
+  `3D02D86CE61816B19DD75DA3934E5333` TERNYATA BASI** — saat "Verify" ditekan,
+  Bing menolak dengan *"Incorrect authentication key"* dan menyebut kunci yang
+  benar. Itu bukti tambahan pendaftaran lama tak pernah tuntas. File
   ini **JANGAN dihapus/diubah** — begitu situs ditambahkan, file inilah yang
   dipakai memverifikasi kepemilikan.
   **IndexNow tetap sah tanpa BWT** — yang mengautentikasi ping adalah file kunci
