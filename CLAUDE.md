@@ -52,7 +52,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260904b`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260904d`, sama di **keenam** file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -601,6 +601,41 @@ Aturan penting:
   melaporkannya. Sekarang `align-items: start` + `margin-top: auto` dihapus:
   void tinggal **22,4px**, kartu kanan setinggi isinya sendiri. Jangan
   kembalikan `stretch` tanpa memikirkan void itu lagi.
+- **PAKEM KELAS SAAT MENAMBAH HALAMAN — baca ini SEBELUM menulis markup baru.**
+  Halaman baru wajib menyalin kelas dari halaman yang sudah ada, bukan mengarang
+  nama kelas yang "kedengarannya benar". CSS tidak pernah mengeluh: kelas karangan
+  hanya diam tanpa efek, jadi kesalahannya tak terlihat sampai pemilik melaporkan
+  "teksnya tidak terbaca". Ini betul-betul terjadi di `pemesanan.html`.
+  - **Section GELAP (`.hero`, `.cta-band`) punya kelas SENDIRI — jangan pakai
+    versi terang.** Pasangannya:
+    | di latar terang | di latar gelap |
+    |---|---|
+    | `class="eyebrow"` | `class="eyebrow on-dark"` |
+    | `class="hl"` — **TIDAK ADA di CSS** | `class="hl-light"` |
+    | `class="lead"` | `class="hero__lead"` |
+    `.eyebrow` polos memakai `var(--green)` yang gelap → di hero gelap nyaris
+    tak terbaca. `.hl` tidak pernah didefinisikan sama sekali, jadi frasa sorotan
+    kehilangan warna **dan** `white-space: nowrap`-nya sehingga bisa pecah baris.
+  - **Tidak ada varian `.section--*`.** Seluruh situs cuma memakai
+    `class="section"`. `section--tint` pernah dikarang dan tidak berefek apa pun.
+  - **Cara memeriksa (angka, bukan mata):** kumpulkan semua kelas dari atribut
+    `class="…"` di keenam HTML, lalu cocokkan dengan `\.([A-Za-z][\w-]*)` dari
+    `styles.css` + `responsive.css`. Yang tersisa = kelas tanpa definisi. Hasil
+    yang WAJAR dan boleh diabaikan: `crows` (pembungkus tanpa gaya), `js-qty`
+    (cantolan JS), `prod__body`. Selain itu, curigai.
+  - **`aria-current="page"` harus TEPAT SATU per halaman.** Saat `pemesanan.html`
+    dirakit dari kerangka `kontak.html`, penanda milik Kontak ikut terbawa dan
+    tidak dihapus → dua item nav bergaris bawah sekaligus, sekaligus cacat
+    aksesibilitas. Kalau merakit halaman dari kerangka halaman lain, hitung
+    kemunculannya sebelum commit.
+- **`<legend>` TIDAK menghormati `padding-top` fieldset.** Browser menaruh legend
+  di kotak *border* fieldset, bukan kotak konten, jadi `padding` `.of-set` seluruhnya
+  menumpuk di BAWAH legend — terukur 0px di atas judul dan 44,8px di bawahnya,
+  sehingga "Identitas pemesan" dsb. menempel ke garis pemisah (dilaporkan pemilik).
+  Perbaikannya `float: left; width: 100%` pada `.of-legend` + `.of-legend + * {
+  clear: both }`; setelah itu terukur 30,4px di 1280 dan 22,4px di 504 (= nilai
+  `--card-pad`), bawah 14,4px. **Jangan hapus float/clear itu** — tanpa `clear`,
+  isi fieldset menimpa legend yang mengambang.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion` dihormati,
   responsif sampai lebar 360px.
 

@@ -983,11 +983,20 @@ a.fc-val:hover { color: #fff; }
 .order-form { padding: 0; overflow: hidden; }
 .of-set { border: 0; margin: 0; padding: var(--card-pad); border-bottom: 1px solid var(--line); }
 .of-set:last-of-type { border-bottom: 0; }
+/* `float` + `width:100%` DISENGAJA, jangan dihapus. Tanpa keduanya browser
+   menaruh <legend> di kotak BORDER fieldset, bukan kotak konten, sehingga
+   `padding` .of-set diabaikan di atas legend dan malah menumpuk di bawahnya —
+   terukur 0px di atas judul dan 44,8px di bawahnya, jadi judul seperti
+   "Identitas pemesan" menempel ke garis pemisah. Difloat-kan, legend kembali
+   mengalir normal di dalam padding. `clear` pada elemen sesudahnya wajib,
+   kalau tidak isi fieldset menimpa legend yang mengambang. */
 .of-legend {
+  float: left; width: 100%;
   font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
   letter-spacing: .13em; text-transform: uppercase; color: var(--green);
   padding: 0; margin-bottom: 0.9rem;
 }
+.of-legend + * { clear: both; }
 .of-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1rem; }
 .of-grid--gap { margin-top: 0.9rem; }
 .of-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
