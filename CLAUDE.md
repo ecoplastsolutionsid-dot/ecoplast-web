@@ -1006,14 +1006,28 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 ## Backup
 
 Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-web.tar.gz`** (Google Drive).
-Diperbarui terakhir **4 Sep 2026** (mtime 14:11), **6.145.276 byte** — angka ini
-diukur ulang dari file di `G:`; catatan lama menulis 6.108.907, itu keliru.
+Diperbarui terakhir **5 Sep 2026 dari laptop**, **±6,3 MB**, 270 entri.
+Generasi sebelumnya disimpan sebagai `ecoplast-web_2026-09-04_LAMA.tar.gz`
+(6.145.276 byte, dibuat dari PC Toko) — boleh dihapus kapan saja.
+Catatan lama yang menulis 6.108.907 byte itu keliru.
 
-**Struktur di dalam tarball — BUKAN lagi rata di `./`:**
+**Struktur di dalam tarball — BUKAN rata di `./`:**
 ```
 ecoplast-web/      repo lengkap + .git (riwayat commit) + .claude/settings.local.json
-claude-settings/   settings.global.json, settings.local.json, BACA-SAYA.txt
+claude-settings/   settings.global.json, settings.local.json,
+                   settings.user-local.json, BACA-SAYA.txt
 ```
+`settings.user-local.json` (= `~/.claude/settings.local.json`, izin tingkat user)
+**baru ada sejak generasi 5 Sep**; versi 4 Sep tidak punya.
+
+**Sudah DIUJI PULIH, bukan cuma dibuat.** Tarball diekstrak ke folder sementara
+lalu `git fsck` dijalankan pada hasilnya: **bersih (exit 0)**, riwayat commit
+utuh, working tree bersih, remote menunjuk repo yang benar. Kalau kelak backup
+dibuat ulang, **ulangi uji ini** — backup yang tak bisa dipulihkan tidak ada
+gunanya, dan `tar` yang "berhasil" tidak membuktikan apa-apa soal isi `.git`.
+
+**Tarball ini memuat commit yang BELUM ada di GitHub.** Selama laptop tidak bisa
+push, `.git` di dalamnya "ahead" dari `origin/main`. Itu wajar, bukan korupsi.
 Restore: `tar -xzf ecoplast-web.tar.gz` → dua folder terpisah. Layout lama menaruh
 semuanya di `./`; itu diubah karena setelan Claude yang ikut di root repo akan
 masuk ke direktori kerja saat diekstrak dan berisiko ter-commit.
