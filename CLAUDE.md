@@ -616,8 +616,15 @@ Aturan penting:
     `.eyebrow` polos memakai `var(--green)` yang gelap → di hero gelap nyaris
     tak terbaca. `.hl` tidak pernah didefinisikan sama sekali, jadi frasa sorotan
     kehilangan warna **dan** `white-space: nowrap`-nya sehingga bisa pecah baris.
-  - **Tidak ada varian `.section--*`.** Seluruh situs cuma memakai
-    `class="section"`. `section--tint` pernah dikarang dan tidak berefek apa pun.
+  - **Varian `.section--*` hanya SATU dan harus terdefinisi di CSS.** Yang ada:
+    **`.section--tight`** (`padding-top: 0`) untuk section yang merupakan
+    *lanjutan* dari section di atasnya. Dipakai di `pemesanan.html` pada section
+    formulir: dua `.section` beruntun menumpuk `var(--space)` bawah + atas =
+    **208px** terukur di 1280px, dan pemilik melaporkan jeda itu terlalu jauh
+    karena "Syarat pemesanan" adalah pengantar langsung ke formulirnya, bukan
+    topik baru. Setelah dinolkan: **119,7px** di 1280 dan **73,2px** di 504.
+    `section--tint` pernah **dikarang** dan tidak pernah ada di CSS — itu bug,
+    bukan preseden. Kalau butuh varian baru, definisikan dulu di `styles.css`.
   - **Cara memeriksa (angka, bukan mata):** kumpulkan semua kelas dari atribut
     `class="…"` di keenam HTML, lalu cocokkan dengan `\.([A-Za-z][\w-]*)` dari
     `styles.css` + `responsive.css`. Yang tersisa = kelas tanpa definisi. Hasil
