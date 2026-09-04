@@ -1029,16 +1029,37 @@ dipindai, bukan kehati-hatian teoretis):
 Cara memeriksa sebelum mengunggah: hitung kecocokan pola (`re_[A-Za-z0-9_]{20,}`,
 `accessToken`, `Bearer`) dan pastikan **nol**; jangan pernah mencetak nilainya.
 
+**Kenapa Drive dipakai sama sekali:** `_BACKUP-servis` ada karena **servis /
+instal ulang menghapus semua folder di mesin**. Jadi Drive bukan sekadar
+jembatan antar mesin — ia **titik pulih terakhir** kalau salah satu hardware
+rusak, dan bisa dibuka dari mana saja karena terkunci akun Gmail. Konsekuensinya:
+isi Drive harus cukup untuk **membangun ulang dari nol**, bukan cuma mengoper
+file. Itu sebabnya `ecoplast-app` wajib ikut ke sana.
+
 **Memindahkan token/secret antar mesin — JANGAN pernah dalam bentuk polos di
-Drive.** Dua jalan yang sah, dan urutan preferensinya sudah ditetapkan:
-1. **Tidak mengirim sama sekali (disarankan).** Mesin tujuan membuat token
-   Cloudflare **baru** dari dashboard, dan `RESEND_API_KEY` di-set ulang lewat
-   dashboard saat deploy pertama. Nol rahasia lewat Drive. Token bisa dibuat
-   ulang; token bocor tidak bisa ditarik kembali.
-2. **Terenkripsi**, mengikuti preseden yang sudah ada di `_BACKUP-servis`:
-   `cc-env-secrets` dan `cc-pos-env-secrets` tersimpan sebagai `.tar.gz.enc`
-   berpasangan dengan `CARA-BUKA-*.txt`. Ikuti metode yang sama; **passphrase
-   tidak boleh ikut ditulis di Drive.**
+Drive, dan JANGAN PERNAH di repo** (`ecoplast-web` publik; token yang masuk
+langsung terbuka ke internet dan sulit dicabut dari riwayat git).
+**Cara yang dipilih pemilik (5 Sep 2026): TERENKRIPSI di Drive**, mengikuti
+preseden `cc-env-secrets` & `cc-pos-env-secrets` yang sudah ada di folder yang
+sama — `.tar.gz.enc` berpasangan dengan `CARA-BUKA-*.txt`.
+- Metodenya **OpenSSL `enc` standar: `-aes-256-cbc -pbkdf2 -iter 600000`**
+  (dicocokkan dari `CARA-BUKA-*.txt` yang sudah ada — ikuti persis, jangan
+  mengarang parameter baru).
+- **Passphrase tidak boleh ditulis di Drive** maupun di repo; disampaikan lewat
+  jalur lain.
+- Alasan tetap dienkripsi walau Drive sudah terkunci akun Gmail: kalau akun itu
+  sendiri yang jebol, enkripsi ini lapisan terakhir yang masih menahan token.
+- Sisi pembuka sudah jadi: **`_transfer\AMBIL-ENV.ps1`** (mencari openssl bawaan
+  Git kalau tidak ada di PATH — di laptop ada di
+  `C:\Program Files\Git\usr\bin\openssl.exe`, v3.5.7; minta passphrase tanpa
+  menampilkannya; hapus file sementara setelah selesai).
+- **JEBAKAN PowerShell:** jangan menyalurkan keluaran `openssl`/`tar` lewat
+  **pipe PowerShell** — pipe-nya mengalirkan teks/objek, bukan byte mentah, jadi
+  data biner **rusak**. Pakai Git Bash, atau lewat file sementara. `AMBIL-ENV.ps1`
+  sudah memakai cara file sementara.
+- Alternatif yang **tidak jadi dipakai** (jangan ditawarkan lagi tanpa permintaan
+  baru): tidak mengirim token sama sekali dan membuat token baru dari dashboard
+  di mesin tujuan.
 Folder `memory` proyek KOSONG saat backup 4 Sep 2026 dibuat.
 
 **LUBANG YANG MASIH TERBUKA — `ecoplast-app` BELUM PERNAH DI-BACKUP SAMA SEKALI.**
