@@ -10,6 +10,32 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 
 ## Mesin kerja (LINTAS MESIN — baca sebelum menyimpulkan ada file yang hilang)
 
+### WAJIB — SEBELUM MENGERJAKAN TUGAS APA PUN, PASTIKAN LOKAL TIDAK TERTINGGAL
+
+Repo ini dikerjakan bergantian di **dua mesin**, jadi salinan lokal bisa basi
+tanpa terlihat basi. **Langkah pertama setiap tugas, sebelum membaca atau
+mengubah file apa pun**, bukan setelahnya:
+
+```
+git -C <repo> fetch origin            # aman, tidak mengubah working tree
+git -C <repo> status --short --branch # lihat ahead/behind
+```
+
+- **`behind` > 0** → `git -C <repo> pull --rebase origin main` dulu, baru mulai
+  kerja. Mengedit di atas salinan basi = konflik atau perubahan yang tertimpa.
+- **`ahead` > 0** → ada commit lokal yang belum terkirim; jangan asumsikan mesin
+  seberang sudah punya.
+- **Pakai `fetch` lebih dulu, jangan langsung `pull`.** `fetch` tidak menyentuh
+  working tree, jadi kalau ternyata ada kerjaan lokal yang belum di-commit, kamu
+  masih sempat menyelamatkannya.
+
+**PENGECUALIAN PENTING — di laptop selagi login GitHub belum pulih, `fetch`/`pull`
+akan MENGGANTUNG sampai timeout** (dialog Credential Manager menunggu persetujuan
+HP; terukur mati di 2 menit). Jangan jalankan, dan jangan salah membacanya sebagai
+repo rusak. Gantinya: cek folder jembatan
+`G:\My Drive\_BACKUP-servis\_transfer\` — kalau ada bundle yang lebih baru dari
+`HEAD` lokal, tarik dari situ (lihat "Jembatan Drive" di bawah).
+
 Pekerjaan proyek ini berpindah antara **dua mesin**, dan isinya **tidak sama**.
 Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
 
@@ -1002,6 +1028,17 @@ dipindai, bukan kehati-hatian teoretis):
   sampah runtime.
 Cara memeriksa sebelum mengunggah: hitung kecocokan pola (`re_[A-Za-z0-9_]{20,}`,
 `accessToken`, `Bearer`) dan pastikan **nol**; jangan pernah mencetak nilainya.
+
+**Memindahkan token/secret antar mesin — JANGAN pernah dalam bentuk polos di
+Drive.** Dua jalan yang sah, dan urutan preferensinya sudah ditetapkan:
+1. **Tidak mengirim sama sekali (disarankan).** Mesin tujuan membuat token
+   Cloudflare **baru** dari dashboard, dan `RESEND_API_KEY` di-set ulang lewat
+   dashboard saat deploy pertama. Nol rahasia lewat Drive. Token bisa dibuat
+   ulang; token bocor tidak bisa ditarik kembali.
+2. **Terenkripsi**, mengikuti preseden yang sudah ada di `_BACKUP-servis`:
+   `cc-env-secrets` dan `cc-pos-env-secrets` tersimpan sebagai `.tar.gz.enc`
+   berpasangan dengan `CARA-BUKA-*.txt`. Ikuti metode yang sama; **passphrase
+   tidak boleh ikut ditulis di Drive.**
 Folder `memory` proyek KOSONG saat backup 4 Sep 2026 dibuat.
 
 **LUBANG YANG MASIH TERBUKA — `ecoplast-app` BELUM PERNAH DI-BACKUP SAMA SEKALI.**
