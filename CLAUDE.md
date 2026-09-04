@@ -45,7 +45,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260801b`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260904a`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -385,9 +385,11 @@ Aturan penting:
   - Reduced-motion tidak perlu diubah: blok `prefers-reduced-motion` hanya menolkan
     `transition-duration` (drawer terbuka seketika, tetap berfungsi) dan memaksa
     `transform: none` pada selector hover/reveal tertentu — `.nav` tidak termasuk.
-- **Footer (4 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`)
-  berisi 4 kolom yang **semua mulai di baseline atas yang sama** (sejajar tepi atas
-  logo):
+- **Footer (3 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`,
+  `1.75fr 1.55fr 0.95fr`) berisi 3 kolom yang **semua mulai di baseline atas yang sama**
+  (sejajar tepi atas logo). Dulu 4 kolom; kolom **"Halaman"** (nav ulangan) **DIBUANG**
+  atas permintaan pemilik — lihat catatan di bawah, karena pembuangannya menyeret
+  konsekuensi pada tautan Kebijakan Privasi:
   1. **Perusahaan** (`.foot-info`): **logo footer ≠ logo header.** Footer memakai
      **satu gambar** lockup mendatar `assets/logo-lockup.png` (570×124, transparan)
      di dalam **PANEL PUTIH** — meniru `.footer-brand .logo-link` di centralcats.id.
@@ -490,9 +492,9 @@ Aturan penting:
      Mencoba Bertahan Hidup" ±14px karena half-leading `line-height: 1.7` di
      `.foot-address` menambah ±6px yang tak terhitung di angka gap.
      Keempat kolom tetap mulai di baseline atas yang sama (terukur `colTops` identik).
-  2. **Halaman** (`.foot-col`): nav, hover memunculkan panah (`ul a::before`).
-  3. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider.
-  4. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
+  2. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider —
+     WhatsApp, Telepon, **Email**, Jam Operasional.
+  3. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
      LinkedIn, YouTube (inline SVG) dengan label **"Segera hadir"** low-emphasis
      (`opacity .6`) — **placeholder, JANGAN dihapus**; siap jadi tautan asli nanti
      (ganti `<span>` → `<a href>`). Ecoplast belum punya akun sosial.
@@ -517,28 +519,30 @@ Aturan penting:
     via `.js-year` + `getFullYear()` (fallback `2026`). Teks: `© <tahun> Ecoplast
     Solutions. Balaraja, …` — pakai **brand "Ecoplast Solutions"**, bukan nama badan
     hukum PT (badan hukum tetap tampil di kolom "Perusahaan" & JSON-LD `legalName`).
-  - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
-    ≤560px **1 kolom** (urutan: logo, alamat, Kontak, Media Sosial, copyright —
-    kolom **Halaman** disembunyikan di mobile, lihat dua butir berikutnya). Kalau
+  - Responsif (`responsive.css`): desktop 3 kolom → tablet ≤900px **2 kolom** (baris
+    kedua menyisakan satu kolom) → mobile
+    ≤560px **1 kolom** (urutan: logo, alamat, Kontak, Media Sosial, copyright). Kalau
     mengedit footer, ubah di **kelima** file HTML.
-  - **Kolom "Halaman" (`.foot-col--pages`) = `display: none` di ≤560px**, atas
-    permintaan pemilik: keempat tautannya (Beranda/Produk/Tentang Kami/Kontak) sudah
-    ada di drawer hamburger, jadi di layar sempit kolom ini cuma mengulang menu yang
-    sama dan memanjangkan footer. Sengaja disembunyikan lewat CSS, **BUKAN dihapus
-    dari markup** — desktop masih memakainya, footer tetap identik di kelima file, dan
-    tautannya tetap ada di DOM sehingga crawler (yang mengindeks versi mobile) membacanya.
-  - **Konsekuensinya → `.foot-bottom__privacy`.** Kebijakan Privasi hanya ditaut dari
-    kolom "Halaman" — tidak ada di nav utama maupun drawer — jadi menyembunyikan kolom
-    itu membuatnya **tak bisa dicapai sama sekali dari mobile**. Karena itu baris
-    copyright memuat tautan Kebijakan Privasi yang `display: none` secara default
-    (desktop sudah punya kolom "Halaman") dan `display: inline` di ≤560px.
-    `white-space: nowrap` di situ mencegah frasanya pecah jadi dua baris (terukur di
-    504px). Kalau kolom "Halaman" kelak dimunculkan lagi di mobile, sembunyikan lagi
-    tautan ini supaya tidak dobel.
+  - **Kolom "Halaman" SUDAH DIBUANG dari markup**, bukan sekadar disembunyikan.
+    Permintaan pemilik: kelima tautannya (Beranda/Produk/Tentang Kami/Kontak/Kebijakan
+    Privasi) hanya mengulang nav yang sudah ada di header dan di drawer hamburger.
+    Sebelumnya kolom ini `display: none` di ≤560px saja; kini hilang di semua ukuran
+    dan `.foot-col--pages` beserta aturannya tidak ada lagi di CSS mana pun.
+  - **Konsekuensi yang WAJIB ikut ditangani → `.foot-bottom__privacy`.** Kebijakan
+    Privasi **hanya** pernah ditaut dari kolom "Halaman" — tidak ada di nav utama,
+    tidak di drawer. Membuang kolom itu tanpa penggantinya akan menjadikannya
+    **halaman yatim**: ada di sitemap, tapi tak satu pun tautan menuju ke sana.
+    Karena itu tautan Kebijakan Privasi di baris copyright yang dulu `display: none`
+    (hanya menyala di ≤560px) kini **`display: inline` di semua ukuran**, dan itulah
+    satu-satunya jalan menuju halaman tersebut. **Jangan matikan lagi tanpa
+    menyediakan tautan pengganti.** `white-space: nowrap` di situ tetap perlu — tanpa
+    itu frasanya pecah jadi dua baris saat copyright wrap (terukur di 504px).
+    Terukur setelah perubahan: tautan tampil di 375/504/700/900/1280, dan setiap
+    halaman punya tepat satu tautan ke `/kebijakan-privasi.html`.
   - **Footer mobile = SATU tepi kiri: `x = 20` (padding `.container`).** Dulu ada
     DUA, acuannya kolom Kontak: `x = 0` (tepi kolom) tempat IKON `.fc-ico` mulai, dan
     `x = 46px` (`--foot-mobile-indent`) tempat TEKS mulai (chip 34px + gap `.fc-row`
-    12px). Sejak kolom "Halaman" disembunyikan, tepi 46px itu tak punya penghuni yang
+    12px). Sejak kolom "Halaman" dibuang, tepi 46px itu tak punya penghuni yang
     tampak lagi → **variabel `--foot-mobile-indent` beserta aturan pemakainya SUDAH
     DIHAPUS** dari `responsive.css`. Kalau kolom itu kelak dimunculkan lagi di mobile,
     kembalikan DUA baris ini:
@@ -674,6 +678,18 @@ Aturan penting:
 
 - Badan hukum: **PT. Mencoba Bertahan Hidup** (brand: Ecoplast Solutions).
 - WhatsApp/Telepon: **0852-1440-1234** → `tel:+6285214401234`.
+- Email: **customercare@ecoplastsolutions.id** → `mailto:`. Alamat ini **tidak punya
+  kotak surat sendiri**: Cloudflare Email Routing meneruskannya ke
+  `ecoplastsolutions.id@gmail.com`. Terbukti bekerja lewat uji kirim dari akun lain
+  (4 Sep 2026). Pengirimannya lewat Resend (apex terverifikasi). Alamat ini tampil di
+  kartu "Informasi kontak" (`kontak.html`), kolom Kontak di footer kelima file, dan
+  properti `email` pada JSON-LD `LocalBusiness` (`index.html` + `kontak.html`).
+  **Catatan tata letak:** `.fc-val` sengaja `white-space: nowrap` supaya nomor telepon
+  tak pernah patah, tapi alamat email 33 karakter akan melar keluar kolom footer.
+  Karena itu ada kelas tambahan `.fc-val--email` (`white-space: normal`,
+  `overflow-wrap: anywhere`, `font-size: 0.86rem`) plus `<wbr>` tepat setelah `@` di
+  markup, supaya patahannya jatuh di tempat yang wajar. Terukur: tidak keluar kolom
+  dan tidak menimbulkan overflow horizontal di 375/504/900/1280.
 - Semua tombol WhatsApp: `https://wa.me/6285214401234?text=<pesan-terurl-encode>`,
   selalu `target="_blank" rel="noopener"`, teks pre-filled sesuai konteks tombol.
 - Alamat: Kp. Tobat, Desa Sentul Jaya, Kec. Balaraja, Kab. Tangerang, Banten.

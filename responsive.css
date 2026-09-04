@@ -148,15 +148,9 @@
      semuanya mulai di x=20,0.
      Dulu ada DUA tepi: 0 untuk alamat & judul kolom, 46px untuk daftar "Halaman"
      (46 = chip .fc-ico 34px + gap .fc-row 0.75rem/12px = titik mulai TEKS di kolom
-     Kontak). Sejak kolom "Halaman" disembunyikan di mobile (lihat .foot-col--pages
-     di bawah), tepi 46px itu tak punya penghuni yang tampak lagi — variabel
-     `--foot-mobile-indent` beserta aturan pemakainya SUDAH DIHAPUS dari blok ini.
-     KALAU kolom "Halaman" kelak dimunculkan lagi di mobile, kembalikan DUA baris ini:
-       .foot-cols { --foot-mobile-indent: 46px; }
-       .foot-col ul:not(.foot-social) { margin-left: var(--foot-mobile-indent); }
-     `:not(.foot-social)` WAJIB ada di situ — daftar Media Sosial juga <ul> di dalam
-     .foot-col tapi item-nya sudah punya chip ikon sendiri; tanpa pengecualian itu ia
-     tergeser DOBEL (dulu terukur teksnya lompat dari x=65.2 ke x=111.2).
+     Kontak). Kolom "Halaman" kini DIBUANG seluruhnya dari footer, jadi tepi 46px itu
+     tak punya penghuni sama sekali — variabel `--foot-mobile-indent` beserta aturan
+     pemakainya SUDAH DIHAPUS dari blok ini dan tidak perlu dikembalikan.
      Blok alamat `margin-left: 0` = sejajar dengan LOGO WhatsApp (chip .fc-ico), bukan
      dengan teksnya — permintaan pemilik; jangan kembalikan ke 46px tanpa permintaan.
      Judul kolom (h3) memang selalu di tepi kolom, seperti sejak awal.
@@ -172,23 +166,10 @@
      diminta untuk mobile; begitu desktop ikut disamakan, keduanya dipindah ke
      styles.css supaya angkanya hidup di SATU tempat. Lihat --foot-panel-pad-x dan
      .foot-brand di sana. */
-  /* Kolom "Halaman" DISEMBUNYIKAN di mobile atas permintaan pemilik — keempat
-     tautannya (Beranda/Produk/Tentang Kami/Kontak) sudah ada di drawer hamburger,
-     jadi di layar sempit kolom ini cuma mengulang menu yang sama dan memanjangkan
-     footer. Sengaja `display: none` di CSS, BUKAN dihapus dari HTML: desktop masih
-     memakainya, markup footer tetap identik di kelima file, dan tautannya tetap
-     ada di DOM sehingga crawler (yang mengindeks versi mobile) tetap membacanya.
-     Efek samping yang menguntungkan: setelah kolom ini hilang, `Halaman` tak lagi
-     jadi satu-satunya blok di tepi teks 46px — semua blok mobile yang tersisa rata
-     di x=20 (lihat catatan tepi kiri di atas). */
-  .foot-col--pages { display: none; }
-  /* Tautan Kebijakan Privasi HANYA muncul di mobile, menempel di baris copyright.
-     Alasannya: halaman itu ditaut dari kolom "Halaman" saja — tidak ada di nav utama
-     maupun drawer — jadi menyembunyikan kolomnya membuat kebijakan privasi TIDAK
-     BISA dicapai sama sekali dari layar mobile. Di desktop tetap disembunyikan
-     karena kolom "Halaman" sudah memuatnya (lihat .foot-bottom__privacy di
-     styles.css yang menyetel display:none sebagai default). */
-  .foot-bottom__privacy { display: inline; }
+  /* Kolom "Halaman" dan aturan penyembunyiannya SUDAH TIDAK ADA — kolomnya dibuang
+     dari markup, bukan lagi sekadar disembunyikan di mobile. Tautan Kebijakan Privasi
+     kini hidup di semua ukuran lewat `.foot-bottom__privacy` di styles.css, jadi
+     override khusus mobile di sini tidak diperlukan lagi. */
   .cta-band .container { flex-direction: column; align-items: flex-start; }
   /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
      wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */

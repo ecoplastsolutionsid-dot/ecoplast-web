@@ -702,7 +702,11 @@ a.crow__val:hover { color: var(--green); }
    `align-items: start` membuat keempatnya mulai di baseline atas yang SAMA — terukur
    `top` identik di keempatnya. Jadi puncak plakat logo sejajar dengan judul "HALAMAN",
    "KONTAK", dan "MEDIA SOSIAL", bukan dengan teks di bawah logo. */
-.foot-cols { display: grid; grid-template-columns: 1.75fr 0.8fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
+/* TIGA kolom: Perusahaan · Kontak · Media Sosial. Kolom keempat "Halaman" (0.8fr)
+   DIBUANG atas permintaan pemilik — isinya cuma mengulang nav utama yang sudah ada di
+   header dan di drawer hamburger. Konsekuensinya ditangani di `.foot-bottom__privacy`
+   di bawah: tautan Kebijakan Privasi dulu hanya hidup di kolom itu. */
+.foot-cols { display: grid; grid-template-columns: 1.75fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
 /* Padding KIRI-KANAN panel putih lockup = jarak logo ke tepi plakat. Atas-bawah TIDAK
    memakai angka ini (lihat `padding` di .foot-brand) — hanya sisi horizontal, karena
    angka ini dipakai DUA kali: oleh .foot-brand (padding kiri-kanan) dan .foot-address
@@ -864,6 +868,14 @@ a.crow__val:hover { color: var(--green); }
 .fc-ico svg { width: 17px; height: 17px; }
 .fc-label { display: block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: .12em; text-transform: uppercase; color: #8A9A8E; margin-bottom: 1px; }
 .fc-val { font-size: 0.95rem; font-weight: 600; color: #EAF1EB; text-decoration: none; white-space: nowrap; transition: color var(--dur) var(--ease); }
+/* Pengecualian untuk alamat email. `.fc-val` sengaja `nowrap` supaya nomor telepon tak
+   pernah patah, tapi customercare@ecoplastsolutions.id itu 33 karakter sementara kolom
+   Kontak di footer cuma ~147px — dengan nowrap ia melar keluar kolom dan berisiko bikin
+   overflow horizontal. Di markup ada <wbr> tepat setelah "@", jadi patahannya jatuh di
+   tempat yang wajar: "customercare@" lalu "ecoplastsolutions.id", bukan terpotong
+   sembarangan. `overflow-wrap: anywhere` cuma jaring pengaman kalau kolom menyempit
+   lebih jauh dari perkiraan. */
+.fc-val--email { white-space: normal; overflow-wrap: anywhere; font-size: 0.86rem; line-height: 1.35; }
 a.fc-val:hover { color: #fff; }
 .fc-row:hover .fc-ico { background: rgba(31,122,77,.35); color: #fff; }
 .fc-divider { border: 0; border-top: 1px solid rgba(255, 255, 255, .06); margin: 0; }
@@ -900,12 +912,14 @@ a.fc-val:hover { color: #fff; }
   text-align: center;
 }
 .foot-bottom .js-year { color: inherit; }   /* tahun ikut warna copyright, tak tersembunyi */
-/* Tautan Kebijakan Privasi di baris copyright — default MATI. Ia hanya dinyalakan di
-   blok ≤560px (responsive.css), tempat kolom "Halaman" disembunyikan; tanpa itu
-   kebijakan privasi tak punya tautan sama sekali di mobile. Di desktop kolom
-   "Halaman" masih memuatnya, jadi menampilkannya di sini cuma jadi duplikat. */
+/* Tautan Kebijakan Privasi di baris copyright — SATU-SATUNYA tautan ke halaman itu.
+   Dulu default MATI dan hanya menyala di ≤560px, karena kolom "Halaman" di footer
+   sudah memuatnya untuk desktop. Sejak kolom itu dibuang, tautan ini WAJIB hidup di
+   semua ukuran layar — kalau tidak, kebijakan privasi jadi halaman yatim: tidak
+   ditaut dari nav utama, tidak dari drawer, tidak dari footer. Jangan matikan lagi
+   tanpa menyediakan tautan pengganti di tempat lain. */
 .foot-bottom__privacy {
-  display: none;
+  display: inline;
   color: inherit;
   text-decoration: none;
   /* Tanpa ini frasanya pecah di tengah ("Kebijakan" / "Privasi") saat baris copyright
