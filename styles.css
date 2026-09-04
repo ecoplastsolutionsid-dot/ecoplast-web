@@ -596,14 +596,18 @@ h1, h2, h3 {
 /* ==========================================================================
    Contact
    ========================================================================== */
-/* `align-items: start`, BUKAN `stretch`. Dulu stretch supaya kedua kartu sama tinggi,
-   dan itu masuk akal waktu kartu "Informasi kontak" masih 4 baris. Setelah baris Email
-   masuk (5 baris), kartu kiri jadi 505px sementara isi kartu penawaran cuma butuh
-   ~190px — terukur menyisakan VOID 313px antara paragraf dan tombol, karena tombolnya
-   didorong ke dasar oleh `margin-top: auto`. Mengisi void itu dengan hiasan sudah
-   pernah ditolak pemilik (chip ikon, watermark jabat tangan); jadi yang dibetulkan
-   penyebabnya: kartu kanan dibiarkan setinggi isinya sendiri. */
-.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+/* `stretch`: kedua kartu SAMA TINGGI. Riwayat bolak-baliknya penting supaya tidak
+   diputar lagi. (1) Awalnya stretch, dan tombol penawaran didorong ke dasar dengan
+   `margin-top: auto` — waktu kartu kiri masih 4 baris itu terlihat wajar. (2) Setelah
+   baris Email masuk, kartu kiri jadi 505px sementara isi kartu kanan cuma ~190px:
+   terukur VOID 313px, dan pemilik melaporkannya. (3) Void itu saya hapus dengan
+   `align-items: start` — tapi akibatnya kedua kartu jadi beda tinggi (410 vs 245px),
+   dan pemilik menilai kontainernya jadi tidak konsisten. (4) Sekarang: stretch lagi,
+   TAPI kartu kanan diisi konten sungguhan (alur permintaan penawaran) sehingga
+   tingginya mendekati kartu kiri dengan sendirinya. Kalau kelak kartu kiri bertambah
+   baris lagi, isi kartu kanan yang perlu ditambah — jangan kembali menyusutkan
+   kartunya, dan jangan mengisi dengan hiasan (chip ikon & watermark sudah ditolak). */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: stretch; }
 
 .quote-card {
   position: relative;
@@ -619,9 +623,22 @@ h1, h2, h3 {
 }
 .quote-card h3 { color: #fff; font-size: 1.3rem; margin-bottom: 0.6rem; }
 .quote-card p { color: #CFE7D8; margin-bottom: 1.4rem; }
-/* `margin-top: auto` DIHAPUS bersama stretch di atas — tanpa tinggi paksaan, tombol
-   yang didorong ke dasar justru yang menciptakan void itu. */
-.quote-card .btn { align-self: flex-start; }
+.quote-card .btn { margin-top: auto; align-self: flex-start; }
+
+/* Alur permintaan penawaran. Meminjam idiom nomor-berlingkaran yang sudah dipakai
+   "alur produksi" di produk.html, jadi ini bahasa visual yang sudah ada — bukan
+   ornamen baru. Isinya informasi yang memang berguna bagi pembeli: apa yang perlu
+   disiapkan, kapan dibalas, dan apa langkah sesudahnya. */
+.quote-flow { list-style: none; margin: 0.2rem 0 1.4rem; padding: 0; display: grid; gap: 0.9rem; }
+.quote-flow li { display: grid; grid-template-columns: 1.65rem 1fr; gap: 0.8rem; align-items: start; }
+.quote-flow .qn {
+  width: 1.65rem; height: 1.65rem; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.4); color: #EAF6EE;
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 0.72rem; line-height: 1;
+}
+.quote-flow strong { display: block; color: #fff; font-size: 0.94rem; font-weight: 600; }
+.quote-flow span { display: block; color: #BEDCC9; font-size: 0.85rem; line-height: 1.5; }
 /* Jalur kedua: formulir pemesanan. WhatsApp tetap jalur cepat, formulir jalur formal
    yang tercatat dan berbalas nomor pengajuan. */
 .quote-card .quote-alt {
