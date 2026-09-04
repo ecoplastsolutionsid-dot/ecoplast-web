@@ -793,30 +793,34 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   kuncinya sendiri) — file ini **JANGAN dihapus/diubah**, kalau hilang seluruh
   pengiriman IndexNow gagal. Ping Bing setelah konten berubah:
   `https://api.indexnow.org/indexnow?url=<URL>&key=b3f0fc85243d5aabc07151b1c4324fe5`.
-  **Bing Webmaster Tools — BELUM SELESAI. Jangan percaya klaim lama.**
-  Diperiksa langsung 4 Sep 2026 di `bing.com/webmasters/home`: akun yang masuk
-  **benar** (`ecoplastsolutions.id@gmail.com`, nama "ecoplast solution") tetapi
-  halamannya menampilkan *empty state* **"Welcome to Bing Webmaster Tools — Get
-  started by adding your site"**, yaitu **NOL situs terdaftar**. Jadi versi
-  sebelumnya yang menyatakan situs "sudah ditambahkan manual dan terverifikasi"
-  **TIDAK BENAR** — langkah "Add site" tidak pernah tuntas, dan karena itu
-  `sitemap.xml` juga tidak pernah disubmit ke Bing.
-  Yang **memang sudah** ada: `BingSiteAuth.xml` di root, token
-  `982BBCFB7442C111D78753E1CCF0CABC`, dilayani `200` di live. **Token lama
-  `3D02D86CE61816B19DD75DA3934E5333` TERNYATA BASI** — saat "Verify" ditekan,
-  Bing menolak dengan *"Incorrect authentication key"* dan menyebut kunci yang
-  benar. Itu bukti tambahan pendaftaran lama tak pernah tuntas. File
-  ini **JANGAN dihapus/diubah** — begitu situs ditambahkan, file inilah yang
-  dipakai memverifikasi kepemilikan.
-  **IndexNow tetap sah tanpa BWT** — yang mengautentikasi ping adalah file kunci
-  di root, bukan pendaftaran BWT. Ping 4 Sep 2026 untuk keenam URL semuanya `200`.
-  **Langkah tersisa:** `bing.com/webmasters/home` → "Add your site manually" →
-  isi `https://ecoplastsolutions.id/` → verifikasi metode **XML file** (file sudah
-  live, tinggal Verify) → submit `sitemap.xml` di menu Sitemaps.
-  **JANGAN pakai tombol "Import your sites from GSC"** walau lebih cepat: itu
-  meminta izin OAuth ke akun Google pemegang Search Console, sedangkan pemilik
-  memasang batasan tegas agar akun lain tidak disentuh. Jalur manual tidak
-  menyentuh akun Google sama sekali — buktinya kontrol atas domain, bukan akun.
+  **Bing Webmaster Tools — SUDAH terdaftar & terverifikasi (4 Sep 2026).**
+  Akun: `ecoplastsolutions.id@gmail.com` (nama "ecoplast solution").
+  Sebelum tanggal itu dasbornya **NOL situs** — catatan lama yang menyatakan situs
+  "sudah ditambahkan manual dan terverifikasi" **tidak benar**; langkah "Add site"
+  tak pernah tuntas.
+  - **Token verifikasi `BingSiteAuth.xml` = `982BBCFB7442C111D78753E1CCF0CABC`.**
+    Token lama `3D02D86CE61816B19DD75DA3934E5333` **BASI** — saat Verify ditekan
+    Bing menolak dengan *"Incorrect authentication key"*. Setelah file diganti dan
+    live, Verify langsung lolos. File ini **JANGAN dihapus/diubah lagi**.
+  - **Jebakan saat membaca pesan Bing:** teks error terpotong di 100 karakter oleh
+    SEMUA pembaca teks (accessibility tree, find, get_page_text), `javascript_tool`
+    diblokir di domain `bing.com`, dan **screenshot ditolak** karena domain itu belum
+    diizinkan untuk ekstensi Chrome. Akal-akalannya: buka metode **"HTML Meta Tag"** —
+    kunci yang dipakai SAMA tapi ditampilkan sebagai string pendek sehingga utuh.
+  - **JANGAN pakai "Import your sites from GSC"** walau lebih cepat: itu meminta izin
+    OAuth ke akun Google pemegang Search Console, sedangkan pemilik memasang batasan
+    tegas agar akun lain tidak disentuh. Jalur manual tidak menyentuhnya sama sekali.
+  - **Sitemap:** `https://ecoplastsolutions.id/sitemap.xml` sudah dikenal Bing dengan
+    status **Success** (ditemukan sendiri lewat `Sitemap:` di robots.txt), tapi
+    **crawl terakhir 1 Agu 2026** — sebelum `pemesanan.html` ada. Mengirim ulang
+    lewat tombol "Submit sitemap" **belum berhasil dilakukan**: dialog dan menu
+    dropdown Bing dirender di portal yang tidak muncul di pohon aksesibilitas, dan
+    tanpa izin screenshot di `bing.com` hal itu tak bisa dituntaskan dari sini.
+    Kerjakan manual, atau beri izin screenshot untuk `bing.com` lebih dulu.
+  - **IndexNow terbukti jalan.** Halaman IndexNow di BWT menunjukkan *"URLs submitted
+    in last 6 hours: 6"* dengan sumber **Self** — keenam ping 4 Sep 2026 teratribusi.
+    Riwayat: 31 Jul 7 URL, 1 Agu 11 URL. Ping tetap sah walau BWT belum terdaftar,
+    karena yang mengautentikasi adalah file kunci di root.
 - **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
   di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
   berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
