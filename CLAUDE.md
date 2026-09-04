@@ -682,6 +682,30 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   lewat Email Routing. Email ke pemilik **didahulukan** dan ditunggu; konfirmasi
   ke pemesan dikirim lewat `waitUntil` — kalau alamat pemesan salah ketik,
   pengajuannya tetap sampai ke pemilik dan tidak dianggap gagal.
+- **Susunan blok "Domisili" — URUTANNYA KEPUTUSAN PEMILIK, jangan dibalik.**
+  1. **`Alamat jalan` (textarea, full-width) DULUAN**, di ATAS rantai wilayah.
+     Dulu ia paling akhir — setelah provinsi s/d kelurahan terisi dan kode pos
+     muncul sendiri — dan pemilik bertanya "kolom alamat lengkap ini buat apa?".
+     Pertanyaan itu tepat: begitu wilayah sudah lengkap, kotak alamat di bawahnya
+     terbaca seperti pengulangan, padahal justru itu satu-satunya bagian yang
+     tidak bisa diambil dari data wilayah (nama jalan & nomor). Labelnya sengaja
+     **"Alamat jalan"**, bukan "Alamat lengkap" — yang terakhir mengundang orang
+     menulis ulang seluruh wilayah di situ.
+  2. Lalu rantai wilayah **tetap `Provinsi → Kabupaten/Kota → Kecamatan →
+     Kelurahan/Desa`**. Pemilik sempat menyebut urutan lazim penulisan alamat
+     (kelurahan, kecamatan, kabupaten, kode pos) lalu **menyetujui susunan
+     sekarang** ("pakai susunan saat ini juga nggak masalah, cuma kolom jalan
+     harus di awal"). Urutan ini memang tidak bisa dibalik: daftar kabupaten baru
+     bisa diambil setelah provinsi dipilih (`/api/wilayah/kab/<prov>`), dan
+     kecamatan + kelurahan berasal dari blob kabupaten. Menaruh kelurahan di atas
+     = kolom mati sampai provinsi diisi. Kalau kelak benar-benar ingin
+     kelurahan-dulu, jalannya **bukan** menukar urutan melainkan membuat indeks
+     pencarian kelurahan di Worker.
+  3. **`Kode pos` = HASIL, bukan isian** (`readonly`, diturunkan dari kelurahan).
+     Karena rantai wilayah berjumlah genap (4), ia selalu jatuh sendirian di kolom
+     kiri; sebagai kotak 491px penuh, barisnya tampak seperti grid yang patah dan
+     kotaknya mengundang diketik. Kelas **`.of-field--pos`** mempersempitnya ke
+     `10ch` (terukur **87px**) + font mono. Jangan kembalikan ke lebar penuh.
 - **CSS formulir** semuanya berawalan `.of-` di `styles.css`; penyesuaian layar
   sempit ada di `responsive.css` seperti aturan proyek.
 
