@@ -885,6 +885,44 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
    cache basi, bukan bug CSS. Cek isinya langsung dengan
    `curl -s https://ecoplastsolutions.id/styles.css | grep -A6 "^\.foot-brand {"`.
 
+## Backup
+
+Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-web.tar.gz`** (Google Drive).
+Diperbarui terakhir **4 Sep 2026**, 6.108.907 byte.
+
+**Struktur di dalam tarball — BUKAN lagi rata di `./`:**
+```
+ecoplast-web/      repo lengkap + .git (riwayat commit) + .claude/settings.local.json
+claude-settings/   settings.global.json, settings.local.json, BACA-SAYA.txt
+```
+Restore: `tar -xzf ecoplast-web.tar.gz` → dua folder terpisah. Layout lama menaruh
+semuanya di `./`; itu diubah karena setelan Claude yang ikut di root repo akan
+masuk ke direktori kerja saat diekstrak dan berisiko ter-commit.
+
+**JANGAN PERNAH memasukkan ini ke backup di cloud** (alasannya nyata, sudah
+dipindai, bukan kehati-hatian teoretis):
+- `~/.claude/projects/C--Users-USER-ecoplast-web/*.jsonl` — transkrip percakapan,
+  39,5 MB, **664 baris berpola rahasia**. Kunci API Resend dan token API Cloudflare
+  memang ditangani lewat sesi itu, jadi nilainya betul-betul ada di dalamnya.
+- `~/.claude/.credentials.json` — kredensial OAuth Claude Code.
+- `cache/`, `sessions/`, `shell-snapshots/`, `file-history/`, `paste-cache/` —
+  sampah runtime.
+Cara memeriksa sebelum mengunggah: hitung kecocokan pola (`re_[A-Za-z0-9_]{20,}`,
+`accessToken`, `Bearer`) dan pastikan **nol**; jangan pernah mencetak nilainya.
+Folder `memory` proyek KOSONG saat backup 4 Sep 2026 dibuat.
+
+**LUBANG YANG MASIH TERBUKA — `ecoplast-app` BELUM PERNAH DI-BACKUP SAMA SEKALI.**
+`C:\Users\USER\ecoplast-app` adalah Worker Cloudflare yang melayani
+`ecoplastsolutions.id/api/*`, yaitu **backend formulir pemesanan**. Kalau folder itu
+hilang, formulir mati dan harus dirakit ulang dari nol — dan repo situs ini tidak
+menyimpan satu baris pun kodenya. Yang menghalangi backup langsung: di dalamnya ada
+**`.cf-token`** (token API Cloudflare, rahasia) yang wajib dikecualikan, serta
+`data/wilayah-kv.json` (3,9 MB). Yang perlu ikut kalau kelak dibuat:
+`src/index.js`, `wrangler.toml`, `package.json`, `data/`, `.gitignore`.
+Yang **harus** dikecualikan: `.cf-token`, `.dev.vars`, `.wrangler/`, `node_modules/`.
+Catatan: data wilayah bisa diregenerasi dari sumbernya (`cahyadsn/wilayah` +
+`wilayah_kodepos`), tapi `src/index.js` dan `wrangler.toml` tidak.
+
 ## Verifikasi lokal (cara yang dipakai)
 
 - Jalankan server statis lalu screenshot headless:
