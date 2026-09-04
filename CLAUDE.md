@@ -8,6 +8,67 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 
 ---
 
+## Mesin kerja (LINTAS MESIN — baca sebelum menyimpulkan ada file yang hilang)
+
+Pekerjaan proyek ini berpindah antara **dua mesin**, dan isinya **tidak sama**.
+Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
+
+| | **PC Toko** | **Laptop** |
+|---|---|---|
+| Profil | `C:\Users\USER` | `C:\Users\Asus` |
+| `ecoplast-web` (repo situs) | ada | ada |
+| `ecoplast-app` (Worker backend) | **ada** | **TIDAK ADA** |
+
+- **`ecoplast-app` hanya ada di PC Toko.** Laptop tidak pernah punya salinannya —
+  bukan terhapus, memang belum pernah dirakit di sini. Jadi kalau dari laptop
+  `C:\Users\USER\ecoplast-app` (maupun `C:\Users\Asus\ecoplast-app`) tidak ketemu,
+  itu **normal**. Sudah kejadian dan sempat bikin salah alarm: pencarian
+  `wrangler.toml` rekursif di seluruh `C:` dan `G:` memberi **nol hasil**, lalu
+  disimpulkan kode Worker-nya lenyap — padahal cuma salah mesin.
+- **Cara membuktikan Worker masih hidup** (bisa dari mesin mana pun):
+  `GET https://ecoplastsolutions.id/api/wilayah/prov` → **200** (±885 byte).
+  Kalau 404, barulah ada masalah sungguhan.
+- **Pembagian kerja yang mengikat:** apa pun yang menyentuh `ecoplast-app` —
+  termasuk **backup Worker yang masih jadi lubang terbuka** (lihat bagian Backup)
+  — **hanya bisa dikerjakan di PC Toko**. Dari laptop, repo situs lengkap dan
+  bersih, jadi seluruh pekerjaan HTML/CSS/SEO jalan normal.
+
+### Repo tetangga di laptop — JANGAN tersenggol
+
+Laptop menyimpan **5 repo git** milik **3 akun GitHub berbeda** di bawah
+`C:\Users\Asus\`:
+
+| folder | akun GitHub |
+|---|---|
+| `ecoplast-web` | `ecoplastsolutionsid-dot` |
+| `blog-centralcats`, `central-cats-pos`, `centralcats` | `centralcatgrooming-svg` |
+| `marga-acrylic-jaya-system` | `mencobabertahanhidupid-ui` |
+
+Pagar yang menjaga supaya tidak salah repo — **beberapa sudah terpasang, jangan
+dibongkar**:
+- **`gh` (GitHub CLI) TIDAK terpasang di laptop.** Semua operasi lewat `git`
+  biasa. Jangan menginstalnya cuma untuk menuntaskan satu tugas — menambah alat
+  ber-auth global di mesin bermulti-akun justru menambah jalan untuk salah repo.
+- **Selalu pakai path eksplisit `git -C C:\Users\Asus\ecoplast-web …`**, jangan
+  bergantung pada direktori kerja; `cd` bisa tertinggal dari perintah sebelumnya.
+- **JANGAN PERNAH `git add -A` dari `C:\Users\Asus`** — di folder induk itu kelima
+  repo bertetangga.
+- **`user.name`/`user.email` global sengaja KOSONG.** Itu pagar, bukan kelalaian:
+  tiap repo punya identitas lokalnya sendiri, jadi commit di repo mana pun tidak
+  bisa diam-diam memakai identitas repo lain — kalau identitas lokal lupa dipasang,
+  git menolak commit alih-alih menandatanganinya dengan nama yang salah.
+  **Jangan set identitas global.** Milik repo ini: `ecoplastsolutionsid-dot` /
+  `ecoplastsolutions.id@gmail.com`.
+- **URL origin sengaja menyematkan username:**
+  `https://ecoplastsolutionsid-dot@github.com/ecoplastsolutionsid-dot/ecoplast-web.git`.
+  `credential.helper` = `manager` (Windows Credential Manager) menyimpan kredensial
+  **ketiga** akun sekaligus; username di URL itulah yang memilih kredensial yang
+  benar. **Jangan menghapusnya** saat mengutak-atik remote.
+- Sebelum push, pastikan sasarannya: `git -C C:\Users\Asus\ecoplast-web remote -v`
+  harus menunjuk `ecoplastsolutionsid-dot/ecoplast-web.git`, branch `main`.
+
+---
+
 ## Stack
 
 - **HTML + CSS statis murni.** TANPA build step, TANPA framework.
@@ -653,7 +714,8 @@ Modul pengajuan pemesanan. Halamannya statis di repo ini; logikanya di Worker
 terpisah, **bukan** di repo ini — `CLAUDE.md` mengunci repo situs tanpa build
 step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 
-- **Repo Worker:** `C:\Users\USER\ecoplast-app` (`wrangler.toml`, `src/index.js`).
+- **Repo Worker:** `C:\Users\USER\ecoplast-app` (`wrangler.toml`, `src/index.js`) —
+  **HANYA ada di PC Toko**, tidak di laptop. Lihat bagian "Mesin kerja".
 - **Route:** `ecoplastsolutions.id/api/*` — **zona yang sama** dengan situsnya.
   Itu disengaja: halaman bisa POST tanpa CORS, tanpa preflight, tanpa subdomain
   tambahan. Path selain `/api/*` tidak disentuh dan tetap dilayani GitHub Pages.
@@ -888,7 +950,8 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 ## Backup
 
 Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-web.tar.gz`** (Google Drive).
-Diperbarui terakhir **4 Sep 2026**, 6.108.907 byte.
+Diperbarui terakhir **4 Sep 2026** (mtime 14:11), **6.145.276 byte** — angka ini
+diukur ulang dari file di `G:`; catatan lama menulis 6.108.907, itu keliru.
 
 **Struktur di dalam tarball — BUKAN lagi rata di `./`:**
 ```
@@ -912,10 +975,18 @@ Cara memeriksa sebelum mengunggah: hitung kecocokan pola (`re_[A-Za-z0-9_]{20,}`
 Folder `memory` proyek KOSONG saat backup 4 Sep 2026 dibuat.
 
 **LUBANG YANG MASIH TERBUKA — `ecoplast-app` BELUM PERNAH DI-BACKUP SAMA SEKALI.**
-`C:\Users\USER\ecoplast-app` adalah Worker Cloudflare yang melayani
-`ecoplastsolutions.id/api/*`, yaitu **backend formulir pemesanan**. Kalau folder itu
-hilang, formulir mati dan harus dirakit ulang dari nol — dan repo situs ini tidak
-menyimpan satu baris pun kodenya. Yang menghalangi backup langsung: di dalamnya ada
+`C:\Users\USER\ecoplast-app` (**PC Toko saja**) adalah Worker Cloudflare yang
+melayani `ecoplastsolutions.id/api/*`, yaitu **backend formulir pemesanan**. Kalau
+folder itu hilang, formulir mati dan harus dirakit ulang dari nol — dan repo situs
+ini tidak menyimpan satu baris pun kodenya.
+**Sudah diverifikasi (5 Sep 2026), jangan diperiksa ulang tanpa alasan baru:**
+`G:\My Drive\_BACKUP-servis` berisi 14 file dan **satu-satunya yang ecoplast adalah
+`ecoplast-web.tar.gz`**; di dalam tarball itu, dari 250 entri, **nol** yang cocok
+dengan `wrangler`, `ecoplast-app`, `/src/`, `package.json`, `.cf-token`, atau
+`wilayah`. Jadi kode Worker sekarang hidup di **tepat dua tempat**: disk PC Toko dan
+versi ter-deploy di Cloudflare. Yang ter-deploy tidak menyertakan `wrangler.toml`
+maupun nilai secret, jadi ia bukan backup yang utuh.
+**Backup ini hanya bisa dikerjakan dari PC Toko** — dari laptop foldernya tidak ada. Yang menghalangi backup langsung: di dalamnya ada
 **`.cf-token`** (token API Cloudflare, rahasia) yang wajib dikecualikan, serta
 `data/wilayah-kv.json` (3,9 MB). Yang perlu ikut kalau kelak dibuat:
 `src/index.js`, `wrangler.toml`, `package.json`, `data/`, `.gitignore`.
