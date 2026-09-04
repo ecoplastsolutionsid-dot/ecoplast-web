@@ -67,6 +67,36 @@ dibongkar**:
 - Sebelum push, pastikan sasarannya: `git -C C:\Users\Asus\ecoplast-web remote -v`
   harus menunjuk `ecoplastsolutionsid-dot/ecoplast-web.git`, branch `main`.
 
+### Laptop belum bisa push/pull — jembatannya Google Drive
+
+**Per 5 Sep 2026 laptop TIDAK BISA push maupun pull.** Git Credential Manager
+membuka dialog login GitHub yang menunggu persetujuan di HP pemilik, jadi
+`git push` **menggantung sampai timeout** (terukur: mati di 2 menit) — itu bukan
+error git, jadi jangan didiagnosis sebagai masalah remote/branch. Jangan
+mengulang push "untuk memastikan"; hasilnya cuma menggantung lagi.
+
+Jalan pintasnya: **`G:` (Google Drive) tersambung ke kedua mesin**, jadi commit
+dioper lewat `git bundle`, tanpa GitHub sama sekali.
+- Folder transfer: **`G:\My Drive\_BACKUP-servis\_transfer\`**, berisi
+  `BACA-SAYA.txt` (prosedur lengkap), bundle repo situs, dan
+  **`BACKUP-ecoplast-app.ps1`** (skrip backup Worker, dijalankan di PC Toko).
+- Bikin bundle dari mesin yang terkunci:
+  `git -C <repo> bundle create <G:\…\nama.bundle> --all`, lalu `git bundle verify`.
+- Ambil dari mesin seberang: `git pull --rebase <path-bundle> main`. Mesin yang
+  bisa login GitHub (PC Toko) yang kemudian `git push origin main`.
+- **Bundle adalah cuplikan beku.** Setiap commit baru di laptop membuat bundle
+  lama basi — regenerasi bundle-nya, jangan berharap yang lama ikut terbarui.
+
+### Akun Cloudflare Ecoplast ≠ akun Cloudflare MBH
+
+Ecoplast dan proyek **MBH** (`mbh-blueprint`, aplikasi lain: Next.js + Supabase +
+R2) sama-sama memakai Cloudflare, **tapi akunnya berbeda**. Ini pernah jadi salah
+alarm: `mbh-blueprint__.env.local` di `G:\My Drive\_BACKUP-servis` memuat
+`CLOUDFLARE_API_TOKEN` polos, dan sempat disimpulkan token itu bisa menyentuh zona
+`ecoplastsolutions.id` + Worker `/api/*`. **Tidak bisa** — beda akun. Jangan
+mengulang kekhawatiran itu. (Higiene `.env` polos di Drive tetap urusan proyek
+MBH, di luar lingkup repo ini.)
+
 ---
 
 ## Stack
@@ -986,7 +1016,15 @@ dengan `wrangler`, `ecoplast-app`, `/src/`, `package.json`, `.cf-token`, atau
 `wilayah`. Jadi kode Worker sekarang hidup di **tepat dua tempat**: disk PC Toko dan
 versi ter-deploy di Cloudflare. Yang ter-deploy tidak menyertakan `wrangler.toml`
 maupun nilai secret, jadi ia bukan backup yang utuh.
-**Backup ini hanya bisa dikerjakan dari PC Toko** — dari laptop foldernya tidak ada. Yang menghalangi backup langsung: di dalamnya ada
+**Backup ini hanya bisa dikerjakan dari PC Toko** — dari laptop foldernya tidak ada.
+**Skripnya sudah disiapkan** (5 Sep 2026, ditulis dari laptop):
+`G:\My Drive\_BACKUP-servis\_transfer\BACKUP-ecoplast-app.ps1`. Ia mengecualikan
+`.cf-token`/`.dev.vars`/`.wrangler/`/`node_modules/`, **memindai sisa file untuk
+pola rahasia dan berhenti kalau ada** (tanpa pernah mencetak nilainya), menulis
+`G:\My Drive\_BACKUP-servis\ecoplast-app.tar.gz`, lalu memverifikasi tarballnya
+(nol entri terlarang, `src/index.js` + `wrangler.toml` ada). Tinggal dijalankan
+di PC Toko; prosedur lengkap + cara memasangnya di laptop ada di
+`_transfer\BACA-SAYA.txt`. Yang menghalangi backup langsung: di dalamnya ada
 **`.cf-token`** (token API Cloudflare, rahasia) yang wajib dikecualikan, serta
 `data/wilayah-kv.json` (3,9 MB). Yang perlu ikut kalau kelak dibuat:
 `src/index.js`, `wrangler.toml`, `package.json`, `data/`, `.gitignore`.
