@@ -596,7 +596,14 @@ h1, h2, h3 {
 /* ==========================================================================
    Contact
    ========================================================================== */
-.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: stretch; }
+/* `align-items: start`, BUKAN `stretch`. Dulu stretch supaya kedua kartu sama tinggi,
+   dan itu masuk akal waktu kartu "Informasi kontak" masih 4 baris. Setelah baris Email
+   masuk (5 baris), kartu kiri jadi 505px sementara isi kartu penawaran cuma butuh
+   ~190px — terukur menyisakan VOID 313px antara paragraf dan tombol, karena tombolnya
+   didorong ke dasar oleh `margin-top: auto`. Mengisi void itu dengan hiasan sudah
+   pernah ditolak pemilik (chip ikon, watermark jabat tangan); jadi yang dibetulkan
+   penyebabnya: kartu kanan dibiarkan setinggi isinya sendiri. */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
 
 .quote-card {
   position: relative;
@@ -612,7 +619,20 @@ h1, h2, h3 {
 }
 .quote-card h3 { color: #fff; font-size: 1.3rem; margin-bottom: 0.6rem; }
 .quote-card p { color: #CFE7D8; margin-bottom: 1.4rem; }
-.quote-card .btn { margin-top: auto; align-self: flex-start; }
+/* `margin-top: auto` DIHAPUS bersama stretch di atas — tanpa tinggi paksaan, tombol
+   yang didorong ke dasar justru yang menciptakan void itu. */
+.quote-card .btn { align-self: flex-start; }
+/* Jalur kedua: formulir pemesanan. WhatsApp tetap jalur cepat, formulir jalur formal
+   yang tercatat dan berbalas nomor pengajuan. */
+.quote-card .quote-alt {
+  margin-top: 0.9rem; font-size: 0.88rem; color: #BEDCC9;
+}
+.quote-card .quote-alt a {
+  color: #fff; font-weight: 600; text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.35);
+  transition: border-color var(--dur) var(--ease);
+}
+.quote-card .quote-alt a:hover { border-bottom-color: #fff; }
 
 .map-wrap {
   margin-top: 1.5rem;
@@ -707,6 +727,11 @@ a.crow__val:hover { color: var(--green); }
    header dan di drawer hamburger. Konsekuensinya ditangani di `.foot-bottom__privacy`
    di bawah: tautan Kebijakan Privasi dulu hanya hidup di kolom itu. */
 .foot-cols { display: grid; grid-template-columns: 1.75fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
+/* Kolom terakhir (Media Sosial) dirapatkan ke tepi kanan grid. Kolomnya paling sempit
+   (terukur 216,9px di 1280) sementara isinya rata kiri, jadi sisi kanan footer terasa
+   menggantung kosong. `justify-self: end` menggeser BLOKNYA ke kanan; teks di dalamnya
+   tetap rata kiri sehingga chip ikon dan labelnya tetap sejajar seperti kolom Kontak. */
+.foot-cols > .foot-col:last-child { justify-self: end; }
 /* Padding KIRI-KANAN panel putih lockup = jarak logo ke tepi plakat. Atas-bawah TIDAK
    memakai angka ini (lihat `padding` di .foot-brand) — hanya sisi horizontal, karena
    angka ini dipakai DUA kali: oleh .foot-brand (padding kiri-kanan) dan .foot-address
@@ -930,6 +955,101 @@ a.fc-val:hover { color: #fff; }
 }
 .foot-bottom__privacy::before { content: " · "; }
 .foot-bottom__privacy:hover { color: #C7D3CA; text-decoration: underline; }
+
+/* ==========================================================================
+   Formulir pemesanan (/pemesanan.html) — SATU-SATUNYA halaman dengan input
+   --------------------------------------------------------------------------
+   Semua kelas di sini berawalan `of-` (order form) supaya tidak pernah bentrok
+   dengan komponen lain. Tak ada @media di blok ini; penyesuaian layar sempit
+   ada di responsive.css seperti aturan proyek.
+   ========================================================================== */
+.order-form { padding: 0; overflow: hidden; }
+.of-set { border: 0; margin: 0; padding: var(--card-pad); border-bottom: 1px solid var(--line); }
+.of-set:last-of-type { border-bottom: 0; }
+.of-legend {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
+  letter-spacing: .13em; text-transform: uppercase; color: var(--green);
+  padding: 0; margin-bottom: 0.9rem;
+}
+.of-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1rem; }
+.of-grid--gap { margin-top: 0.9rem; }
+.of-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.of-field--full { grid-column: 1 / -1; }
+.of-field label { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
+.of-req { color: var(--green); font-weight: 700; }
+.of-hint { font-size: 0.78rem; color: var(--muted); }
+
+.order-form input,
+.order-form select,
+.order-form textarea {
+  font-family: inherit; font-size: 0.95rem; color: var(--ink); background: #fff;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 0.62rem 0.7rem; width: 100%;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.order-form input:hover,
+.order-form select:hover,
+.order-form textarea:hover { border-color: #BFCCB8; }
+.order-form input:focus-visible,
+.order-form select:focus-visible,
+.order-form textarea:focus-visible {
+  outline: 2px solid var(--green); outline-offset: 1px; border-color: var(--green);
+}
+.order-form input[readonly] { background: var(--bg); color: var(--muted); }
+.order-form select:disabled { background: var(--bg); color: var(--muted); cursor: not-allowed; }
+.order-form textarea { min-height: 5.5rem; resize: vertical; }
+/* Kolom yang ditandai salah saat pengiriman gagal validasi. */
+.order-form .of-invalid { border-color: #9B2C2C; box-shadow: 0 0 0 3px rgba(155,44,44,.12); }
+
+.of-picks { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.of-pick {
+  display: flex; gap: 0.6rem; align-items: flex-start; cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 0.75rem 0.85rem; background: #fff;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.of-pick:hover { border-color: var(--green); box-shadow: var(--shadow-sm); }
+.of-pick input { width: auto; margin-top: 0.15rem; accent-color: var(--green); }
+.of-pick strong { display: block; font-size: 0.95rem; }
+.of-pick span span { font-size: 0.8rem; color: var(--muted); }
+
+.of-qty { margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px dashed var(--line); }
+.of-qty[hidden] { display: none; }
+
+/* Peringatan di bawah minimum pemesanan. Nadanya sengaja informatif, bukan
+   penolakan — pesanan percobaan justru pintu masuk pelanggan besar. */
+.of-alert {
+  margin-top: 1rem; padding: 0.9rem 1rem;
+  border-left: 3px solid #92590C; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: #FBF2E0; font-size: 0.9rem;
+}
+.of-alert[hidden] { display: none; }
+.of-alert > strong {
+  display: block; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase; color: #92590C; margin-bottom: 0.3rem;
+}
+.of-alert p { margin: 0 0 0.7rem; color: var(--ink); }
+
+.of-consent { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9rem; color: var(--muted); }
+.of-consent input { width: auto; margin-top: 0.2rem; accent-color: var(--green); }
+
+/* Umpan bot: didorong keluar layar, BUKAN display:none — sebagian pengisi
+   otomatis melewati kolom yang benar-benar disembunyikan. */
+.of-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.of-actions {
+  display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center;
+  justify-content: space-between; padding: var(--card-pad); background: var(--bg);
+  border-top: 1px solid var(--line);
+}
+.of-side { margin: 0; font-size: 0.86rem; color: var(--muted); }
+.of-actions .btn[disabled] { opacity: .6; cursor: progress; }
+
+.of-result { padding: var(--card-pad); border-top: 1px solid var(--line); font-size: 0.95rem; }
+.of-result[hidden] { display: none; }
+.of-result--ok { background: #ECF5EF; color: var(--green-deep); }
+.of-result--ok strong { display: block; font-size: 1.05rem; margin-bottom: 0.25rem; }
+.of-result--gagal { background: #FAEDEC; color: #9B2C2C; }
 
 /* ==========================================================================
    Accessibility helpers

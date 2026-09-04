@@ -12,7 +12,13 @@
   .contact-grid { grid-template-columns: 1fr; }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
-  .foot-cols { grid-template-columns: 1fr 1fr; }   /* tablet: 2 x 2 */
+  .foot-cols { grid-template-columns: 1fr 1fr; }   /* tablet: 2 kolom */
+  /* Batalkan perapatan-ke-kanan kolom Media Sosial. Di desktop ia menyeimbangkan
+     sisi kanan footer, tapi begitu grid tinggal 2 kolom (dan 1 kolom di ≤560px)
+     kolom itu tidak lagi di tepi kanan — `justify-self: end` malah melemparkannya
+     menjauh dari tepi kiri. Terukur sebelum perbaikan: x=294,8 di 900px dan x=208,3
+     di 375px, padahal semua blok mobile lain rata di x=20. */
+  .foot-cols > .foot-col:last-child { justify-self: start; }
 }
 
 /* --------------------------------------------------------------------------
@@ -170,6 +176,12 @@
      dari markup, bukan lagi sekadar disembunyikan di mobile. Tautan Kebijakan Privasi
      kini hidup di semua ukuran lewat `.foot-bottom__privacy` di styles.css, jadi
      override khusus mobile di sini tidak diperlukan lagi. */
+  /* Formulir pemesanan: dua kolom jadi satu di layar sempit. */
+  .of-grid { grid-template-columns: 1fr; }
+  .of-picks { grid-template-columns: 1fr; }
+  .of-actions { flex-direction: column; align-items: stretch; }
+  .of-actions .btn { width: 100%; }
+  .of-side { text-align: center; }
   .cta-band .container { flex-direction: column; align-items: flex-start; }
   /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
      wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */

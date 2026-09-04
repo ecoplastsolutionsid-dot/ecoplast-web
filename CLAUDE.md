@@ -20,7 +20,14 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   3. **Reveal saat masuk layar (scroll-in)** — `IntersectionObserver` menambah
      kelas `.in` ke elemen target saat masuk viewport (fade + geser naik, ala
      jagopijat.com). Detail di bagian "Reveal scroll-in" pada Sistem desain.
-  Di luar ketiga hal ini, tidak ada JS lain — pertahankan seminimal mungkin.
+  Di luar ketiga hal ini, tidak ada JS lain di halaman-halaman profil —
+  pertahankan seminimal mungkin.
+- **SATU pengecualian: `pemesanan.html`.** Halaman itu punya blok `<script>`
+  KEDUA, terpisah dan diletakkan SETELAH skrip bersama, berisi logika formulir
+  (rantai wilayah, ambang minimum pemesanan, pengiriman). Skrip bersama di
+  atasnya **tetap identik byte-per-byte** dengan kelima halaman lain — jangan
+  pernah menggabungkan keduanya, karena begitu digabung, skrip bersama tidak
+  lagi bisa disamakan lintas file.
 - **Menu hamburger: buka/tutupnya tetap murni CSS** (checkbox hack, tanpa JS).
   Yang butuh JS **hanya** pemulihan state saat navigasi riwayat:
   - **Gejala yang dilaporkan pemilik:** di mobile, buka hamburger → pilih
@@ -45,7 +52,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260904a`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260904b`, sama di **keenam** file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -93,6 +100,10 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ produk.html         # #tali (Tali Plastik PP), #biji (Biji Plastik PP), alur produksi 4 tahap
 ├─ tentang.html        # Profil + galeri mesin/fasilitas + lokasi
 ├─ kontak.html         # Kartu info kontak, kartu penawaran, blok peta (embed Google Maps)
+├─ pemesanan.html      # Formulir pengajuan pemesanan (SATU-SATUNYA halaman dengan
+│                      #   <input>/<select>, dan satu-satunya yang punya skrip
+│                      #   tambahan di luar skrip bersama). Backend-nya Worker
+│                      #   terpisah, lihat bagian "Formulir pemesanan".
 ├─ kebijakan-privasi.html   # Kebijakan privasi (tautan di footer, di luar nav utama)
 ├─ styles.css          # Base + desktop (TANPA @media)
 ├─ responsive.css      # Semua @media (mobile/tablet) + prefers-reduced-motion
@@ -311,6 +322,11 @@ Aturan penting:
   - **Ikon inline SVG dekoratif** (mis. `.feature__ico`) wajib punya atribut
     `width`/`height` eksplisit **selain** ukuran via CSS — jaga-jaga bila `styles.css`
     ke-cache lama (Cloudflare) sementara HTML sudah baru, SVG tak membesar ke default.
+- **Nav utama kini 5 item**: Beranda, Produk, Tentang Kami, Kontak, **Pemesanan**,
+  plus tombol WhatsApp. Terukur muat di semua lebar tanpa overflow; titik paling
+  sempit di **768px** (tepat di atas ambang drawer 720px) — jarak brand→nav 16px
+  dan nav→tombol WA 15,4px, tidak bertabrakan. Kalau kelak ada item nav keenam,
+  **ukur ulang 768px lebih dulu**; di situlah yang pertama patah.
 - **Header mobile = drawer hamburger** (≤720px, CSS-only, tanpa JS — checkbox hack
   `.nav-toggle` + label `.nav-burger` + label `.nav-overlay`):
   - **Ruang brand vs hamburger (terukur, iframe lebar sungguhan).** Sejak header
@@ -573,12 +589,66 @@ Aturan penting:
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
   "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
-  penawaran (`.quote-card`, latar hijau gelap) = **judul + deskripsi + tombol saja**
-  (tombol rata-bawah via `margin-top:auto`). Pernah dicoba diisi ikon: chip kotak
+  penawaran (`.quote-card`, latar hijau gelap) = **judul + deskripsi + tombol +
+  satu tautan ke `/pemesanan.html`**. Pernah dicoba diisi ikon: chip kotak
   (mirip `.crow__ico`) bikin ambigu, watermark jabat tangan besar terlihat jelek —
-  keduanya **ditolak**; biarkan kartu polos.
+  keduanya **ditolak**; jangan mengisi kartu ini dengan hiasan.
+  **Kedua kartu TIDAK lagi dipaksa sama tinggi.** `.contact-grid` dulu
+  `align-items: stretch` dan tombolnya `margin-top: auto`. Itu masuk akal waktu
+  kartu "Informasi kontak" masih 4 baris; setelah baris Email masuk (5 baris),
+  kartu kiri jadi 505px sementara isi kartu kanan cuma ~190px — terukur
+  menyisakan **void 313px** antara paragraf dan tombol, dan pemilik
+  melaporkannya. Sekarang `align-items: start` + `margin-top: auto` dihapus:
+  void tinggal **22,4px**, kartu kanan setinggi isinya sendiri. Jangan
+  kembalikan `stretch` tanpa memikirkan void itu lagi.
 - Aksesibilitas: skip-link, `:focus-visible` jelas, `prefers-reduced-motion` dihormati,
   responsif sampai lebar 360px.
+
+## Formulir pemesanan (`pemesanan.html` + Worker `ecoplast-app`)
+
+Modul pengajuan pemesanan. Halamannya statis di repo ini; logikanya di Worker
+terpisah, **bukan** di repo ini — `CLAUDE.md` mengunci repo situs tanpa build
+step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
+
+- **Repo Worker:** `C:\Users\USER\ecoplast-app` (`wrangler.toml`, `src/index.js`).
+- **Route:** `ecoplastsolutions.id/api/*` — **zona yang sama** dengan situsnya.
+  Itu disengaja: halaman bisa POST tanpa CORS, tanpa preflight, tanpa subdomain
+  tambahan. Path selain `/api/*` tidak disentuh dan tetap dilayani GitHub Pages.
+- **Endpoint:** `GET /api/wilayah/prov`, `/api/wilayah/kab/<prov>`,
+  `/api/wilayah/wil/<kab>`, dan `POST /api/pengajuan`.
+- **Data wilayah di KV, bukan di repo.** 38 provinsi / 514 kab-kota / 7.285
+  kecamatan / **83.762 kelurahan**, semuanya berkode pos (0 yang kosong).
+  Dikelompokkan **per kabupaten** → **553 kunci KV**. Kalau dikelompokkan per
+  kecamatan jumlahnya jadi 7.285 kunci, sementara **batas tulis KV gratis 1.000
+  per hari** — pengunggahannya akan makan lebih dari seminggu. Ongkos
+  pengelompokan ini: satu blob kabupaten terbesar 34,9 KB, diunduh sekali saat
+  pengunjung memilih kabupaten. Sumber: `cahyadsn/wilayah` + `wilayah_kodepos`.
+  Uji silang yang harus tetap lulus kalau data diregenerasi: **Sentul Jaya,
+  Balaraja, Kab. Tangerang → 15610** (alamat pabrik sendiri).
+- **Nomor pengajuan** `ECO-YYYYMMDD-NNN`, urut harian, dihitung di KV dengan
+  tanggal **WIB** (bukan UTC — kalau UTC, pengajuan jam 07.30 WIB tercatat hari
+  sebelumnya). KV tidak atomik, jadi dua pengajuan pada milidetik yang sama bisa
+  bernomor kembar; untuk volume yang diharapkan risikonya kecil dan dampaknya
+  cuma nomor kembar, bukan data hilang. Kalau volume naik, pindah ke Durable Object.
+- **Minimum pemesanan 8 ton**, berlaku untuk tali PP maupun biji PP; spesifikasi
+  yang tersedia **PP daur ulang**. Pesanan percobaan (mis. 2 ton) **tetap
+  diterima** — formulir tidak memblokirnya, hanya menandai dan menjanjikan
+  pertemuan. Angka 2 ton itu **contoh**, bukan batas bawah; pemilik menegaskan
+  itu untuk uji coba. Ambangnya **dijumlah lintas produk** (5 ton tali + 5 ton
+  biji = 10 ton, tidak ditandai).
+- **Syarat ini sengaja HANYA ada di halaman pemesanan** atas permintaan pemilik —
+  jangan tambahkan MOQ ke `produk.html` atau `kontak.html` tanpa permintaan baru.
+- **Rahasia:** kunci Resend diambil dari Cloudflare Secrets Store
+  (`RESEND_API_KEY`), tidak pernah ada di repo mana pun. `TURNSTILE_SECRET`
+  opsional — selama belum dipasang, verifikasi anti-bot dilewati supaya formulir
+  tetap jalan. Umpan tersembunyi (`#website`) selalu aktif.
+- **Email:** dikirim dari `customercare@ecoplastsolutions.id` (apex terverifikasi
+  di Resend), `Reply-To` ke alamat yang sama sehingga balasan mendarat di Gmail
+  lewat Email Routing. Email ke pemilik **didahulukan** dan ditunggu; konfirmasi
+  ke pemesan dikirim lewat `waitUntil` — kalau alamat pemesan salah ketik,
+  pengajuannya tetap sampai ke pemilik dan tidak dianggap gagal.
+- **CSS formulir** semuanya berawalan `.of-` di `styles.css`; penyesuaian layar
+  sempit ada di `responsive.css` seperti aturan proyek.
 
 ## SEO / GEO (local SEO)
 
