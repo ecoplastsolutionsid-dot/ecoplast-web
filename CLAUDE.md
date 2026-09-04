@@ -793,14 +793,27 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   kuncinya sendiri) — file ini **JANGAN dihapus/diubah**, kalau hilang seluruh
   pengiriman IndexNow gagal. Ping Bing setelah konten berubah:
   `https://api.indexnow.org/indexnow?url=<URL>&key=b3f0fc85243d5aabc07151b1c4324fe5`.
-  **Bing Webmaster Tools** (bing.com/webmasters): situs ditambahkan **manual**, bukan
-  lewat "Import from Google Search Console" — verifikasi kepemilikan pakai metode
-  **XML file**, yaitu `BingSiteAuth.xml` di root (token `3D02D86…`). File ini
-  **JANGAN dihapus/diubah** — sama seperti file verifikasi GSC, kepemilikan dicek
-  ulang berkala; hilang = verifikasi dicabut. Jalur manual dipilih karena login BWT
-  boleh pakai akun apa pun (Microsoft/Google/Facebook) dan tak perlu menyentuh akun
-  Google pemilik GSC; buktinya kontrol atas domain, bukan akun. Setelah verified,
-  submit `sitemap.xml` di menu Sitemaps.
+  **Bing Webmaster Tools — BELUM SELESAI. Jangan percaya klaim lama.**
+  Diperiksa langsung 4 Sep 2026 di `bing.com/webmasters/home`: akun yang masuk
+  **benar** (`ecoplastsolutions.id@gmail.com`, nama "ecoplast solution") tetapi
+  halamannya menampilkan *empty state* **"Welcome to Bing Webmaster Tools — Get
+  started by adding your site"**, yaitu **NOL situs terdaftar**. Jadi versi
+  sebelumnya yang menyatakan situs "sudah ditambahkan manual dan terverifikasi"
+  **TIDAK BENAR** — langkah "Add site" tidak pernah tuntas, dan karena itu
+  `sitemap.xml` juga tidak pernah disubmit ke Bing.
+  Yang **memang sudah** ada: `BingSiteAuth.xml` di root, token
+  `3D02D86CE61816B19DD75DA3934E5333`, terverifikasi dilayani `200` di live. File
+  ini **JANGAN dihapus/diubah** — begitu situs ditambahkan, file inilah yang
+  dipakai memverifikasi kepemilikan.
+  **IndexNow tetap sah tanpa BWT** — yang mengautentikasi ping adalah file kunci
+  di root, bukan pendaftaran BWT. Ping 4 Sep 2026 untuk keenam URL semuanya `200`.
+  **Langkah tersisa:** `bing.com/webmasters/home` → "Add your site manually" →
+  isi `https://ecoplastsolutions.id/` → verifikasi metode **XML file** (file sudah
+  live, tinggal Verify) → submit `sitemap.xml` di menu Sitemaps.
+  **JANGAN pakai tombol "Import your sites from GSC"** walau lebih cepat: itu
+  meminta izin OAuth ke akun Google pemegang Search Console, sedangkan pemilik
+  memasang batasan tegas agar akun lain tidak disentuh. Jalur manual tidak
+  menyentuh akun Google sama sekali — buktinya kontrol atas domain, bukan akun.
 - **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
   di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
   berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
