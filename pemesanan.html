@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=20260904d" />
-  <link rel="stylesheet" href="/responsive.css?v=20260904d" />
+  <link rel="stylesheet" href="/styles.css?v=20260904e" />
+  <link rel="stylesheet" href="/responsive.css?v=20260904e" />
 
   <script type="application/ld+json">
   {
@@ -201,6 +201,11 @@
           <fieldset class="of-set">
             <legend class="of-legend">Domisili</legend>
             <div class="of-grid">
+              <div class="of-field of-field--full">
+                <label for="alamat">Alamat jalan</label>
+                <textarea id="alamat" maxlength="600" placeholder="Nama jalan, nomor, gedung/kawasan, patokan"></textarea>
+                <span class="of-hint">Bagian yang Anda ketik sendiri. Wilayahnya &#8212; provinsi sampai kelurahan &#8212; dipilih di bawah ini, dan kode pos terisi otomatis.</span>
+              </div>
               <div class="of-field">
                 <label for="prov">Provinsi <span class="of-req">*</span></label>
                 <select id="prov" required><option value="">Memuat…</option></select>
@@ -217,15 +222,10 @@
                 <label for="kel">Kelurahan / Desa <span class="of-req">*</span></label>
                 <select id="kel" required disabled><option value="">Pilih kecamatan dulu</option></select>
               </div>
-              <div class="of-field">
+              <div class="of-field of-field--pos">
                 <label for="pos">Kode pos</label>
-                <input id="pos" type="text" readonly placeholder="terisi otomatis" />
+                <input id="pos" type="text" readonly placeholder="&#8212;" />
                 <span class="of-hint">Terisi sendiri setelah kelurahan dipilih.</span>
-              </div>
-              <div class="of-field of-field--full">
-                <label for="alamat">Alamat lengkap</label>
-                <textarea id="alamat" maxlength="600" placeholder="Nama jalan, nomor, gedung/kawasan, patokan"></textarea>
-                <span class="of-hint">Dipakai untuk memperkirakan ongkos dan waktu pengiriman.</span>
               </div>
             </div>
           </fieldset>

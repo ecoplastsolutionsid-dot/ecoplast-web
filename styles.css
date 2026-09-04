@@ -1001,6 +1001,12 @@ a.fc-val:hover { color: #fff; }
 .of-grid--gap { margin-top: 0.9rem; }
 .of-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
 .of-field--full { grid-column: 1 / -1; }
+/* Kode pos BUKAN kolom isian — nilainya diturunkan dari kelurahan. Dibuat sempit
+   dan mono supaya terbaca sebagai HASIL, bukan kotak kosong yang menunggu diketik.
+   Ini sekaligus menghilangkan kesan "setengah baris menggantung": rantai wilayah
+   berjumlah genap (4), jadi kode pos selalu jatuh sendirian di kolom kiri. Kotak
+   selebar 491px di situ terlihat seperti grid yang patah; kotak 10ch tidak. */
+.of-field--pos input { max-width: 10ch; font-family: var(--font-mono); letter-spacing: .06em; }
 .of-field label { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
 .of-req { color: var(--green); font-weight: 700; }
 .of-hint { font-size: 0.78rem; color: var(--muted); }
