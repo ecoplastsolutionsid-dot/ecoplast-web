@@ -45,7 +45,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260731c`, sama di kelima file).
+  `/responsive.css?v=<versi>` (kini `v=20260801b`, sama di kelima file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
@@ -53,6 +53,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
   baru sementara CSS masih basi → footer sempat merender lockup logo baru dengan
   aturan lama (tinggi 36px, panel putih tak muncul) dan tampak "rusak" berjam-jam.
   Gejalanya: `curl -D -` menunjukkan `last-modified` styles.css **lebih tua** dari
+  `last-modified` HTML-nya (perintah lengkapnya di bagian Deploy).
   **JEBAKAN — jangan mengambil URL berversi sebelum deploy selesai.** Pernah
   kejadian dan bikin bingung: `curl .../styles.css?v=X` dijalankan saat GitHub Pages
   masih men-deploy → request itu mengambil `styles.css` versi **lama** dari origin
@@ -99,7 +100,7 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 │  ├─ logo-lockup.png  # Lockup MENDATAR 570x124 transparan (emblem + ECOPLAST/SOLUTIONS
 │                      #   bertumpuk) — SATU-SATUNYA logo yang dipakai halaman, di
 │                      #   HEADER (.brand, tinggi 48px) DAN FOOTER (.foot-brand =
-│                      #   PLAKAT putih max-width 200px → logo 160x34.8px, tinggi
+│                      #   PLAKAT putih max-width 176px → logo 160x34.8px, tinggi
 │                      #   ikut lebar). Disusun dari potongan logo-full.png; resep di
 │                      #   bagian Footer. Dulu bernama logo-footer.png.
 │  ├─ logo-mark.png    # Emblem asli (248x218, transparan) — SUDAH TIDAK dipakai di
@@ -108,8 +109,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  ├─ mesin/           # Foto mesin & area produksi (.webp) untuk galeri di
-│                      #   tentang.html: mesin-1..4.webp. mesin-1/2/4 potret
-│                      #   1086x1448, mesin-3 lanskap 1448x1086. Sumber: foto
+│                      #   tentang.html: mesin-1..6.webp. Semua potret 1086x1448
+│                      #   kecuali mesin-3 yang lanskap 1448x1086. Sumber: foto
 │                      #   pemilik. Dipakai dengan `?v=1` (aturan aset baru).
 │  └─ product/         # Foto produk (.webp): tali.webp, biji1.webp (katalog),
 │                      #   biji1-full.webp (detail biji), biji.webp (bukti Balaraja)
@@ -407,13 +408,19 @@ Aturan penting:
      - **Panel = PLAKAT, bukan kotak pembungkus.** Permintaan pemilik: "rapikan
        container logo lockup jadi plakat yang lembut, bukan kotak kaku". CSS:
        `display: flex` + `justify-content: center`, `width: 100%`,
-       **`max-width: 200px`**, `padding: var(--foot-panel-pad-x)` (**20px, keempat
-       sisi sama**), `background: #fff`, `border-radius: var(--radius-lg)` (20px),
-       `box-shadow: var(--shadow-sm)`, `border: 0`. Hover cuma menaikkan elevasi ke
-       `--shadow-md`, **tanpa transform** → sengaja, supaya tak perlu entri baru di
-       blok `prefers-reduced-motion`.
-       Sebelumnya: `width: fit-content` + `padding: 8px 14px` + `--radius-sm` —
-       membungkus lockup rapat sehingga bentuknya sangat pipih dan sudutnya kaku.
+       **`max-width: 176px`**, `padding: 12px var(--foot-panel-pad-x)` (**8px
+       kiri-kanan, 12px atas-bawah** — sengaja tidak simetris), `background: #fff`,
+       `border-radius: var(--radius-lg)` (20px), `box-shadow: var(--shadow-sm)`,
+       `border: 0`. Hover **mengangkat 2px** (`translateY(-2px)` + `--shadow-lg`).
+       Karena hover ini memakai transform, `.foot-brand:hover` **WAJIB ada di blok
+       `prefers-reduced-motion`** (`responsive.css`) — sudah ada; itu aturan proyek
+       untuk setiap transform hover baru. Naik 2px saja, bukan 4px: plakat duduk cuma
+       8px di atas blok alamat, angkatan besar terlihat menabrak teks di bawahnya.
+       Riwayat ukuran — jangan diputar balik tanpa permintaan baru:
+       `width: fit-content` + `padding: 8px 14px` + `--radius-sm` (membungkus lockup
+       rapat, bentuknya pipih & sudutnya kaku) → plakat `max-width: 200px` + padding
+       20px keempat sisi → **kini `max-width: 176px` + padding `12px 8px`**
+       ("jarak logo ke tepi dipangkas"). Lebar logo tetap 160px di ketiganya.
      - **Pemisah dari footer gelap = SHADOW, bukan border.** Pemilik menawarkan dua
        opsi (border `1px rgba(255,255,255,.15)` **atau** shadow lembut) dan minta
        dipilih yang paling bersih. Border kalah: garisnya menimpa tepi panel yang
@@ -421,7 +428,7 @@ Aturan penting:
        **keabu-abuan yang lebih gelap dari panelnya** — malah menegaskan sudut,
        kebalikan dari kesan lembut yang diminta. **Jangan tambahkan border di sini.**
      - **`.foot-brand__mark { width: 100%; height: auto }` — TIDAK ADA tinggi tetap.**
-       Ukuran logo kini diturunkan oleh `max-width` plakat: 200 − (2 × 20) = **160px
+       Ukuran logo kini diturunkan oleh `max-width` plakat: 176 − (2 × 8) = **160px
        lebar → 34.8px tinggi** (rasio aset 570×124 = 4.5968; terukur 4.5981, selisih
        pembulatan → tidak gepeng). **SAMA di semua breakpoint**, karena itu override
        tinggi mobile yang dulu ada di `responsive.css` (40px ≤720px, 36px ≤360px)
@@ -431,9 +438,9 @@ Aturan penting:
        **Konsekuensi yang diketahui & sudah dilaporkan ke pemilik:** "ECOPLAST"
        ±13.4px & "SOLUTIONS" **±5.9px**, jadi SOLUTIONS ada di bawah ambang baca
        ±8px yang dulu dijaga saat lockup 52px (dan lebih kecil dari kompromi mobile
-       ±6.8px yang lama). Ini ikut langsung dari `max-width: 200px` yang diminta.
+       ±6.8px yang lama). Ini ikut langsung dari lebar plakat yang diminta.
        Kalau kelak SOLUTIONS harus terbaca lagi: **naikkan `max-width` plakat**
-       (±260px → lockup kembali ke ±48px), **JANGAN** kembalikan tinggi tetap pada
+       (±236px = 220 + 2 × 8 → lockup kembali ke ±48px), **JANGAN** kembalikan tinggi tetap pada
        gambar. Riwayat tinggi: emblem 36px → lockup 52px ("logo agak diperbesar")
        → kini digerakkan lebar plakat.
      - **Cara meregenerasi `logo-lockup.png`** (Pillow, sumber `assets/logo-full.png`):
@@ -454,12 +461,16 @@ Aturan penting:
      (`alamat.left == logoImg.left`, terukur selisih 0.0). Dulu `panel.left ==
      alamat.left` sehingga logo di dalam panel tampak menjorok ±14px ke kanan
      sendirian; **pemilik minta diubah** ("teks … tepat di bawah logo"). Angkanya
-     dipegang satu variabel `--foot-panel-pad-x` di `.foot-info` — **kini `20px`**
-     (naik dari 14px saat panel dijadikan plakat), dipakai dua kali: padding
-     `.foot-brand` (keempat sisi) **dan** `margin-left` `.foot-address`. Karena
-     logo mengisi penuh lebar-dalam plakat, `logoImg.left == panel.left + 20px`,
-     jadi pasangan itu tetap membuat alamat lurus di bawah gambar — terukur di
-     1280px: panel `x=102.5`, gambar & alamat sama-sama `x=122.5`.
+     dipegang satu variabel `--foot-panel-pad-x` di `.foot-info` — **kini `8px`**
+     (riwayat: 14px → 20px saat panel dijadikan plakat → 8px saat jarak logo ke tepi
+     dipangkas), dipakai dua kali: padding **kiri-kanan** `.foot-brand` **dan**
+     `margin-left` `.foot-address`. Karena logo mengisi penuh lebar-dalam plakat,
+     `logoImg.left == panel.left + 8px`, jadi pasangan itu tetap membuat alamat lurus
+     di bawah gambar — terukur ulang di 1280px: panel `x=102.5`, gambar & alamat
+     sama-sama `x=110.5` (selisih 0.0).
+     **`max-width` plakat TERIKAT ke variabel ini**: 176 = 160 (lebar logo yang
+     dipertahankan) + 2 × 8. Kalau salah satu diubah, hitung ulang yang lain — kalau
+     tidak, lebar logo ikut berubah dan "SOLUTIONS" makin tak terbaca.
      **Harus `margin-left`, bukan `padding-left`** — blok alamat kena
      `max-width: 34ch` (dari `.site-footer p`) + `box-sizing: border-box`, jadi
      padding memotong lebar teks; terukur baris "Kp. Tobat, …" pecah dari 1 baris
@@ -507,29 +518,47 @@ Aturan penting:
     Solutions. Balaraja, …` — pakai **brand "Ecoplast Solutions"**, bukan nama badan
     hukum PT (badan hukum tetap tampil di kolom "Perusahaan" & JSON-LD `legalName`).
   - Responsif (`responsive.css`): desktop 4 kolom → tablet ≤900px **2×2** → mobile
-    ≤560px **1 kolom** (urutan: logo, alamat, Halaman, Kontak, Media Sosial,
-    copyright). Kalau mengedit footer, ubah di **kelima** file HTML.
-  - **Footer mobile = DUA tepi kiri, sengaja.** Acuannya kolom Kontak:
-    **`x = 0` (tepi kolom) = tempat IKON `.fc-ico` mulai**, dan
-    **`x = 46px` (`--foot-mobile-indent`) = tempat TEKS mulai** (chip 34px + gap
-    `.fc-row` 12px).
+    ≤560px **1 kolom** (urutan: logo, alamat, Kontak, Media Sosial, copyright —
+    kolom **Halaman** disembunyikan di mobile, lihat dua butir berikutnya). Kalau
+    mengedit footer, ubah di **kelima** file HTML.
+  - **Kolom "Halaman" (`.foot-col--pages`) = `display: none` di ≤560px**, atas
+    permintaan pemilik: keempat tautannya (Beranda/Produk/Tentang Kami/Kontak) sudah
+    ada di drawer hamburger, jadi di layar sempit kolom ini cuma mengulang menu yang
+    sama dan memanjangkan footer. Sengaja disembunyikan lewat CSS, **BUKAN dihapus
+    dari markup** — desktop masih memakainya, footer tetap identik di kelima file, dan
+    tautannya tetap ada di DOM sehingga crawler (yang mengindeks versi mobile) membacanya.
+  - **Konsekuensinya → `.foot-bottom__privacy`.** Kebijakan Privasi hanya ditaut dari
+    kolom "Halaman" — tidak ada di nav utama maupun drawer — jadi menyembunyikan kolom
+    itu membuatnya **tak bisa dicapai sama sekali dari mobile**. Karena itu baris
+    copyright memuat tautan Kebijakan Privasi yang `display: none` secara default
+    (desktop sudah punya kolom "Halaman") dan `display: inline` di ≤560px.
+    `white-space: nowrap` di situ mencegah frasanya pecah jadi dua baris (terukur di
+    504px). Kalau kolom "Halaman" kelak dimunculkan lagi di mobile, sembunyikan lagi
+    tautan ini supaya tidak dobel.
+  - **Footer mobile = SATU tepi kiri: `x = 20` (padding `.container`).** Dulu ada
+    DUA, acuannya kolom Kontak: `x = 0` (tepi kolom) tempat IKON `.fc-ico` mulai, dan
+    `x = 46px` (`--foot-mobile-indent`) tempat TEKS mulai (chip 34px + gap `.fc-row`
+    12px). Sejak kolom "Halaman" disembunyikan, tepi 46px itu tak punya penghuni yang
+    tampak lagi → **variabel `--foot-mobile-indent` beserta aturan pemakainya SUDAH
+    DIHAPUS** dari `responsive.css`. Kalau kolom itu kelak dimunculkan lagi di mobile,
+    kembalikan DUA baris ini:
+    `.foot-cols { --foot-mobile-indent: 46px; }` dan
+    `.foot-col ul:not(.foot-social) { margin-left: var(--foot-mobile-indent); }`.
     - **Blok alamat (`.foot-address`) → `margin-left: 0`, sejajar IKON WhatsApp.**
       Ini keputusan **terbaru** pemilik ("sejajarkan dengan logo whatsapp", mobile).
       Sebelumnya ia di 46px (sejajar *teks* WhatsApp, "simetris dengan teks
       WhatsApp") — **jangan dikembalikan tanpa permintaan baru.** Terukur di 375px
       & 504px: alamat, chip WhatsApp, chip Media Sosial, dan plakat logo semuanya
       di `x = 20.0` (= padding `.container`).
-    - **Daftar Halaman (`.foot-col ul:not(.foot-social)`) TETAP di 46px** — pemilik
-      hanya menyebut blok alamat. Jadi Halaman kini satu-satunya blok di tepi teks;
-      terukur `x = 66.0`. Kalau kelak diminta seragam, cukup nolkan indent ini juga.
     - Judul kolom (`h3`) sengaja **tetap** di tepi kolom, seperti sejak awal.
     - **`.foot-brand` sudah TIDAK digeser lagi.** Dulu `margin-left: calc(-1 *
       var(--foot-panel-pad-x))` = −14px, supaya **gambar** logo footer mendarat di
       `x = 20` sejajar gambar logo header (permintaan lama "logo footer sejajar
       dengan logo header"), dengan konsekuensi tepi panel putih di `x = 6`. Geseran
-      itu **dihapus** saat panel jadi plakat: dengan padding 20px ia akan menaruh
-      tepi plakat tepat di `x = 0`, menempel bibir layar dan merusak kesan plakat.
-      Sekarang **plakat**-nya yang rata kolom (`x = 20`), gambar logo di `x = 40` —
+      itu **dihapus** saat panel jadi plakat: ia menempelkan tepi plakat ke bibir
+      layar (dengan padding 20px waktu itu, tepat di `x = 0`) dan merusak kesan
+      plakat. Sekarang **plakat**-nya yang rata kolom (`x = 20`), gambar logo di
+      `x = 28` (= 20 + padding 8px) —
       jadi di mobile alamat sejajar dengan tepi PLAKAT, bukan dengan gambar logo
       (di desktop tetap sejajar gambar logo). Perbedaan ini disengaja.
     - **`:not(.foot-social)` WAJIB** — daftar Media Sosial juga `<ul>` di dalam
@@ -537,8 +566,6 @@ Aturan penting:
       tergeser dobel (terukur lompat 65.2 → 111.2).
     - `.fsoc` gap dinaikkan `0.7rem` → **`0.75rem`** agar sama dengan `.fc-row`;
       tanpa itu teks Media Sosial meleset 0.8px dari teks Kontak.
-    - Judul kolom (`h3`) sengaja **tetap** di tepi kolom — kolom Kontak & Media
-      Sosial memang sudah begitu sejak awal, jadi Halaman kini konsisten.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
   "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
@@ -712,6 +739,6 @@ Aturan penting:
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
   `/assets/logo-lockup.png`, `/assets/logo-full.png`,
   `/assets/og-image.png`,
-  `/assets/product/*.webp`, `/assets/mesin/mesin-1..4.webp`,
+  `/assets/product/*.webp`, `/assets/mesin/mesin-1..6.webp`,
   `favicon.ico`, `favicon-32x32.png`, `favicon-48x48.png`,
   `apple-touch-icon.png`.
