@@ -128,7 +128,8 @@ Live: **https://ecoplastsolutions.id** (GitHub Pages, branch `main`, folder root
 ├─ favicon.ico         # Multi-size 16/32/48 (entri PNG) — EMBLEM saja, bukan lockup
 ├─ favicon-32x32.png / favicon-48x48.png / apple-touch-icon.png   # lihat bagian "Favicon & gambar OG"
 ├─ robots.txt          # Allow all + pointer ke sitemap
-├─ sitemap.xml         # 5 URL (/, produk, tentang, kontak, kebijakan-privasi) + lastmod
+├─ sitemap.xml         # 6 URL (/, produk, pemesanan, tentang, kontak,
+│                      #   kebijakan-privasi) + lastmod per URL
 ├─ google5c4d18bf39fc4ecf.html   # Verifikasi Google Search Console — JANGAN dihapus
 ├─ b3f0fc85243d5aabc07151b1c4324fe5.txt   # Kunci IndexNow (Bing/Edge) — JANGAN dihapus/diubah
 ├─ BingSiteAuth.xml   # Verifikasi Bing Webmaster Tools — JANGAN dihapus/diubah
@@ -736,8 +737,9 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   `https://www.google.com/maps?cid=893561851054800034`. **Jangan** kembalikan ke format
   `search/?api=1&query=LAT,LNG` — itu cuma menjatuhkan pin di titik koordinat (bukan nempel
   ke listing) dan pernah bikin peta meleset ~286 m (longitude salah `106.4415609`).
-- **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 5 URL absolut
-  (beranda, produk, tentang, kontak, kebijakan-privasi) + `<lastmod>` per URL.
+- **`robots.txt`**: allow all + `Sitemap:` pointer. **`sitemap.xml`**: 6 URL absolut
+  (beranda, produk, pemesanan, tentang, kontak, kebijakan-privasi) + `<lastmod>`
+  per URL.
 - **Meta per halaman (kelima file):** `keywords` (mengandung Indonesia / Tangerang /
   Balaraja / Banten — permintaan pemilik; mesin pencari besar mengabaikannya, sinyal
   lokal yang benar-benar dipakai ada di `<title>`/description/JSON-LD/isi halaman),
