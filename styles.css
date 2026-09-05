@@ -411,7 +411,18 @@ h1, h2, h3 {
 .pcard__media {
   width: calc(100% + 2 * var(--card-pad));
   margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0.7rem;
-  aspect-ratio: 3 / 4;
+  /* 4/3, bukan 3/4. Sumbernya (tali.webp & biji1.webp) sama-sama 3:4, jadi
+     `cover` MEMANGKAS atas-bawah ~44% — itu disengaja dan sudah dibandingkan
+     dengan merender 3/4, 1/1, dan 4/3 lalu melihatnya di 1707px:
+       3/4 -> media 517x689, kartu setinggi hampir satu layar; judul & tautan
+              "Selengkapnya" jatuh di bawah lipatan.
+       1/1 -> 517x517, masih terpotong di lipatan.
+       4/3 -> 517x388, SELURUH kartu (foto + tag + judul + deskripsi + tautan)
+              terbaca sekaligus. Crop-nya juga lebih fokus ke produk: foto biji
+              jadi penuh pellet, bukan latar putih.
+     Kalau kelak foto diganti, cek ulang bahwa bagian penting tidak jatuh di
+     luar potongan tengah. */
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-bottom: 1px solid var(--line);
 }

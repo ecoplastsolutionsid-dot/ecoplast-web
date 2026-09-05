@@ -263,9 +263,21 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260904d`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905a`, sama di **keenam** file).
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
+  **JANGAN menaikkannya dengan `Get-Content -Raw` + `Set-Content` di PowerShell 5.1.**
+  Sudah kejadian 5 Sep 2026 dan nyaris ter-commit: `Get-Content` membaca UTF-8 sebagai
+  ANSI lalu `Set-Content -Encoding UTF8` menulis ulang → **BOM tertambah dan setiap
+  `—`/`·` ter-enkode ganda**; `index.html` berubah **21 baris** padahal harusnya 2.
+  Pakai .NET dengan encoding eksplisit:
+  ```powershell
+  $enc = New-Object System.Text.UTF8Encoding($false)
+  $s = [System.IO.File]::ReadAllText($p, [System.Text.Encoding]::UTF8)
+  [System.IO.File]::WriteAllText($p, $s.Replace('?v=lama','?v=baru'), $enc)
+  ```
+  Lalu **buktikan** dengan `git diff --numstat` — harus **2 2** per file HTML, bukan
+  lebih. Cek juga byte pertama bukan `0xEF` (BOM) dan tak ada pola `â€`/`Ã`/`Â`.
   Alasannya nyata, pernah kejadian: Cloudflare memberi HTML `max-age=600`
   (10 menit) tapi CSS `max-age=14400` (**4 jam**), jadi setelah push HTML sudah
   baru sementara CSS masih basi → footer sempat merender lockup logo baru dengan
@@ -500,13 +512,24 @@ Aturan penting:
     memakai siluet serupa, terapkan overlay yang sama. Murni CSS/SVG, tanpa JS.
 - **Foto produk — dua pola berbeda:**
   - **Kartu ringkasan beranda (`.pcard`)**: foto di dalam `.pcard__media` = container
-    **full-bleed** ke tepi kartu, **`aspect-ratio: 3/4`** (portrait), `overflow:hidden`;
-    `<img class="pcard__img">` `object-fit: cover` + `object-position:center` → mengisi
-    penuh tanpa area kosong. Kedua kartu **identik tinggi** (rasio & lebar sama). Sudut
-    atas membulat ikut radius kartu (via `overflow:hidden` di `.pcard`). Rasio **3/4
-    di semua ukuran** (desktop & mobile 1 kolom sama). **File `tali.webp` (1086×1448)
-    & `biji1.webp` (789×1052) keduanya rasio 3:4 PERSIS** — jadi `cover` = tampil utuh,
-    tak ada yang terpangkas di ukuran apa pun.
+    **full-bleed** ke tepi kartu, **`aspect-ratio: 4/3`** (lanskap), `overflow:hidden`;
+    `<img class="pcard__img">` `object-fit: cover` + `object-position:center`. Kedua
+    kartu **identik tinggi** (rasio & lebar sama). Sudut atas membulat ikut radius
+    kartu (via `overflow:hidden` di `.pcard`). Rasio **4/3 di semua ukuran** (desktop
+    & mobile 1 kolom sama) — tidak ada override di `responsive.css`.
+    **DULU 3/4, diubah 5 Sep 2026.** Alasan lama: `tali.webp` (1086×1448) dan
+    `biji1.webp` (789×1052) sama-sama 3:4 persis, jadi `cover` menampilkan foto utuh
+    tanpa terpangkas. Itu benar, tapi ongkosnya terlalu mahal — di 1280px media jadi
+    **517×689** dan tinggi kartu **±922px**, sehingga judul, deskripsi, dan tautan
+    "Selengkapnya" jatuh di bawah lipatan; halaman terasa berat dan tersendat.
+    Diputuskan dengan **merender 3/4, 1/1, dan 4/3 lalu melihatnya** (cara yang sama
+    dengan galeri mesin): 1/1 masih terpotong di lipatan; 4/3 membuat **seluruh kartu
+    terbaca sekaligus** (media 517×388, kartu 621px) dan crop-nya justru lebih fokus
+    ke produk — foto biji jadi penuh pellet, bukan latar putih.
+    **Konsekuensi yang diterima:** `cover` kini memangkas ±44% tinggi foto (atas &
+    bawah). Kalau foto diganti, pastikan bagian pentingnya ada di potongan tengah.
+    Terukur setelah perubahan, tanpa overflow horizontal di 1280/900/768/504/375/360;
+    rasio terbaca 1.33 di semua lebar.
   - **Halaman detail produk (`.prod__img` di produk.html)**: tetap `object-fit: contain`
     + matting lembut (gradasi putih) → produk tampil UTUH tak terpotong untuk tampilan
     detail. Pakai file foto yang sama.
