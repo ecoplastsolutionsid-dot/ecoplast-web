@@ -172,9 +172,17 @@ git -C C:\Users\Asus\ecoplast-web config credential.guiPrompt false
 ```
 `guiPrompt false` memaksa GCM bertanya sebagai **teks di terminal**, bukan jendela.
 
-**Tokennya:** fine-grained PAT `laptop-ecoplast-web` (id 19194363), hanya repo
-`ecoplast-web`, permission **Contents: Read and write** + Metadata read,
-**kedaluwarsa 4 Sep 2027**. Tersimpan di Windows Credential Manager pada target
+**Tokennya:** fine-grained PAT `laptop-ecoplast-web` (id 19194363), permission
+**Contents: Read and write** + Metadata read, **kedaluwarsa 4 Sep 2027**.
+Cakupannya **DUA repo: `ecoplast-web` DAN `ecoplast-app`** — `ecoplast-app`
+ditambahkan 5 Sep 2026 setelah repo itu dijadikan privat; sebelum ditambahkan,
+`git ls-remote` ke sana menjawab **403 "Write access to repository not granted"**.
+Kalau kelak ada repo privat lain yang perlu disentuh dari laptop, gejalanya akan
+403 yang sama — tambahkan repo itu ke daftar token, jangan bikin token baru dan
+jangan mengubah ke "All repositories".
+**Menambah repo ke token TIDAK membatalkan nilainya** (beda dari Regenerate):
+Settings → token → "Access on …" → Edit → Select repositories → Update. Kredensial
+yang sudah tersimpan tetap dipakai, tak perlu ditempel ulang — sudah dibuktikan. Tersimpan di Windows Credential Manager pada target
 **`git:https://ecoplastsolutionsid-dot@github.com`** — bukan target generik
 `git:https://github.com`, yang ternyata milik akun **`mencobabertahanhidupid-ui`**
 (Marga Acrylic). Itu alasan konkret kenapa username wajib tetap disematkan di URL
