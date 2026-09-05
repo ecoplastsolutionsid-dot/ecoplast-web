@@ -499,6 +499,22 @@ Aturan penting:
   punya hover sendiri. `produk.html` **tidak punya `.card` sama sekali**, jadi
   `.prod:hover .prod__img` yang mewakili supaya halaman itu tidak jadi satu-satunya
   yang kontainernya diam.
+- **AUDIT HOVER MENYELURUH (5 Sep 2026) — hasil: NOL kontainer diam di keenam
+  halaman.** Cara mengulanginya kalau kelak ada kontainer baru: muat tiap halaman
+  di iframe, kumpulkan **pemicu** hover dari seluruh `document.styleSheets` (potong
+  selector sampai compound yang memuat `:hover`, mis. `.crow:hover .crow__ico` →
+  pemicunya `.crow`), lalu untuk setiap elemen berbingkai (border atau box-shadow,
+  luas > 120×50) cek apakah **elemen itu ATAU salah satu leluhurnya** cocok dengan
+  salah satu pemicu.
+  **Dua kesalahan yang sempat membuat audit ini menyesatkan:** (1) mengecek apakah
+  elemen jadi **sasaran** selector, bukan **pemicu** — `.crow` jadi terbaca "tanpa
+  hover" padahal menyentuhnya mengisi ikonnya; (2) tidak menelusuri leluhur —
+  `.pcard__media`, `.prod__img`, dan `<figcaption>` terbaca diam padahal
+  menyentuhnya memicu `.pcard` / `.prod` / `.gshot` di atasnya.
+  **Yang tercakup hanya secara teknis:** `.of-set`, `.of-qty`, `.of-actions` masuk
+  hitungan karena berada di dalam `.order-form` yang punya aturan hover — padahal
+  aturan itu justru **mengembalikannya ke keadaan diam**. Formulir memang sengaja
+  tenang; jangan "memperbaiki" ini.
 - **DUA BUG LAMA YANG MEMATIKAN HOVER, ditemukan 5 Sep 2026 — jangan diulang.**
   Keduanya tidak terlihat dari membaca CSS; aturannya tampak baik-baik saja.
   Ketahuan dengan mengukur `getComputedStyle` **saat kursor benar-benar di atas
