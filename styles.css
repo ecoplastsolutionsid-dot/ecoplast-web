@@ -1105,6 +1105,27 @@ a.fc-val:hover { color: #fff; }
    berjumlah genap (4), jadi kode pos selalu jatuh sendirian di kolom kiri. Kotak
    selebar 491px di situ terlihat seperti grid yang patah; kotak 10ch tidak. */
 .of-field--pos input { max-width: 10ch; font-family: var(--font-mono); letter-spacing: .06em; }
+
+/* LEBAR ISIAN MENGIKUTI PANJANG ISI, bukan lebar kolom grid. Prinsip yang sama
+   dengan `.of-field--pos` di atas, cuma diperluas ke isian lain.
+   Sebelumnya semua isian `width: 100%` di grid 2 kolom → tiap kotak **491px**
+   (terukur di 1440px). Kotak selebar itu untuk "Jumlah tali (ton)" atau nomor
+   telepon menyesatkan: ia menjanjikan isian panjang padahal isinya pendek, dan
+   membuat formulir terasa jauh lebih berat daripada sebenarnya.
+   Dipakai selektor ATRIBUT (`[id="…"]`), bukan selektor ID (`#…`), supaya
+   bobotnya setara kelas — kalau memakai `#`, aturan ini akan sulit ditimpa dan
+   memicu perang spesifisitas seperti yang sudah pernah terjadi di aturan hover.
+   Isian wilayah (Provinsi s/d Kelurahan) SENGAJA dibiarkan penuh: nama daerah
+   bisa sangat panjang ("Daerah Khusus Ibukota Jakarta"), dan `<select>` memotong
+   teks yang tak muat. `Alamat jalan` & `Catatan` juga tetap penuh — keduanya
+   memang mengharapkan teks panjang. */
+.order-form input[type="tel"]    { max-width: 26ch; }
+.order-form input[type="email"]  { max-width: 40ch; }
+.order-form input[type="number"] { max-width: 16ch; }
+.order-form input[type="date"]   { max-width: 22ch; }
+.order-form input[id="nama"],
+.order-form input[id="perusahaan"] { max-width: 40ch; }
+.order-form select[id="frekuensi"] { max-width: 30ch; }
 .of-field label { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
 .of-req { color: var(--green); font-weight: 700; }
 .of-hint { font-size: 0.78rem; color: var(--muted); }

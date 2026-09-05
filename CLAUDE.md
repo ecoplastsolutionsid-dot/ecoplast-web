@@ -1088,6 +1088,28 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
      kiri; sebagai kotak 491px penuh, barisnya tampak seperti grid yang patah dan
      kotaknya mengundang diketik. Kelas **`.of-field--pos`** mempersempitnya ke
      `10ch` (terukur **87px**) + font mono. Jangan kembalikan ke lebar penuh.
+- **LEBAR ISIAN MENGIKUTI PANJANG ISI, bukan lebar kolom grid (5 Sep 2026).**
+  Prinsip `.of-field--pos` diperluas ke isian lain. Dulu semuanya `width: 100%` di
+  grid 2 kolom → tiap kotak **491px**; kotak selebar itu untuk nomor telepon atau
+  "Jumlah tali (ton)" menyesatkan — ia menjanjikan isian panjang padahal isinya
+  pendek, dan membuat formulir terasa jauh lebih berat daripada sebenarnya.
+  Terukur sesudahnya di 1440px: nama/perusahaan/email **348px**, telepon **226px**,
+  `frekuensi` **261px**, `target` **192px**, jumlah **139px**, kode pos **87px**.
+  **Yang SENGAJA tetap penuh:** Provinsi s/d Kelurahan (nama daerah bisa sangat
+  panjang dan `<select>` memotong teks yang tak muat), serta `Alamat jalan` dan
+  `Catatan` (memang mengharapkan teks panjang).
+  **Pakai selektor ATRIBUT `[id="…"]`, JANGAN selektor ID `#…`** — bobot atribut
+  setara kelas, sedangkan `#` akan sulit ditimpa dan memicu perang spesifisitas
+  seperti yang sudah pernah terjadi di aturan hover.
+  Aman di layar sempit: `max-width` tidak menghalangi penyusutan — terukur di 360px
+  isian menyusut ke 259px, **nol yang meluber**, tanpa overflow horizontal.
+- **Instruksi panjang JANGAN ditaruh di `placeholder`.** Placeholder `Nama
+  perusahaan` dulu berbunyi *"PT / CV / UD — tulis "Perorangan" bila bukan badan
+  usaha"* (389px teks). Begitu isiannya dipersempit, teks itu terpotong — tapi
+  masalah sebenarnya lebih dalam: **placeholder hilang saat orang mulai mengetik**,
+  tepat ketika instruksinya masih dibutuhkan. Dipecah: placeholder tinggal
+  `PT / CV / UD`, sisanya jadi `<p class="of-hint">` di bawah kotak, sama seperti
+  petunjuk pada Telepon dan Email. Terukur: keenam placeholder kini muat.
 - **CSS formulir** semuanya berawalan `.of-` di `styles.css`; penyesuaian layar
   sempit ada di `responsive.css` seperti aturan proyek.
 
