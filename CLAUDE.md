@@ -1036,17 +1036,33 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 ## Backup
 
 Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-web.tar.gz`** (Google Drive).
-Diperbarui terakhir **5 Sep 2026 dari laptop**, 6.358.814 byte, **275 entri**
-(`tar -tzf` termasuk entri direktori; catatan "270" sebelumnya menghitung berkas saja).
-**Isinya berhenti di commit `6a75e37`** — dicek 5 Sep 2026 dari PC Toko: `8b6d2b7`
-("Laptop sudah bisa push sendiri") **TIDAK ada** di dalamnya. Itu bukan kerusakan,
-cuma tarball dibuat sebelum commit terakhir; dan karena `8b6d2b7` sudah ada di
-GitHub, tidak ada yang berisiko hilang. Label `[ahead 5]` yang muncul kalau tarball
-ini diekstrak juga bukan tanda masalah — itu relatif terhadap ref `origin/main`
-basi yang ikut terbungkus, sementara kelima commit itu kini sudah ter-push.
-Generasi sebelumnya disimpan sebagai `ecoplast-web_2026-09-04_LAMA.tar.gz`
-(6.145.276 byte, dibuat dari PC Toko) — boleh dihapus kapan saja.
-Catatan lama yang menulis 6.108.907 byte itu keliru.
+Diperbarui terakhir **5 Sep 2026 dari PC Toko**, **±6,4 MB**, **286 entri**,
+`main == origin/main` dan working tree bersih saat dibungkus — jadi generasi ini
+**tidak** memuat commit yang cuma hidup di dalam tarball.
+**Ukurannya sengaja ditulis kira-kira**: tiap regenerasi menghasilkan byte yang
+sedikit berbeda (isi repo berubah, gzip tidak deterministik lintas versi), dan
+catatan byte presisi di sini sudah dua kali salah. Yang layak dicocokkan kalau
+curiga: **jumlah entri** dan **commit teratas di `.git`**, bukan byte.
+
+**Dua generasi sebelumnya disimpan, jangan tertukar:**
+- `ecoplast-web_2026-09-05_laptop_LAMA.tar.gz` (6.358.814 byte, 275 entri) —
+  dibuat **dari laptop**, berhenti di commit `6a75e37`. Ini satu-satunya tempat
+  `settings.global.json` versi laptop tersimpan (bedanya cuma `"tui": "fullscreen"`).
+  Label `[ahead 5]` kalau diekstrak **bukan** kerusakan: itu relatif terhadap ref
+  `origin/main` basi yang ikut terbungkus, dan kelima commit itu kini sudah ter-push.
+- `ecoplast-web_2026-09-04_LAMA.tar.gz` (6.145.276 byte) — dari PC Toko, generasi
+  paling tua. Boleh dihapus kapan saja.
+Catatan lama yang menulis 6.108.907 byte itu keliru; yang menulis "270 entri"
+menghitung berkas saja, tanpa entri direktori.
+
+**JEBAKAN setelan — penyegaran backup bisa MENGHILANGKAN data kalau tidak hati-hati.**
+`settings.user-local.json` (= `~/.claude/settings.local.json`, izin tingkat user)
+**hanya ada di laptop; PC Toko tidak punya file itu sama sekali.** Kalau backup
+disegarkan dari PC Toko dengan cara naif "salin apa yang ada di mesin ini", file
+itu lenyap dari generasi terbaru. Karena itu generasi 5 Sep PC Toko **membawanya
+dari generasi laptop dengan sengaja**. Kalau kelak menyegarkan lagi dari mesin
+mana pun, **cek dulu file mana yang cuma ada di generasi sebelumnya**, jangan
+langsung menimpa.
 
 **Struktur di dalam tarball — BUKAN rata di `./`:**
 ```
@@ -1055,7 +1071,8 @@ claude-settings/   settings.global.json, settings.local.json,
                    settings.user-local.json, BACA-SAYA.txt
 ```
 `settings.user-local.json` (= `~/.claude/settings.local.json`, izin tingkat user)
-**baru ada sejak generasi 5 Sep**; versi 4 Sep tidak punya.
+**baru ada sejak generasi 5 Sep**; versi 4 Sep tidak punya. Isinya **milik laptop** —
+lihat jebakan di atas sebelum menyegarkan backup dari PC Toko.
 
 **Sudah DIUJI PULIH, bukan cuma dibuat.** Tarball diekstrak ke folder sementara
 lalu `git fsck` dijalankan pada hasilnya: **bersih (exit 0)**, riwayat commit
@@ -1063,8 +1080,10 @@ utuh, working tree bersih, remote menunjuk repo yang benar. Kalau kelak backup
 dibuat ulang, **ulangi uji ini** — backup yang tak bisa dipulihkan tidak ada
 gunanya, dan `tar` yang "berhasil" tidak membuktikan apa-apa soal isi `.git`.
 
-**Tarball ini memuat commit yang BELUM ada di GitHub.** Selama laptop tidak bisa
-push, `.git` di dalamnya "ahead" dari `origin/main`. Itu wajar, bukan korupsi.
+**Generasi 5 Sep PC Toko (yang sekarang) SUDAH sejalan dengan GitHub** — dibuat
+saat `main == origin/main`, jadi tidak ada commit yang cuma hidup di dalamnya.
+Yang "ahead" adalah generasi **laptop** (`…_2026-09-05_laptop_LAMA.tar.gz`), dibuat
+waktu laptop belum bisa push. Itu wajar, bukan korupsi — jangan disimpulkan rusak.
 Restore: `tar -xzf ecoplast-web.tar.gz` → dua folder terpisah. Layout lama menaruh
 semuanya di `./`; itu diubah karena setelan Claude yang ikut di root repo akan
 masuk ke direktori kerja saat diekstrak dan berisiko ter-commit.
