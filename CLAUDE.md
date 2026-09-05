@@ -40,7 +40,7 @@ Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
 |---|---|---|
 | Profil | `C:\Users\USER` | `C:\Users\Asus` |
 | `ecoplast-web` (repo situs) | ada | ada |
-| `ecoplast-app` (Worker backend) | **ada** | **TIDAK ADA** |
+| `ecoplast-app` (Worker backend) | **ada** | **TIDAK ADA** (bisa dipulihkan dari Drive) |
 
 - **`ecoplast-app` hanya ada di PC Toko.** Laptop tidak pernah punya salinannya —
   bukan terhapus, memang belum pernah dirakit di sini. Jadi kalau dari laptop
@@ -51,10 +51,11 @@ Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
 - **Cara membuktikan Worker masih hidup** (bisa dari mesin mana pun):
   `GET https://ecoplastsolutions.id/api/wilayah/prov` → **200** (±885 byte).
   Kalau 404, barulah ada masalah sungguhan.
-- **Pembagian kerja yang mengikat:** apa pun yang menyentuh `ecoplast-app` —
-  termasuk **backup Worker yang masih jadi lubang terbuka** (lihat bagian Backup)
-  — **hanya bisa dikerjakan di PC Toko**. Dari laptop, repo situs lengkap dan
-  bersih, jadi seluruh pekerjaan HTML/CSS/SEO jalan normal.
+- **Pembagian kerja yang mengikat:** apa pun yang menyentuh `ecoplast-app`
+  **hanya bisa dikerjakan di PC Toko** — kecuali kalau laptop lebih dulu memulihkan
+  salinannya dari `ecoplast-app.tar.gz` di Drive (sejak 5 Sep 2026 backup itu ADA;
+  lihat bagian Backup). Backup Worker **bukan lagi lubang terbuka**. Dari laptop,
+  repo situs lengkap dan bersih, jadi seluruh pekerjaan HTML/CSS/SEO jalan normal.
 
 ### Repo tetangga di laptop — JANGAN tersenggol
 
@@ -1035,7 +1036,14 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 ## Backup
 
 Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-web.tar.gz`** (Google Drive).
-Diperbarui terakhir **5 Sep 2026 dari laptop**, **±6,3 MB**, 270 entri.
+Diperbarui terakhir **5 Sep 2026 dari laptop**, 6.358.814 byte, **275 entri**
+(`tar -tzf` termasuk entri direktori; catatan "270" sebelumnya menghitung berkas saja).
+**Isinya berhenti di commit `6a75e37`** — dicek 5 Sep 2026 dari PC Toko: `8b6d2b7`
+("Laptop sudah bisa push sendiri") **TIDAK ada** di dalamnya. Itu bukan kerusakan,
+cuma tarball dibuat sebelum commit terakhir; dan karena `8b6d2b7` sudah ada di
+GitHub, tidak ada yang berisiko hilang. Label `[ahead 5]` yang muncul kalau tarball
+ini diekstrak juga bukan tanda masalah — itu relatif terhadap ref `origin/main`
+basi yang ikut terbungkus, sementara kelima commit itu kini sudah ter-push.
 Generasi sebelumnya disimpan sebagai `ecoplast-web_2026-09-04_LAMA.tar.gz`
 (6.145.276 byte, dibuat dari PC Toko) — boleh dihapus kapan saja.
 Catatan lama yang menulis 6.108.907 byte itu keliru.
@@ -1105,50 +1113,67 @@ sama — `.tar.gz.enc` berpasangan dengan `CARA-BUKA-*.txt`.
   di mesin tujuan.
 Folder `memory` proyek KOSONG saat backup 4 Sep 2026 dibuat.
 
-**LUBANG YANG MASIH TERBUKA — `ecoplast-app` BELUM PERNAH DI-BACKUP SAMA SEKALI.**
-`C:\Users\USER\ecoplast-app` (**PC Toko saja**) adalah Worker Cloudflare yang
-melayani `ecoplastsolutions.id/api/*`, yaitu **backend formulir pemesanan**. Kalau
-folder itu hilang, formulir mati dan harus dirakit ulang dari nol — dan repo situs
-ini tidak menyimpan satu baris pun kodenya.
-**Sudah diverifikasi (5 Sep 2026), jangan diperiksa ulang tanpa alasan baru:**
-`G:\My Drive\_BACKUP-servis` berisi 14 file dan **satu-satunya yang ecoplast adalah
-`ecoplast-web.tar.gz`**; di dalam tarball itu, dari 250 entri, **nol** yang cocok
-dengan `wrangler`, `ecoplast-app`, `/src/`, `package.json`, `.cf-token`, atau
-`wilayah`. Jadi kode Worker sekarang hidup di **tepat dua tempat**: disk PC Toko dan
-versi ter-deploy di Cloudflare. Yang ter-deploy tidak menyertakan `wrangler.toml`
-maupun nilai secret, jadi ia bukan backup yang utuh.
+**`ecoplast-app` SUDAH DI-BACKUP — lubang lama itu TERTUTUP (5 Sep 2026, dari PC
+Toko).** Catatan sebelumnya yang berbunyi "BELUM PERNAH DI-BACKUP SAMA SEKALI"
+sudah tidak berlaku; jangan dipakai lagi sebagai dasar.
 
-**Tapi lubangnya tidak sedalam yang tertulis di atas — sudah dicek langsung
-(5 Sep 2026) dan bisa diandalkan sebagai jaring pengaman:** dashboard Cloudflare
-→ Workers & Pages → `ecoplast-api` → **Edit code** menampilkan `index.js`
-ter-deploy **utuh dan tidak diminifikasi** (masih ada penanda `// src/index.js`,
-nama fungsi asli `tanggalWIB` / `nomorBerikutnya` / `lolosTurnstile`, konstanta
-`MOQ_TON = 8`, `DARI`, `BALAS_KE`, `TUJUAN_INTERNAL`). Jadi **logika `src/index.js`
-— satu-satunya bagian yang tidak bisa diregenerasi — bisa dipulihkan dari mesin
-mana pun**, tidak perlu PC Toko. Tidak ada nilai rahasia di kode itu
-(`RESEND_API_KEY` dibaca dari binding), jadi aman dibuka.
-Yang tetap harus disusun ulang manual, dan semuanya terbaca di halaman Overview
-Worker: route `ecoplastsolutions.id/api/*`, binding KV **`WILAYAH`**, Secrets
-Store **`RESEND_API_KEY`**, versi aktif `61587f9e`. Data wilayah ada di KV dan
-bisa diregenerasi dari `cahyadsn/wilayah`.
-Ini **bukan pengganti** `BACKUP-ecoplast-app.ps1` (tak ada `wrangler.toml`,
-`package.json`, `.gitignore`) — tapi menghapus skenario terburuk "kode hilang
-total kalau disk PC Toko mati".
-**Backup ini hanya bisa dikerjakan dari PC Toko** — dari laptop foldernya tidak ada.
-**Skripnya sudah disiapkan** (5 Sep 2026, ditulis dari laptop):
-`G:\My Drive\_BACKUP-servis\_transfer\BACKUP-ecoplast-app.ps1`. Ia mengecualikan
-`.cf-token`/`.dev.vars`/`.wrangler/`/`node_modules/`, **memindai sisa file untuk
-pola rahasia dan berhenti kalau ada** (tanpa pernah mencetak nilainya), menulis
-`G:\My Drive\_BACKUP-servis\ecoplast-app.tar.gz`, lalu memverifikasi tarballnya
-(nol entri terlarang, `src/index.js` + `wrangler.toml` ada). Tinggal dijalankan
-di PC Toko; prosedur lengkap + cara memasangnya di laptop ada di
-`_transfer\BACA-SAYA.txt`. Yang menghalangi backup langsung: di dalamnya ada
-**`.cf-token`** (token API Cloudflare, rahasia) yang wajib dikecualikan, serta
-`data/wilayah-kv.json` (3,9 MB). Yang perlu ikut kalau kelak dibuat:
-`src/index.js`, `wrangler.toml`, `package.json`, `data/`, `.gitignore`.
-Yang **harus** dikecualikan: `.cf-token`, `.dev.vars`, `.wrangler/`, `node_modules/`.
+Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-app.tar.gz`**, **810.674 byte**,
+**8 entri**. Dibuat oleh `_transfer\BACKUP-ecoplast-app.ps1`, bukan `tar` manual.
+
+**Struktur di dalam tarball** (berprefiks folder, seperti backup situs):
+```
+ecoplast-app/  src/index.js, wrangler.toml, package.json, .gitignore,
+               data/wilayah-kv.json (553 kunci KV, ~3,9 MB)
+```
+`ecoplast-app` **bukan repo git** — tidak ada `.git`, jadi tidak ada riwayat commit
+yang bisa ikut. Tarball ini satu-satunya versi berjangka waktu yang ada.
+
+**Sengaja TIDAK ikut:** `.cf-token` (token API Cloudflare), `.dev.vars`,
+`.wrangler/`, `node_modules/`. Konsekuensinya setelah restore: `npm install`, lalu
+`.cf-token` dan secret Cloudflare (`RESEND_API_KEY` di Secrets Store,
+`TURNSTILE_SECRET` opsional) **harus dipasang ulang** — tidak ada di tarball, dan itu
+memang disengaja.
+
+**Sudah DIUJI PULIH, bukan cuma dibuat** (aturan yang sama dengan backup situs):
+tarball diekstrak ke folder sementara, lalu **sha256 kelima berkas dibandingkan
+dengan sumbernya → identik semua**, dan `data/wilayah-kv.json` hasil ekstrak diurai
+sebagai JSON lalu diuji silang: **`36.03.01.2016` Sentul Jaya → `15610`** (alamat
+pabrik sendiri) — **LULUS**. Kalau backup ini dibuat ulang, **ulangi uji ini**;
+`tar` yang exit 0 tidak membuktikan apa pun soal isi.
+
+**JEBAKAN yang sudah kejadian — pemindai rahasia skripnya berhenti karena positif
+palsu.** Pola aslinya `'Bearer '` polos, dan `src/index.js:175` memuat
+`` authorization: `Bearer ${apiKey}` `` — **interpolasi variabel, bukan nilai
+rahasia** (`apiKey` datang dari binding Secrets Store). Skrip berhenti dengan
+"BERHENTI: ada 1 kecocokan pola rahasia" padahal tidak ada yang bocor. Polanya
+**sudah diperketat** jadi `'Bearer [A-Za-z0-9_.-]{20,}'` di
+`_transfer\BACKUP-ecoplast-app.ps1` — masih menangkap token literal yang
+benar-benar bocor, tapi tidak lagi tersandung template literal. **Jangan
+dikembalikan ke pola polos**, dan kalau skrip ini berhenti lagi, periksa file mana
+dulu — jangan pernah dipaksa jalan.
+
+**Jaring pengaman kedua (di luar Drive), sudah dicek langsung 5 Sep 2026:**
+dashboard Cloudflare → Workers & Pages → `ecoplast-api` → **Edit code** menampilkan
+`index.js` ter-deploy **utuh dan tidak diminifikasi** (masih ada penanda
+`// src/index.js`, nama fungsi asli `tanggalWIB` / `nomorBerikutnya` /
+`lolosTurnstile`, konstanta `MOQ_TON = 8`, `DARI`, `BALAS_KE`, `TUJUAN_INTERNAL`).
+Jadi kode Worker sekarang hidup di **tiga** tempat: disk PC Toko, tarball di Drive,
+dan versi ter-deploy di Cloudflare. Yang ter-deploy **bukan** backup utuh — tak ada
+`wrangler.toml`, `package.json`, `.gitignore`, maupun nilai secret. Yang harus
+disusun ulang manual dari halaman Overview Worker kalau hanya itu yang tersisa:
+route `ecoplastsolutions.id/api/*`, binding KV **`WILAYAH`**, Secrets Store
+**`RESEND_API_KEY`**, versi aktif `61587f9e`.
+
 Catatan: data wilayah bisa diregenerasi dari sumbernya (`cahyadsn/wilayah` +
 `wilayah_kodepos`), tapi `src/index.js` dan `wrangler.toml` tidak.
+
+**YANG MASIH TERBUKA — rahasia belum dikirim ke laptop.** `ecoplast-env.tar.gz.enc`
+(berisi `.dev.vars` + `.cf-token`, terenkripsi) **belum dibuat**; `_transfer\AMBIL-ENV.ps1`
+di sisi laptop sudah siap tapi belum ada yang bisa dibukanya. Selama itu belum ada,
+laptop bisa **membaca & mengedit** `ecoplast-app` hasil restore, tapi **tidak bisa
+deploy**. Metodenya sudah diputuskan pemilik (OpenSSL `-aes-256-cbc -pbkdf2
+-iter 600000`, passphrase lewat jalur lain) — lihat bagian "Memindahkan
+token/secret antar mesin" di atas.
 
 ## Verifikasi lokal (cara yang dipakai)
 
