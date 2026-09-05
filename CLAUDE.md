@@ -1277,8 +1277,10 @@ Rencana lamanya mengoper `.cf-token` terenkripsi lewat Drive (lengkap dengan
 passphrase, `BUAT-ENV-ecoplast.ps1`, `AMBIL-ENV.ps1`). Pemilik membatalkannya
 setelah menyadari dashboard Cloudflare bisa dibuka langsung di Chrome laptop:
 **token baru dibuat di mesin tujuan**, jadi tidak ada rahasia yang perlu berpindah
-sama sekali. `CARA-BUKA-ecoplast-env.txt` di Drive kini menjelaskan berkas yang
-tak pernah ada — abaikan. Kalau kelak butuh memindahkan rahasia yang **tidak bisa**
+sama sekali. `CARA-BUKA-ecoplast-env.txt` **sudah ikut dihapus** dari Drive —
+tidak adanya kedua berkas itu bukan tanda ada yang hilang. (`CARA-BUKA-cc-env-secrets.txt`
+dan `CARA-BUKA-cc-pos-env-secrets.txt` **tetap ada** — itu milik Central Cats dan
+masih berpasangan dengan `.enc`-nya.) Kalau kelak butuh memindahkan rahasia yang **tidak bisa**
 dibuat ulang, prosedur terenkripsi di bagian "Memindahkan token/secret antar mesin"
 tetap berlaku; token Cloudflare bukan salah satunya karena selalu bisa dibuat ulang.
 
