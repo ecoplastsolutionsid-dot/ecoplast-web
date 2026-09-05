@@ -489,16 +489,25 @@ Aturan penting:
   `.feature__num`/`.crow__ico`/`.fc-ico` mengisi hijau saat hover, tombol
   hover/active (press scale), link footer memunculkan panah `::before`. Semua transform
   hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
-- **ATURAN HOVER KONTAINER — angkat HANYA yang bisa diklik.**
-  `.pcard` & `.gshot` adalah `<a>` sungguhan → boleh `translateY`. `.card` polos,
-  `.quote-card`, dan `.prod__img` **bukan** tautan → hanya border menghangat
-  (`rgba(31,122,77,.35)`) + `--shadow-md`, **tanpa gerak**. Kartu teks yang melompat
-  saat disentuh terbaca sebagai tautan, lalu tidak terjadi apa-apa saat diklik.
-  `.order-form` sengaja **dikembalikan ke keadaan diam** — satu kartu besar berisi
-  banyak isian; menyorotinya utuh tiap kursor lewat cuma gangguan, dan isiannya sudah
-  punya hover sendiri. `produk.html` **tidak punya `.card` sama sekali**, jadi
-  `.prod:hover .prod__img` yang mewakili supaya halaman itu tidak jadi satu-satunya
-  yang kontainernya diam.
+- **ATURAN HOVER KONTAINER — SEMUA sama, satu nilai, tanpa pengecualian.**
+  `translateY(-4px)` + border `rgba(31,122,77,.5)` + `--shadow-lg`. Berlaku untuk
+  `.card` (termasuk `.quote-card` **dan** `.order-form`), `.pcard`, `.feature`,
+  `.gshot`, `.map-wrap`, dan `.prod__img`. Yang boleh berbeda hanya **tambahan**
+  yang memang khas elemennya: zoom foto `scale(1.035)` + `saturate(1.06)` pada
+  `.pcard`/`.gshot`. `produk.html` tidak punya `.card` sama sekali, jadi
+  `.prod:hover .prod__img` yang mewakili.
+  **JANGAN membedakan lagi berdasarkan "bisa diklik atau tidak".** Itu percobaan
+  pertama: kartu teks hanya diberi border + `--shadow-md` tanpa gerak, dengan alasan
+  `.card` polos bukan tautan sehingga tak pantas terangkat. Alasannya masuk akal,
+  hasilnya gagal — di atas kartu putih berlatar hampir putih, perubahan border dan
+  bayangan saja **praktis tak terlihat**. Pemilik melaporkan kartu Profil di
+  `tentang.html` "belum ada efek hover", lalu menegaskan hasilnya **tidak konsisten**:
+  sebagian kontainer terangkat jelas, sebagian tampak mati. Konsistensi yang terlihat
+  menang atas kemurnian semantik.
+  `.feature` juga disamakan dari `-3px`/`shadow-md` → `-4px`/`shadow-lg`; beda-beda
+  kecil tanpa alasan seperti itu justru sumber kesan tidak konsisten.
+  Chip ikon (`.fc-ico`, `.crow__ico`) dan `.step__n` **bukan** kontainer — nilainya
+  memang berbeda dan itu wajar.
 - **AUDIT HOVER MENYELURUH (5 Sep 2026) — hasil: NOL kontainer diam di keenam
   halaman.** Cara mengulanginya kalau kelak ada kontainer baru: muat tiap halaman
   di iframe, kumpulkan **pemicu** hover dari seluruh `document.styleSheets` (potong
@@ -511,10 +520,11 @@ Aturan penting:
   hover" padahal menyentuhnya mengisi ikonnya; (2) tidak menelusuri leluhur —
   `.pcard__media`, `.prod__img`, dan `<figcaption>` terbaca diam padahal
   menyentuhnya memicu `.pcard` / `.prod` / `.gshot` di atasnya.
-  **Yang tercakup hanya secara teknis:** `.of-set`, `.of-qty`, `.of-actions` masuk
-  hitungan karena berada di dalam `.order-form` yang punya aturan hover — padahal
-  aturan itu justru **mengembalikannya ke keadaan diam**. Formulir memang sengaja
-  tenang; jangan "memperbaiki" ini.
+  `.of-set`, `.of-qty`, `.of-actions` tercakup lewat induknya `.order-form`, yang
+  sejak 5 Sep 2026 **ikut terangkat** seperti kartu lain (pengecualian "formulir
+  dibiarkan diam" sudah dicabut — justru pengecualian itu yang membuatnya terasa
+  pilih kasih). Angkatannya tidak berkedip saat mengisi, karena hover tetap aktif
+  selama kursor ada di dalam formulir.
 - **DUA BUG LAMA YANG MEMATIKAN HOVER, ditemukan 5 Sep 2026 — jangan diulang.**
   Keduanya tidak terlihat dari membaca CSS; aturannya tampak baik-baik saja.
   Ketahuan dengan mengukur `getComputedStyle` **saat kursor benar-benar di atas

@@ -216,6 +216,8 @@
      walau pengguna minta gerak dikurangi. Sama-sama 3 kelas, menang karena
      responsive.css dimuat setelah styles.css. */
   .has-js .pcard.in:hover, .has-js .feature.in:hover, .has-js .gshot.in:hover,
+  .has-js .card.in:hover,
+  .map-wrap:hover, .prod:hover .prod__img,
   .pcard:hover .pcard__img, .gshot:hover .gshot__img,
   .step:hover .step__n,
   /* .foot-brand baru memakai transform sejak hover-nya jadi "terangkat" (dulu cuma

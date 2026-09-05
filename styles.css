@@ -395,28 +395,25 @@ h1, h2, h3 {
   transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
-/* Hover kartu biasa: border menghangat + bayangan menebal, TANPA translateY.
-   Sengaja tidak ikut "terangkat" seperti `.pcard`/`.gshot` — keduanya <a> yang
-   benar-benar bisa diklik, sedangkan `.card` polos dipakai untuk blok teks
-   (Profil, Alamat, Akses, Informasi kontak) yang bukan tautan. Kartu teks yang
-   melompat saat disentuh terbaca sebagai tautan, lalu tidak terjadi apa-apa
-   ketika diklik.
-   `.order-form` dikecualikan: ia satu kartu besar berisi banyak isian, jadi
-   menyorotinya utuh setiap kali kursor lewat cuma jadi gangguan — isiannya
-   sudah punya hover sendiri.
-   JANGAN pakai `.card:not(.order-form):hover` — `:not()` IKUT MENAMBAH bobot
-   spesifisitas, jadi selektor itu bernilai 3 kelas dan MENGALAHKAN `.pcard:hover`
-   (2 kelas) berapa pun urutannya. Sudah kejadian: kartu produk kehilangan
-   translateY(-4px), shadow-lg, dan border .5 miliknya. Semua aturan hover kartu
-   di bawah ini sengaja dijaga tetap **2 kelas** supaya yang menentukan adalah
-   URUTAN, bukan bobot — dan itu jauh lebih mudah dilacak.
-   Tidak memakai transform, jadi tak perlu masuk blok prefers-reduced-motion. */
-.card:hover { border-color: rgba(31,122,77,.35); box-shadow: var(--shadow-md); }
-
-/* Formulir dikembalikan ke keadaan diam: satu kartu besar berisi banyak isian,
-   menyorotinya utuh tiap kursor lewat cuma jadi gangguan. Isiannya sudah punya
-   hover sendiri. Sama-sama 2 kelas, menang karena ditulis belakangan. */
-.order-form:hover { border-color: var(--line); box-shadow: var(--shadow-sm); }
+/* SEMUA kontainer bereaksi SAMA. Nilainya satu: border `rgba(31,122,77,.5)`,
+   `--shadow-lg`, dan angkat `translateY(-4px)` (transform-nya ditulis di blok
+   khusus dekat aturan reveal — lihat alasannya di sana).
+   RIWAYAT, supaya tidak diputar balik: mula-mula kartu teks sengaja dibedakan —
+   hanya border + `--shadow-md`, TANPA gerak — dengan alasan `.card` polos bukan
+   tautan sehingga tak pantas "terangkat" seperti `.pcard`/`.gshot`. Alasannya
+   masuk akal, hasilnya tidak: di atas kartu putih berlatar hampir putih,
+   perubahan border dan bayangan saja **praktis tak terlihat**. Pemilik melaporkan
+   kartu Profil di tentang.html "belum ada efek hover", lalu menegaskan hasilnya
+   jadi tidak konsisten. Betul — sebagian kontainer terangkat jelas, sebagian
+   tampak mati. Konsistensi menang atas kemurnian semantik.
+   `.order-form` IKUT, tidak lagi dikecualikan: pengecualian itu justru yang
+   membuatnya terasa pilih kasih. Angkatannya tidak berkedip saat mengisi karena
+   hover tetap aktif selama kursor di dalam formulir.
+   JANGAN pakai `.card:not(...)` — `:not()` IKUT MENAMBAH bobot spesifisitas
+   (3 kelas) dan diam-diam mengalahkan `.pcard:hover` (2 kelas) berapa pun
+   urutannya; sudah pernah mematikan hover kartu produk. Semua aturan hover kartu
+   dijaga tetap 2 kelas supaya URUTAN yang menentukan, bukan bobot. */
+.card:hover { border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
 
 .quote-card:hover { box-shadow: var(--shadow-lg); }
 
@@ -475,7 +472,10 @@ h1, h2, h3 {
 .pcard:hover .pcard__more { transform: translateX(5px); }
 
 /* feature cards */
-.feature:hover { border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+/* -4px & shadow-lg, disamakan dengan kartu lain (dulu -3px & shadow-md — beda
+   tipis tanpa alasan, dan justru beda-beda kecil semacam itu yang membuat
+   keseluruhannya terasa tidak konsisten). */
+.feature:hover { border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
 .feature h3 { font-size: 1.12rem; margin-bottom: 0.4rem; }
 .feature p { color: var(--muted); font-size: 0.97rem; }
 /* Badge IKON (menggantikan angka 01–04 di "Kenapa Ecoplast" — poin non-sequence):
@@ -585,15 +585,15 @@ h1, h2, h3 {
   padding: clamp(0.8rem, 2.5vw, 1.4rem);
   box-shadow: var(--shadow-sm);
   animation: img-in .55s ease backwards;   /* lihat alasan di .pcard__img */
-  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
 /* produk.html satu-satunya halaman TANPA `.card`, jadi tanpa aturan ini ia jadi
    satu-satunya halaman yang kontainernya diam saat disentuh. `.prod__img` adalah
-   elemen berbingkai di sana (border + shadow), jadi ia yang mewakili.
-   Perlakuannya disamakan dengan `.card:hover`: border menghangat + bayangan
-   menebal, TANPA angkatan — `.prod` bukan tautan. */
-.prod:hover .prod__img { border-color: rgba(31,122,77,.35); box-shadow: var(--shadow-md); }
+   elemen berbingkai di sana, jadi ia yang mewakili — dengan nilai yang sama
+   persis seperti kartu. `.prod__img` bukan target reveal (yang jadi target
+   `.prod`), jadi transform-nya aman ditulis langsung. */
+.prod:hover .prod__img { transform: translateY(-4px); border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
 @keyframes img-in {
   from { opacity: 0; transform: translateY(8px) scale(.99); }
   to   { opacity: 1; transform: none; }
@@ -737,16 +737,13 @@ h1, h2, h3 {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 44px 44px;
-  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
-/* Satu-satunya kontainer berbingkai yang tadinya benar-benar diam saat disentuh
-   (ketahuan dari audit menyeluruh 5 Sep 2026 atas semua elemen berbingkai di
-   keenam halaman). Justru paling layak bereaksi: isinya peta yang bisa digeser
-   dan di-zoom, jadi isyarat "ini bisa disentuh" ada gunanya.
-   Sama seperti `.card:hover` — border menghangat + bayangan menebal, tanpa
-   angkatan; peta yang melompat saat kursor lewat akan terasa aneh. */
-.map-wrap:hover { border-color: rgba(31,122,77,.35); box-shadow: var(--shadow-md); }
+/* Peta ikut aturan yang sama dengan kartu. `.map-wrap` BUKAN target reveal
+   (yang jadi target adalah `.map-block` di atasnya), jadi transform-nya boleh
+   ditulis langsung di sini tanpa perlu varian `.has-js … .in`. */
+.map-wrap:hover { transform: translateY(-4px); border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
 .map-wrap iframe { width: 100%; height: 420px; border: 0; }
 
 /* Kontak — baris info (chip ikon + label + value) di kartu terang */
@@ -1248,9 +1245,10 @@ a.fc-val:hover { color: #fff; }
    Nilainya sengaja disamakan dengan aturan aslinya di atas supaya tidak ada dua
    sumber kebenaran soal seberapa tinggi angkatannya.
    Ketiganya WAJIB ikut di blok prefers-reduced-motion (responsive.css). */
-.has-js .pcard.in:hover  { transform: translateY(-4px); }
-.has-js .feature.in:hover { transform: translateY(-3px); }
-.has-js .gshot.in:hover  { transform: translateY(-4px); }
+.has-js .pcard.in:hover,
+.has-js .feature.in:hover,
+.has-js .gshot.in:hover,
+.has-js .card.in:hover   { transform: translateY(-4px); }
 
 /* ==========================================================================
    Responsive & Motion
