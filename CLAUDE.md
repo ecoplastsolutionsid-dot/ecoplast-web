@@ -839,6 +839,18 @@ Aturan penting:
       tergeser dobel (terukur lompat 65.2 → 111.2).
     - `.fsoc` gap dinaikkan `0.7rem` → **`0.75rem`** agar sama dengan `.fc-row`;
       tanpa itu teks Media Sosial meleset 0.8px dari teks Kontak.
+- **Kontras chip ikon SUDAH DIPERIKSA (5 Sep 2026) — jangan "diperbaiki" lagi.**
+  Sempat dikira pucat dan hendak digelapkan. Terukur: `.feature__ico` = ikon
+  `--green #1F7A4D` di atas `#E4EFE7` → **4,51 : 1**, jauh di atas ambang WCAG
+  **3 : 1** untuk objek grafis. Yang terlihat "pucat" bukan ikonnya melainkan
+  **latar chip vs kartu putih** (`#E4EFE7` vs `#fff` ≈ **1,18 : 1**) — dan itu
+  memang gaya tint lembut yang konsisten dengan `.crow__ico` & `.fc-ico`.
+  Menggelapkannya = mengubah bahasa desain, bukan memperbaiki aksesibilitas.
+  **Cara mengukurnya** (jangan pakai mata): baca `getComputedStyle` lalu hitung
+  rasio kontras WCAG. Hati-hati dua jebakan yang sempat membuat angka ngawur —
+  target reveal ber-`opacity: 0` kalau `.in` belum terpasang, dan latar footer
+  datang dari pseudo-element sehingga penelusuran `backgroundColor` ke atas
+  menemukan `body`, bukan warna gelapnya.
 - **Kontak**: kartu info pakai baris `.crow` (chip-ikon + label + nilai + divider),
   blok peta `.map-block` (header "Lokasi" + tombol "Buka di Google Maps"). Kartu
   "Informasi kontak" dan "Minta penawaran harga" dibuat **sama lebar & tinggi**. Kartu
@@ -1400,7 +1412,13 @@ non-ASCII merusak parsing — sudah kejadian sekali saat menulisnya.
     berarti tidak ada overflow — drawer off-canvas (`position:fixed` + `translateX(100%)`)
     memang melar ke kanan tapi Chromium mengecualikannya dari scroll (bukan bug).
   - **Peta Google kosong di headless** (tak ada internet ke Google) — normal; akan
-    termuat di live. Tombol "Buka di Google Maps" jadi cadangan.
+    termuat di live. Tombol "Buka di Google Maps" jadi cadangan. Sejak 5 Sep 2026
+    area itu **tidak lagi kosong melompong**: `.map-wrap` punya placeholder CSS
+    (tint `#EAF0E9` + pin `--muted` samar di tengah, data-URI). **Jangkauannya
+    terbatas dan itu disengaja** — begitu iframe mulai melukis, Google menimpanya
+    dengan abu-abu loading-nya sendiri, jadi placeholder ini hanya membantu pada
+    jendela sebelum `loading="lazy"` memicu pemuatan. Tetap berguna, tapi jangan
+    berharap ia menutup seluruh masa tunggu. Tanpa JS, tak ada yang perlu dibersihkan.
 - Pastikan tautan internal & aset tidak 404: `/styles.css`, `/responsive.css`,
   `/assets/logo-lockup.png`, `/assets/logo-full.png`,
   `/assets/og-image.png`,
