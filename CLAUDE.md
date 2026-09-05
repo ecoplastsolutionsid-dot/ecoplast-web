@@ -1036,13 +1036,19 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 ## Backup
 
 Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-web.tar.gz`** (Google Drive).
-Diperbarui terakhir **5 Sep 2026 dari PC Toko**, **±6,4 MB**, **286 entri**,
+Diperbarui terakhir **5 Sep 2026 dari PC Toko**, **±6,5 MB**, **±290 entri**,
 `main == origin/main` dan working tree bersih saat dibungkus — jadi generasi ini
 **tidak** memuat commit yang cuma hidup di dalam tarball.
-**Ukurannya sengaja ditulis kira-kira**: tiap regenerasi menghasilkan byte yang
-sedikit berbeda (isi repo berubah, gzip tidak deterministik lintas versi), dan
-catatan byte presisi di sini sudah dua kali salah. Yang layak dicocokkan kalau
-curiga: **jumlah entri** dan **commit teratas di `.git`**, bukan byte.
+
+**Angka di sini sengaja kira-kira, dan JANGAN dipakai sebagai alat verifikasi.**
+Byte maupun jumlah entri bergeser tiap kali backup dibuat ulang (isi repo berubah,
+`.git` bertambah objek), jadi catatan presisi di sini pasti basi — sudah dua kali
+terbukti salah dan sempat memicu kecurigaan palsu. **Cara memeriksa yang benar
+tidak bergantung pada catatan ini sama sekali:**
+1. `git fsck` pada hasil ekstrak → harus bersih (exit 0);
+2. commit teratas `.git` → harus sama dengan commit yang tercatat di
+   `claude-settings/BACA-SAYA.txt` **di dalam tarball itu sendiri**.
+Keduanya self-contained, jadi tetap sahih walau CLAUDE.md tertinggal.
 
 **Dua generasi sebelumnya disimpan, jangan tertukar:**
 - `ecoplast-web_2026-09-05_laptop_LAMA.tar.gz` (6.358.814 byte, 275 entri) —
