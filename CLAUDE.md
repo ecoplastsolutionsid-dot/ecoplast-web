@@ -59,6 +59,16 @@ Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
 
 ### Sinkronisasi dua mesin — RUTINITAS, baca sebelum mulai & sebelum berhenti
 
+**Pintu masuk lintas mesin:** `G:\My Drive\_BACKUP-servis\_transfer\MULAI-DI-SINI.txt`.
+Pemilik cukup menyuruh Claude di mesin mana pun membaca berkas itu; isinya keadaan
+terkini + penunjuk ke berkas lain. **Pembagian peran yang tidak boleh tertukar:**
+Drive = jalur **perintah** dan muatan sekali-jalan; GitHub = jalur **kode & commit**.
+**JANGAN PERNAH menaruh repo di dalam `G:\My Drive`** — `.git` yang ikut
+disinkronkan Drive itu penyebab korupsi klasik (dua mesin menulis objek yang sama →
+"conflicted copy" → riwayat rusak diam-diam). Repo tetap di `C:\Users\…`.
+Kalau `MULAI-DI-SINI.txt` diperbarui, perbarui juga tanggal & keadaan di dalamnya —
+berkas itu satu-satunya yang dibaca pemilik secara rutin.
+
 Pekerjaan berpindah antara PC Toko dan laptop. Yang membuat keduanya sinkron
 adalah **GitHub**, bukan Google Drive. Tarball di Drive itu **titik pulih kalau
 disk mati**, bukan jalur sinkronisasi — memakainya untuk mengoper pekerjaan
