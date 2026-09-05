@@ -210,6 +210,12 @@
     transition-duration: 0.001ms !important;
   }
   .btn:hover, .pcard:hover, .feature:hover, .gshot:hover,
+  /* Varian ber-.has-js/.in WAJIB ikut disebut. Aturan angkatannya di styles.css
+     bernilai 3 kelas (`.has-js .pcard.in:hover`), jadi kalau di sini hanya ada
+     `.pcard:hover` (2 kelas), peredaman gerak ini KALAH dan kartu tetap melompat
+     walau pengguna minta gerak dikurangi. Sama-sama 3 kelas, menang karena
+     responsive.css dimuat setelah styles.css. */
+  .has-js .pcard.in:hover, .has-js .feature.in:hover, .has-js .gshot.in:hover,
   .pcard:hover .pcard__img, .gshot:hover .gshot__img,
   .step:hover .step__n,
   /* .foot-brand baru memakai transform sejak hover-nya jadi "terangkat" (dulu cuma

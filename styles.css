@@ -395,6 +395,31 @@ h1, h2, h3 {
   transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
+/* Hover kartu biasa: border menghangat + bayangan menebal, TANPA translateY.
+   Sengaja tidak ikut "terangkat" seperti `.pcard`/`.gshot` — keduanya <a> yang
+   benar-benar bisa diklik, sedangkan `.card` polos dipakai untuk blok teks
+   (Profil, Alamat, Akses, Informasi kontak) yang bukan tautan. Kartu teks yang
+   melompat saat disentuh terbaca sebagai tautan, lalu tidak terjadi apa-apa
+   ketika diklik.
+   `.order-form` dikecualikan: ia satu kartu besar berisi banyak isian, jadi
+   menyorotinya utuh setiap kali kursor lewat cuma jadi gangguan — isiannya
+   sudah punya hover sendiri.
+   JANGAN pakai `.card:not(.order-form):hover` — `:not()` IKUT MENAMBAH bobot
+   spesifisitas, jadi selektor itu bernilai 3 kelas dan MENGALAHKAN `.pcard:hover`
+   (2 kelas) berapa pun urutannya. Sudah kejadian: kartu produk kehilangan
+   translateY(-4px), shadow-lg, dan border .5 miliknya. Semua aturan hover kartu
+   di bawah ini sengaja dijaga tetap **2 kelas** supaya yang menentukan adalah
+   URUTAN, bukan bobot — dan itu jauh lebih mudah dilacak.
+   Tidak memakai transform, jadi tak perlu masuk blok prefers-reduced-motion. */
+.card:hover { border-color: rgba(31,122,77,.35); box-shadow: var(--shadow-md); }
+
+/* Formulir dikembalikan ke keadaan diam: satu kartu besar berisi banyak isian,
+   menyorotinya utuh tiap kursor lewat cuma jadi gangguan. Isiannya sudah punya
+   hover sendiri. Sama-sama 2 kelas, menang karena ditulis belakangan. */
+.order-form:hover { border-color: var(--line); box-shadow: var(--shadow-sm); }
+
+.quote-card:hover { box-shadow: var(--shadow-lg); }
+
 /* product summary cards (home) */
 .pcard {
   display: flex;
@@ -432,7 +457,14 @@ h1, h2, h3 {
   object-fit: cover;
   object-position: center;
   display: block;
-  animation: img-in .55s ease both;
+  /* `backwards`, BUKAN `both`. Dengan `both`, keadaan akhir keyframe
+     (`transform: none`) terkunci selamanya — dan di kaskade CSS animasi
+     mengalahkan deklarasi biasa, sehingga `.pcard:hover .pcard__img
+     { transform: scale(1.035) }` di bawah TIDAK PERNAH jalan. Sama persis
+     dengan yang terjadi pada angkatan kartu. `backwards` tetap menahan frame
+     awal sebelum animasi mulai, tapi melepas kendali sesudah selesai.
+     Ditemukan 5 Sep 2026 dengan mengukur transform saat hover. */
+  animation: img-in .55s ease backwards;
   transition: transform var(--dur-slow) var(--ease-out), filter var(--dur) var(--ease);
 }
 .pcard:hover .pcard__img { transform: scale(1.035); filter: saturate(1.06); }
@@ -552,8 +584,16 @@ h1, h2, h3 {
   border: 1px solid var(--line);
   padding: clamp(0.8rem, 2.5vw, 1.4rem);
   box-shadow: var(--shadow-sm);
-  animation: img-in .55s ease both;
+  animation: img-in .55s ease backwards;   /* lihat alasan di .pcard__img */
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
+
+/* produk.html satu-satunya halaman TANPA `.card`, jadi tanpa aturan ini ia jadi
+   satu-satunya halaman yang kontainernya diam saat disentuh. `.prod__img` adalah
+   elemen berbingkai di sana (border + shadow), jadi ia yang mewakili.
+   Perlakuannya disamakan dengan `.card:hover`: border menghangat + bayangan
+   menebal, TANPA angkatan — `.prod` bukan tautan. */
+.prod:hover .prod__img { border-color: rgba(31,122,77,.35); box-shadow: var(--shadow-md); }
 @keyframes img-in {
   from { opacity: 0; transform: translateY(8px) scale(.99); }
   to   { opacity: 1; transform: none; }
@@ -1186,6 +1226,22 @@ a.fc-val:hover { color: #fff; }
   opacity: 1;
   transform: none;
 }
+
+/* Hover "terangkat" harus ditulis DI SINI, sesudah blok reveal, dan dengan
+   `.has-js` + `.in` ikut disebut.
+   Kalau tidak: `.has-js .pcard.in { transform: none }` bernilai 3 kelas dan
+   MENGALAHKAN `.pcard:hover` yang cuma 2 — sehingga begitu kartu selesai muncul,
+   angkatannya mati. Itu berlaku di semua browser dengan JS aktif, jadi praktis
+   micro-interaction ini TIDAK PERNAH terlihat sejak reveal dipasang, walau
+   `.pcard:hover { transform: translateY(-4px) }` di atas terbaca seolah aktif.
+   Ditemukan 5 Sep 2026 lewat pengukuran getComputedStyle saat hover, bukan dari
+   membaca CSS-nya — dari membaca, aturannya tampak baik-baik saja.
+   Nilainya sengaja disamakan dengan aturan aslinya di atas supaya tidak ada dua
+   sumber kebenaran soal seberapa tinggi angkatannya.
+   Ketiganya WAJIB ikut di blok prefers-reduced-motion (responsive.css). */
+.has-js .pcard.in:hover  { transform: translateY(-4px); }
+.has-js .feature.in:hover { transform: translateY(-3px); }
+.has-js .gshot.in:hover  { transform: translateY(-4px); }
 
 /* ==========================================================================
    Responsive & Motion

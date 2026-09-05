@@ -489,6 +489,50 @@ Aturan penting:
   `.feature__num`/`.crow__ico`/`.fc-ico` mengisi hijau saat hover, tombol
   hover/active (press scale), link footer memunculkan panah `::before`. Semua transform
   hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
+- **ATURAN HOVER KONTAINER — angkat HANYA yang bisa diklik.**
+  `.pcard` & `.gshot` adalah `<a>` sungguhan → boleh `translateY`. `.card` polos,
+  `.quote-card`, dan `.prod__img` **bukan** tautan → hanya border menghangat
+  (`rgba(31,122,77,.35)`) + `--shadow-md`, **tanpa gerak**. Kartu teks yang melompat
+  saat disentuh terbaca sebagai tautan, lalu tidak terjadi apa-apa saat diklik.
+  `.order-form` sengaja **dikembalikan ke keadaan diam** — satu kartu besar berisi
+  banyak isian; menyorotinya utuh tiap kursor lewat cuma gangguan, dan isiannya sudah
+  punya hover sendiri. `produk.html` **tidak punya `.card` sama sekali**, jadi
+  `.prod:hover .prod__img` yang mewakili supaya halaman itu tidak jadi satu-satunya
+  yang kontainernya diam.
+- **DUA BUG LAMA YANG MEMATIKAN HOVER, ditemukan 5 Sep 2026 — jangan diulang.**
+  Keduanya tidak terlihat dari membaca CSS; aturannya tampak baik-baik saja.
+  Ketahuan dengan mengukur `getComputedStyle` **saat kursor benar-benar di atas
+  elemen**, bukan dengan membaca berkas.
+  1. **Reveal mengalahkan hover.** `.has-js .pcard.in { transform: none }` bernilai
+     **3 kelas**, sedangkan `.pcard:hover { transform: translateY(-4px) }` cuma **2**.
+     Jadi begitu kartu selesai muncul, angkatannya mati — di semua browser ber-JS,
+     yaitu hampir semua pengunjung. Micro-interaction "kartu angkat" praktis tidak
+     pernah terlihat sejak reveal dipasang. Perbaikannya: aturan angkat ditulis
+     **sesudah** blok reveal dan ikut menyebut `.has-js` + `.in`
+     (`.has-js .pcard.in:hover`), lalu **varian itu WAJIB ikut** di blok
+     `prefers-reduced-motion` — kalau tidak, peredaman geraknya yang kalah.
+  2. **`animation-fill-mode: both` mengunci transform.** `.pcard__img` dan
+     `.prod__img` memakai `animation: img-in .55s ease both`, dan keadaan akhir
+     keyframe-nya `transform: none`. Di kaskade CSS **animasi mengalahkan deklarasi
+     biasa**, jadi `.pcard:hover .pcard__img { transform: scale(1.035) }` tidak
+     pernah jalan. Diganti `backwards`: frame awal tetap ditahan sebelum animasi
+     mulai, tapi kendali dilepas sesudah selesai. Tampilan diam tidak berubah.
+- **`:not()` IKUT MENAMBAH BOBOT SPESIFISITAS.** `.card:not(.order-form):hover`
+  bernilai **3 kelas** dan diam-diam mengalahkan `.pcard:hover` (2 kelas) berapa pun
+  urutannya — sempat mematikan angkatan kartu produk. Aturan hover kartu sengaja
+  dijaga **semuanya 2 kelas** supaya yang menentukan adalah **urutan**, bukan bobot;
+  jauh lebih mudah dilacak. Pengecualian formulir ditulis sebagai aturan terpisah
+  (`.order-form:hover`) yang menang karena ditulis belakangan.
+- **CARA MENGUKUR HOVER (jangan pakai mata, dan hati-hati tab latar).** Di tab yang
+  tidak aktif, Chrome **membekukan transisi DAN animasi**, sehingga
+  `getComputedStyle` mengembalikan nilai yang tersangkut — pernah membuat pembacaan
+  "diam" menampilkan nilai hover, dan membuat zoom foto terbaca `scale(.99)` (frame
+  awal `img-in`). Suntik `*{transition:none !important; animation:none !important}`
+  lebih dulu, lalu bandingkan diam vs hover. Untuk menguji keadaan **sesudah**
+  animasi, panggil `el.getAnimations().forEach(a=>a.finish())`.
+  Saat menguji di `localhost`, ingat browser **men-cache `styles.css?v=…`** — URL-nya
+  tidak berubah walau berkasnya disunting. Ganti `href`-nya dengan query acak dulu,
+  kalau tidak yang diukur adalah CSS lama.
 - **Reveal scroll-in (elemen muncul saat masuk layar — satu-satunya JS selain
   tahun):** pola *progressive enhancement* & **anti-flash**:
   - Skrip sinkron di `<head>` (`document.documentElement.classList.add('has-js')`)
