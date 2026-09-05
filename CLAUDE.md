@@ -1264,13 +1264,62 @@ route `ecoplastsolutions.id/api/*`, binding KV **`WILAYAH`**, Secrets Store
 Catatan: data wilayah bisa diregenerasi dari sumbernya (`cahyadsn/wilayah` +
 `wilayah_kodepos`), tapi `src/index.js` dan `wrangler.toml` tidak.
 
-**YANG MASIH TERBUKA — rahasia belum dikirim ke laptop.** `ecoplast-env.tar.gz.enc`
-(berisi `.dev.vars` + `.cf-token`, terenkripsi) **belum dibuat**; `_transfer\AMBIL-ENV.ps1`
-di sisi laptop sudah siap tapi belum ada yang bisa dibukanya. Selama itu belum ada,
-laptop bisa **membaca & mengedit** `ecoplast-app` hasil restore, tapi **tidak bisa
-deploy**. Metodenya sudah diputuskan pemilik (OpenSSL `-aes-256-cbc -pbkdf2
--iter 600000`, passphrase lewat jalur lain) — lihat bagian "Memindahkan
-token/secret antar mesin" di atas.
+### Deploy dari laptop — SUDAH BISA (5 Sep 2026), dan rute terenkripsi DIBATALKAN
+
+**Laptop sudah bisa `wrangler deploy` sendiri.** Deploy pertama dari laptop:
+versi `61587f9e` → **`5051dd20-f177-45e0-9bd5-560d7c5768f2`**. Setelah itu
+`/api/wilayah/prov` tetap **200 / 885 byte**, `kab/36` 200, `wil/36.03` 200 dengan
+`36.03.01.2016","Sentul Jaya","15610"` utuh, dan `pemesanan.html` tetap dilayani
+GitHub Pages.
+
+**`ecoplast-env.tar.gz.enc` TIDAK JADI DIPAKAI — jangan dibuat, jangan dicari.**
+Rencana lamanya mengoper `.cf-token` terenkripsi lewat Drive (lengkap dengan
+passphrase, `BUAT-ENV-ecoplast.ps1`, `AMBIL-ENV.ps1`). Pemilik membatalkannya
+setelah menyadari dashboard Cloudflare bisa dibuka langsung di Chrome laptop:
+**token baru dibuat di mesin tujuan**, jadi tidak ada rahasia yang perlu berpindah
+sama sekali. `CARA-BUKA-ecoplast-env.txt` di Drive kini menjelaskan berkas yang
+tak pernah ada — abaikan. Kalau kelak butuh memindahkan rahasia yang **tidak bisa**
+dibuat ulang, prosedur terenkripsi di bagian "Memindahkan token/secret antar mesin"
+tetap berlaku; token Cloudflare bukan salah satunya karena selalu bisa dibuat ulang.
+
+**Dua token Cloudflare, sengaja terpisah** (di `dash.cloudflare.com/profile/api-tokens`):
+| nama | mesin | keterangan |
+|---|---|---|
+| `Edit Cloudflare Workers` | PC Toko | yang lama, tanpa kedaluwarsa |
+| `laptop-asus-deploy-ecoplast` | Laptop | dibuat 5 Sep 2026 |
+Kalau salah satu mesin hilang/diservis, **cabut token mesin itu saja** — yang lain
+tetap hidup. Itu alasan tidak memakai satu token bersama.
+
+**JEBAKAN BESAR — template "Edit Cloudflare Workers" TIDAK menyertakan Secrets
+Store, dan deploy repo ini PASTI gagal tanpa itu.** Gejalanya:
+```
+A request to the Cloudflare API (/accounts/…/workers/scripts/ecoplast-api/versions) failed.
+Secrets store binding authorization failed. Check your permissions and secret scopes. [code: 10021]
+```
+Ini muncul **setelah** `wrangler whoami` sukses dan setelah bundling selesai, jadi
+mudah salah didiagnosis sebagai token salah/kedaluwarsa. Bukan — tokennya benar,
+izinnya yang kurang, karena `wrangler.toml` mengikat `RESEND_API_KEY` dari Secrets
+Store. **Butuh `Secrets Store:Edit`. `Secrets Store:Read` TIDAK CUKUP** — sudah
+diuji, gagal dengan pesan yang sama persis. Cara membuktikan izin apa yang benar:
+buka token PC Toko → `…` → **View summary**, lalu samakan.
+**Mengubah izin token TIDAK mengubah nilainya** — `.cf-token` yang sudah tersimpan
+tetap berlaku, tak perlu dibuat ulang. (Beda dengan **Roll**, yang mengganti nilai.)
+Peringatan `The current authentication token does not have 'All Zones' permissions`
+saat deploy itu **normal dan tidak berbahaya**: tokennya sengaja dibatasi ke zona
+`ecoplastsolutions.id`, jadi wrangler memperbarui route lewat endpoint per-zona.
+
+**`deploy.ps1` (di repo `ecoplast-app`) adalah jembatannya — pakai itu, jangan
+menyetel env sendiri.** wrangler **tidak pernah** membaca berkas `.cf-token`; ia
+membaca `CLOUDFLARE_API_TOKEN`. Tanpa jembatan ini `.cf-token` bisa duduk rapi di
+folder sementara `wrangler deploy` tetap bilang "You are not authenticated".
+```
+.\deploy.ps1 -Cek     cek autentikasi saja
+.\deploy.ps1          deploy
+```
+Token hanya dipasang untuk proses skrip itu, tidak pernah dicetak (hanya
+panjangnya), dan dihapus lagi di `finally`. Berkasnya **ASCII murni** dengan
+sengaja: PowerShell 5.1 membaca `.ps1` tanpa BOM sebagai ANSI, jadi karakter
+non-ASCII merusak parsing — sudah kejadian sekali saat menulisnya.
 
 ## Verifikasi lokal (cara yang dipakai)
 
