@@ -548,13 +548,13 @@ h1, h2, h3 {
   transition: transform var(--dur-slow) var(--ease-out), filter var(--dur) var(--ease);
 }
 .gshot:hover .gshot__img { transform: scale(1.035); filter: saturate(1.06); }
-.gshot figcaption {
-  padding: 0.85rem var(--card-pad) 1rem;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
+/* `.gshot figcaption` DIHAPUS 5 Sep 2026 atas permintaan pemilik — keenam
+   keterangan foto mesin dibuang, tinggal fotonya saja. Deskripsi tetap ada di
+   `alt` tiap gambar, jadi tidak ada informasi yang hilang bagi pembaca layar
+   maupun mesin pencari. `<figure>` yang hanya berisi gambar tetap sah.
+   Kalau kelak keterangannya dikembalikan, aturan ini tinggal ditulis lagi —
+   dan ingat pakem lama: caption harus NETRAL, mendeskripsikan apa yang terlihat,
+   tanpa menyebut jenis/merek/kapasitas mesin tanpa konfirmasi pemilik. */
 
 /* ==========================================================================
    Product page — detail rows

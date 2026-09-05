@@ -630,7 +630,8 @@ Aturan penting:
   - Frasa highlight judul dijaga `white-space: nowrap` agar tidak terpecah antar-baris.
 - **Galeri mesin (`.gallery` + `.gshot`, hanya di `tentang.html`)** — section
   "Fasilitas", di antara Profil dan Lokasi. Tiap item `<figure class="gshot">` =
-  `<a class="gshot__link">` membungkus `<img class="gshot__img">` + `<figcaption>`.
+  `<a class="gshot__link">` membungkus `<img class="gshot__img">` — **tanpa
+  `<figcaption>`**.
   - **Tanpa lightbox JS.** `<a>` menuju file fotonya langsung
     (`target="_blank" rel="noopener"`) → foto bisa dilihat ukuran penuh tanpa skrip
     ketiga. Situs ini sengaja cuma punya dua skrip; jangan tambah.
@@ -642,9 +643,18 @@ Aturan penting:
     (dipasang untuk mencegah layout shift) masuk sebagai presentational hint
     width+height; kalau **keduanya definite, `aspect-ratio` DIABAIKAN** browser.
     Ini pernah kejadian: foto ter-render `516×1448` (tinggi asli), bukan 4:3.
-  - Caption sengaja **netral** — mendeskripsikan apa yang terlihat di foto, tanpa
-    menyebut jenis/merek/kapasitas mesin. Pemilik memilih ini agar tak ada klaim
-    yang bisa salah. **Jangan** menambah nama mesin tanpa konfirmasi pemilik.
+  - **Caption DIHAPUS 5 Sep 2026** atas permintaan pemilik — keenamnya dibuang
+    beserta aturan `.gshot figcaption` di `styles.css`; kini tinggal fotonya saja.
+    Yang dihapus: "Pengolahan bahan baku.", "Unit mesin di dalam gedung produksi.",
+    "Lini mesin dengan panel kontrol produksi.", "Area produksi tali PP dan hasil
+    gulungannya.", "Dua lini mesin berjajar di area produksi.", "Mesin dengan corong
+    pengumpan di area produksi."
+    **Tidak ada informasi yang hilang**: deskripsi tiap foto tetap ada di atribut
+    `alt`, jadi pembaca layar dan mesin pencari tetap terlayani. `<figure>` yang
+    hanya berisi gambar tetap sah.
+    Kalau kelak dikembalikan, pakem lamanya tetap berlaku: caption harus **netral** —
+    mendeskripsikan apa yang terlihat, **tanpa** menyebut jenis/merek/kapasitas mesin
+    tanpa konfirmasi pemilik.
   - `.gshot` termasuk target reveal → ada di **tiga** tempat: blok `.has-js` di
     `styles.css`, konstanta `SEL` di skrip body **kelima** HTML, dan blok
     `prefers-reduced-motion` di `responsive.css`.
