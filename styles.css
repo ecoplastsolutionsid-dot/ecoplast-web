@@ -828,12 +828,21 @@ a.crow__val:hover { color: var(--green); }
    DIBUANG atas permintaan pemilik — isinya cuma mengulang nav utama yang sudah ada di
    header dan di drawer hamburger. Konsekuensinya ditangani di `.foot-bottom__privacy`
    di bawah: tautan Kebijakan Privasi dulu hanya hidup di kolom itu. */
-.foot-cols { display: grid; grid-template-columns: 1.75fr 1.55fr 0.95fr; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
-/* Kolom terakhir (Media Sosial) dirapatkan ke tepi kanan grid. Kolomnya paling sempit
-   (terukur 216,9px di 1280) sementara isinya rata kiri, jadi sisi kanan footer terasa
-   menggantung kosong. `justify-self: end` menggeser BLOKNYA ke kanan; teks di dalamnya
-   tetap rata kiri sehingga chip ikon dan labelnya tetap sejajar seperti kolom Kontak. */
-.foot-cols > .foot-col:last-child { justify-self: end; }
+/* Track ketiga `auto`, BUKAN `0.95fr`. Dengan `0.95fr` track-nya lebar sementara
+   `justify-self: end` membuat isinya menyusut dan menempel ke kanan track — sisa
+   track menganga sebagai ruang kosong di sebelah KIRI kolom Media Sosial.
+   Terukur di 1440px: celah antara kolom Kontak dan Media Sosial **148px**, padahal
+   `gap` maksimalnya cuma 3.5rem (56px). Akibatnya Media Sosial terlihat terlempar
+   sendirian ke tepi, terputus dari kolom Kontak.
+   Dengan `auto`, track ketiga tepat selebar isinya dan TETAP menempel kanan (dua
+   kolom `fr` menyerap seluruh sisa ruang), jadi jaraknya kembali murni `gap`. */
+.foot-cols { display: grid; grid-template-columns: 1.75fr 1.55fr auto; gap: clamp(2rem, 3.5vw, 3.5rem); align-items: start; }
+/* `justify-self: end` DIHAPUS dari desktop — tidak lagi ada gunanya sejak track
+   ketiga sama dengan lebar isinya, dan justru dialah penyebab celah 148px itu.
+   Override `justify-self: start` di responsive.css TETAP DIPERLUKAN dan jangan
+   ikut dihapus: di ≤900px grid berubah jadi `1fr 1fr` lalu `1fr`, dan tanpa
+   override itu Media Sosial menjauh dari tepi kiri (terukur x=294,8 di 900px dan
+   x=208,3 di 375px, padahal blok mobile lain rata di x=20). */
 /* Padding KIRI-KANAN panel putih lockup = jarak logo ke tepi plakat. Atas-bawah TIDAK
    memakai angka ini (lihat `padding` di .foot-brand) — hanya sisi horizontal, karena
    angka ini dipakai DUA kali: oleh .foot-brand (padding kiri-kanan) dan .foot-address

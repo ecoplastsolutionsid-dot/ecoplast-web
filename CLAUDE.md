@@ -741,7 +741,7 @@ Aturan penting:
     `transition-duration` (drawer terbuka seketika, tetap berfungsi) dan memaksa
     `transform: none` pada selector hover/reveal tertentu — `.nav` tidak termasuk.
 - **Footer (3 kolom, gaya B2B manufaktur):** grid `.foot-cols` (`align-items: start`,
-  `1.75fr 1.55fr 0.95fr`) berisi 3 kolom yang **semua mulai di baseline atas yang sama**
+  **`1.75fr 1.55fr auto`**) berisi 3 kolom yang **semua mulai di baseline atas yang sama**
   (sejajar tepi atas logo). Dulu 4 kolom; kolom **"Halaman"** (nav ulangan) **DIBUANG**
   atas permintaan pemilik — lihat catatan di bawah, karena pembuangannya menyeret
   konsekuensi pada tautan Kebijakan Privasi:
@@ -849,6 +849,18 @@ Aturan penting:
      Keempat kolom tetap mulai di baseline atas yang sama (terukur `colTops` identik).
   2. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider —
      WhatsApp, Telepon, **Email**, Jam Operasional.
+  - **Track ketiga `auto`, dan `justify-self: end` SUDAH DIHAPUS dari desktop
+    (5 Sep 2026).** Dulu `0.95fr` + `justify-self: end`: track-nya lebar, isinya
+    menyusut dan menempel kanan, sehingga sisa track menganga sebagai ruang kosong
+    di **kiri** kolom Media Sosial — terukur celah **148px** di 1440px, padahal
+    `gap` maksimalnya cuma 3.5rem (56px), sehingga kolom itu tampak terputus dari
+    Kontak. Dengan `auto`, track = lebar isinya (terukur **116,5px**) dan tetap
+    menempel kanan karena dua kolom `fr` menyerap sisa ruang; celah kembali ke
+    **50px di 1440** dan **45px di 1280** — persis nilai `gap`.
+    **Override `justify-self: start` di `responsive.css` JANGAN ikut dihapus:**
+    di ≤900px grid jadi `1fr 1fr` lalu `1fr`, dan tanpa itu Media Sosial menjauh
+    dari tepi kiri (x=294,8 di 900px, x=208,3 di 375px). Terukur setelah perubahan,
+    di 900px dan 375px semua blok tetap rata `x=20`.
   3. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
      LinkedIn, YouTube (inline SVG), **tanpa label apa pun**, low-emphasis
      (`opacity .6`). Ecoplast belum punya akun sosial; akan dirilis nanti, jadi
