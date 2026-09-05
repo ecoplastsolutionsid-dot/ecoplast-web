@@ -29,12 +29,9 @@ git -C <repo> status --short --branch # lihat ahead/behind
   working tree, jadi kalau ternyata ada kerjaan lokal yang belum di-commit, kamu
   masih sempat menyelamatkannya.
 
-**PENGECUALIAN PENTING — di laptop selagi login GitHub belum pulih, `fetch`/`pull`
-akan MENGGANTUNG sampai timeout** (dialog Credential Manager menunggu persetujuan
-HP; terukur mati di 2 menit). Jangan jalankan, dan jangan salah membacanya sebagai
-repo rusak. Gantinya: cek folder jembatan
-`G:\My Drive\_BACKUP-servis\_transfer\` — kalau ada bundle yang lebih baru dari
-`HEAD` lokal, tarik dari situ (lihat "Jembatan Drive" di bawah).
+**Sejak 5 Sep 2026 laptop SUDAH bisa `fetch`/`pull`/`push` langsung** — jalankan
+seperti biasa di kedua mesin. Catatan lama yang melarang `fetch` di laptop sudah
+tidak berlaku; lihat "Laptop: auth GitHub lewat PAT" di bawah.
 
 Pekerjaan proyek ini berpindah antara **dua mesin**, dan isinya **tidak sama**.
 Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
@@ -93,25 +90,57 @@ dibongkar**:
 - Sebelum push, pastikan sasarannya: `git -C C:\Users\Asus\ecoplast-web remote -v`
   harus menunjuk `ecoplastsolutionsid-dot/ecoplast-web.git`, branch `main`.
 
-### Laptop belum bisa push/pull — jembatannya Google Drive
+### Laptop: auth GitHub lewat PAT (SUDAH PULIH 5 Sep 2026)
 
-**Per 5 Sep 2026 laptop TIDAK BISA push maupun pull.** Git Credential Manager
-membuka dialog login GitHub yang menunggu persetujuan di HP pemilik, jadi
-`git push` **menggantung sampai timeout** (terukur: mati di 2 menit) — itu bukan
-error git, jadi jangan didiagnosis sebagai masalah remote/branch. Jangan
-mengulang push "untuk memastikan"; hasilnya cuma menggantung lagi.
+Laptop **sudah bisa push/pull sendiri**. Push pertama yang berhasil:
+`00e5c6b..6a75e37 main -> main`.
 
-Jalan pintasnya: **`G:` (Google Drive) tersambung ke kedua mesin**, jadi commit
-dioper lewat `git bundle`, tanpa GitHub sama sekali.
-- Folder transfer: **`G:\My Drive\_BACKUP-servis\_transfer\`**, berisi
-  `BACA-SAYA.txt` (prosedur lengkap), bundle repo situs, dan
-  **`BACKUP-ecoplast-app.ps1`** (skrip backup Worker, dijalankan di PC Toko).
-- Bikin bundle dari mesin yang terkunci:
-  `git -C <repo> bundle create <G:\…\nama.bundle> --all`, lalu `git bundle verify`.
-- Ambil dari mesin seberang: `git pull --rebase <path-bundle> main`. Mesin yang
-  bisa login GitHub (PC Toko) yang kemudian `git push origin main`.
-- **Bundle adalah cuplikan beku.** Setiap commit baru di laptop membuat bundle
-  lama basi — regenerasi bundle-nya, jangan berharap yang lama ikut terbarui.
+**Yang dulu bikin buntu, supaya tidak diulang.** Mode auth GCM di laptop ini
+disetel `githubAuthModes=browser`, dan alur browser itu **tidak pernah berhasil
+memunculkan apa pun** — bukan dialog, bukan tab OAuth — jadi `git push`
+menggantung di `git-remote-https` sampai timeout. Yang dicek dan ternyata SEHAT
+(jangan buang waktu memeriksanya lagi): `git-credential-manager diagnose` 7/7
+lolos termasuk GitHub API, `Test-NetConnection github.com:443` True, config
+credential benar, GCM 2.9.0 terpasang di
+`C:\Program Files\Git\mingw64\bin\git-credential-manager.exe`.
+Catatan tambahan: **shell non-interaktif (mis. yang dipakai agen) tidak akan
+pernah bisa memunculkan prompt GCM** — auth harus lewat jalur yang tidak butuh
+GUI sama sekali.
+
+**Penyetelan yang membuatnya jalan — LOKAL di repo ini, jangan dijadikan global**
+(mesin ini punya 3 akun GitHub; global akan menyeret repo tetangga):
+```
+git -C C:\Users\Asus\ecoplast-web config credential.https://github.com.githubAuthModes pat
+git -C C:\Users\Asus\ecoplast-web config credential.guiPrompt false
+```
+`guiPrompt false` memaksa GCM bertanya sebagai **teks di terminal**, bukan jendela.
+
+**Tokennya:** fine-grained PAT `laptop-ecoplast-web` (id 19194363), hanya repo
+`ecoplast-web`, permission **Contents: Read and write** + Metadata read,
+**kedaluwarsa 4 Sep 2027**. Tersimpan di Windows Credential Manager pada target
+**`git:https://ecoplastsolutionsid-dot@github.com`** — bukan target generik
+`git:https://github.com`, yang ternyata milik akun **`mencobabertahanhidupid-ui`**
+(Marga Acrylic). Itu alasan konkret kenapa username wajib tetap disematkan di URL
+origin: tanpa itu git jatuh ke entri generik dan mencoba push sebagai akun lain.
+
+**JEBAKAN `regenerate`:** mengubah expiration token hanya bisa lewat Regenerate,
+dan itu **membunuh nilai lama seketika**. Pernah kejadian: token disalin, lalu
+expiry diubah dari "No expiration" ke 1 tahun, lalu token lama yang sudah mati
+ditempel → `remote: Invalid username or token`. Salin nilai barunya **sebelum**
+pindah halaman; nilai itu cuma tampil sekali.
+
+**JANGAN menaruh token polos di Drive.** Pernah dibuatkan
+`G:\My Drive\_BACKUP-servis\token.txt` sebagai jalan pintas; sudah dihapus.
+Preseden folder itu adalah `.tar.gz.enc` + `CARA-BUKA-*.txt`, ikuti itu.
+
+**Jembatan bundle Drive kini CADANGAN, bukan jalur utama.** Masih berguna kalau
+auth rusak lagi: folder `G:\My Drive\_BACKUP-servis\_transfer\`
+(`BACA-SAYA.txt`, bundle repo, `BACKUP-ecoplast-app.ps1`).
+Bikin: `git -C <repo> bundle create <G:\…\nama.bundle> --all` lalu
+`git bundle verify`. Ambil: `git pull --rebase <path-bundle> main`.
+**Bundle adalah cuplikan beku** — commit baru membuat bundle lama basi.
+Bundle `ecoplast-web_dari-laptop.bundle` yang ada sekarang sudah **usang
+fungsinya** karena isinya (`6a75e37`) sudah ada di GitHub.
 
 ### Akun Cloudflare Ecoplast ≠ akun Cloudflare MBH
 
@@ -1088,6 +1117,23 @@ dengan `wrangler`, `ecoplast-app`, `/src/`, `package.json`, `.cf-token`, atau
 `wilayah`. Jadi kode Worker sekarang hidup di **tepat dua tempat**: disk PC Toko dan
 versi ter-deploy di Cloudflare. Yang ter-deploy tidak menyertakan `wrangler.toml`
 maupun nilai secret, jadi ia bukan backup yang utuh.
+
+**Tapi lubangnya tidak sedalam yang tertulis di atas — sudah dicek langsung
+(5 Sep 2026) dan bisa diandalkan sebagai jaring pengaman:** dashboard Cloudflare
+→ Workers & Pages → `ecoplast-api` → **Edit code** menampilkan `index.js`
+ter-deploy **utuh dan tidak diminifikasi** (masih ada penanda `// src/index.js`,
+nama fungsi asli `tanggalWIB` / `nomorBerikutnya` / `lolosTurnstile`, konstanta
+`MOQ_TON = 8`, `DARI`, `BALAS_KE`, `TUJUAN_INTERNAL`). Jadi **logika `src/index.js`
+— satu-satunya bagian yang tidak bisa diregenerasi — bisa dipulihkan dari mesin
+mana pun**, tidak perlu PC Toko. Tidak ada nilai rahasia di kode itu
+(`RESEND_API_KEY` dibaca dari binding), jadi aman dibuka.
+Yang tetap harus disusun ulang manual, dan semuanya terbaca di halaman Overview
+Worker: route `ecoplastsolutions.id/api/*`, binding KV **`WILAYAH`**, Secrets
+Store **`RESEND_API_KEY`**, versi aktif `61587f9e`. Data wilayah ada di KV dan
+bisa diregenerasi dari `cahyadsn/wilayah`.
+Ini **bukan pengganti** `BACKUP-ecoplast-app.ps1` (tak ada `wrangler.toml`,
+`package.json`, `.gitignore`) — tapi menghapus skenario terburuk "kode hilang
+total kalau disk PC Toko mati".
 **Backup ini hanya bisa dikerjakan dari PC Toko** — dari laptop foldernya tidak ada.
 **Skripnya sudah disiapkan** (5 Sep 2026, ditulis dari laptop):
 `G:\My Drive\_BACKUP-servis\_transfer\BACKUP-ecoplast-app.ps1`. Ia mengecualikan
