@@ -1050,16 +1050,20 @@ tidak bergantung pada catatan ini sama sekali:**
    `claude-settings/BACA-SAYA.txt` **di dalam tarball itu sendiri**.
 Keduanya self-contained, jadi tetap sahih walau CLAUDE.md tertinggal.
 
-**Dua generasi sebelumnya disimpan, jangan tertukar:**
-- `ecoplast-web_2026-09-05_laptop_LAMA.tar.gz` (6.358.814 byte, 275 entri) —
-  dibuat **dari laptop**, berhenti di commit `6a75e37`. Ini satu-satunya tempat
-  `settings.global.json` versi laptop tersimpan (bedanya cuma `"tui": "fullscreen"`).
-  Label `[ahead 5]` kalau diekstrak **bukan** kerusakan: itu relatif terhadap ref
-  `origin/main` basi yang ikut terbungkus, dan kelima commit itu kini sudah ter-push.
-- `ecoplast-web_2026-09-04_LAMA.tar.gz` (6.145.276 byte) — dari PC Toko, generasi
-  paling tua. Boleh dihapus kapan saja.
-Catatan lama yang menulis 6.108.907 byte itu keliru; yang menulis "270 entri"
-menghitung berkas saja, tanpa entri direktori.
+**Satu generasi sebelumnya disimpan:**
+`ecoplast-web_2026-09-05_laptop_LAMA.tar.gz` (6.358.814 byte, 275 entri) — dibuat
+**dari laptop**, berhenti di commit `6a75e37`. Ini satu-satunya tempat
+`settings.global.json` versi laptop tersimpan (bedanya cuma `"tui": "fullscreen"`),
+jadi **jangan dihapus** selama laptop belum pernah jadi sumber backup lagi.
+Label `[ahead 5]` kalau diekstrak **bukan** kerusakan: itu relatif terhadap ref
+`origin/main` basi yang ikut terbungkus, dan kelima commit itu kini sudah ter-push.
+
+`ecoplast-web_2026-09-04_LAMA.tar.gz` **sudah DIHAPUS** (5 Sep 2026, atas permintaan
+pemilik). Diperiksa dulu sebelum dihapus, bukan asal: commit teratasnya `00e5c6b`
+adalah leluhur `ef199c6`, **nol** commit yang cuma ada di sana, dan kedua file
+setelannya identik dengan generasi terbaru — jadi benar-benar subset, tidak ada
+yang hilang. Catatan lama yang menulis 6.108.907 byte itu keliru; yang menulis
+"270 entri" menghitung berkas saja, tanpa entri direktori.
 
 **JEBAKAN setelan — penyegaran backup bisa MENGHILANGKAN data kalau tidak hati-hati.**
 `settings.user-local.json` (= `~/.claude/settings.local.json`, izin tingkat user)
