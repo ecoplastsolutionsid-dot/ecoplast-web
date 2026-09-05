@@ -263,7 +263,16 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905a`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905b`, sama di **keenam** file).
+  **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
+  `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
+  muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
+  mesin). Loop lolos seketika, URL `?v=` disentuh saat origin masih lama, dan
+  Cloudflare mengunci CSS lama di kunci baru — persis jebakan di bawah, tapi lolos
+  dari deteksi karena polanya ambigu. Gejalanya halus: HTML sudah menunjuk versi
+  baru, `cf-cache-status: HIT`, tapi `document.styleSheets` menunjukkan nilai lama.
+  Pilih penanda yang **pasti belum pernah ada**, mis. sepotong komentar yang baru
+  ditulis, lalu bandingkan juga **panjang berkasnya** antara `?probe=` dan `?v=`.
   **Naikkan `v` SETIAP KALI `styles.css`/`responsive.css` diubah** — kalau lupa,
   perubahan CSS tak akan tampil di live sampai cache Cloudflare kedaluwarsa.
   **JANGAN menaikkannya dengan `Get-Content -Raw` + `Set-Content` di PowerShell 5.1.**
