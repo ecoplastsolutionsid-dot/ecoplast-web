@@ -580,7 +580,14 @@ h1, h2, h3 {
   line-height: 1.5;
 }
 .prod h2 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); }
-.prod__tag { display: block; margin-bottom: 0.8rem; }
+/* Biru = penanda KATEGORI PRODUK, dan hanya itu. `.pcard__tag` di beranda sudah
+   memakai --blue sejak awal, tapi label yang sama di halaman ini ("Produk jadi · PP",
+   "Bahan baku · PP") mewarisi hijau dari `.eyebrow` — jadi frasa identik tampil beda
+   warna antar halaman, dan biru terbaca seperti kelupaan, bukan sistem.
+   Disamakan 5 Sep 2026: biru dipakai KHUSUS untuk kategori produk. Eyebrow lain
+   ("Produk kami", "Alur produksi", "Lokasi", dst) TETAP hijau — jangan diikutkan,
+   karena justru kedisiplinan itu yang membuat biru punya arti. */
+.prod__tag { display: block; margin-bottom: 0.8rem; color: var(--blue); }
 .prod ul { list-style: none; margin-top: 1.1rem; display: grid; gap: 0.6rem; }
 .prod li { position: relative; padding-left: 1.6rem; color: var(--ink); }
 .prod li::before {

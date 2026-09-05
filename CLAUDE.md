@@ -421,6 +421,21 @@ Aturan penting:
 - CSS variables warna: `--bg #F4F6F1`, `--ink #14271D`, `--green #1F7A4D`,
   `--green-deep #12442B`, `--blue #2B5CB8`, `--muted #5C6B60`, `--line #D9E0D6`,
   `--green-light #7BE0A6` (highlight di background gelap).
+- **`--blue` PUNYA SATU ARTI: penanda KATEGORI PRODUK. Jangan disebar.**
+  Diaudit 5 Sep 2026 — sebelumnya biru muncul **tepat dua kali di seluruh situs**,
+  hanya di `.pcard__tag` beranda ("Produk jadi", "Bahan baku"). Frasa yang **sama
+  persis** di `produk.html` (`.prod__tag`: "Produk jadi · PP", "Bahan baku · PP")
+  mewarisi hijau dari `.eyebrow`, jadi label identik tampil beda warna antar halaman
+  dan biru terbaca seperti kelupaan. Kini `.prod__tag` ikut `var(--blue)`.
+  **Yang TETAP hijau dan jangan diikutkan:** semua `.eyebrow` lain — "Produk kami",
+  "Kenapa Ecoplast", "Alur produksi", "Lokasi", "Profil", dsb. Justru kedisiplinan
+  itu yang membuat biru berarti sesuatu; begitu disebar, ia kembali jadi dekorasi.
+  Terukur: biru `#2B5CB8` di atas `--bg #F4F6F1` = **5,80 : 1** (ambang teks kecil
+  4,5:1 — lolos).
+  Pemakaian `--blue` yang lain, semuanya sah dan tak perlu diubah: outline
+  `:focus-visible` (2 aturan) dan titik aksen di dalam data-URI `.dotted`.
+  **`--brand-green` & `--brand-navy` tetap NOL pemakaian** — memang cuma acuan warna
+  brand untuk memverifikasi aset, bukan token yang mewarnai UI.
 - **Warna wordmark "Ecoplast Solutions" (kiblat = LOGO ASLI):** logo memenggal warna
   **ECO = hijau** + **PLAST = navy**, dan **SOLUTIONS = navy** (sama dgn PLAST). Token:
   `--brand-green #3E9B37` (ECO) & `--brand-navy #173B5C` (PLAST + SOLUTIONS).
