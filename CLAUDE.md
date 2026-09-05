@@ -755,9 +755,18 @@ Aturan penting:
   2. **Kontak** (`.foot-col` + `.fc-*`): baris chip-ikon + label + nilai + divider —
      WhatsApp, Telepon, **Email**, Jam Operasional.
   3. **Media Sosial** (`.foot-col` + `.foot-social`/`.fsoc`): Instagram, Facebook,
-     LinkedIn, YouTube (inline SVG) dengan label **"Segera hadir"** low-emphasis
-     (`opacity .6`) — **placeholder, JANGAN dihapus**; siap jadi tautan asli nanti
-     (ganti `<span>` → `<a href>`). Ecoplast belum punya akun sosial.
+     LinkedIn, YouTube (inline SVG), **tanpa label apa pun**, low-emphasis
+     (`opacity .6`). Ecoplast belum punya akun sosial; akan dirilis nanti, jadi
+     **ikon + nama SENGAJA dipertahankan** sebagai penanda tempat — tinggal ganti
+     `<span class="fsoc-name">` → `<a href>` saat akunnya jadi.
+     **Label "Segera hadir" DIHAPUS 5 Sep 2026** atas permintaan pemilik, beserta
+     aturan `.fsoc-soon` di `styles.css`; catatan lama yang menulis "JANGAN dihapus"
+     sudah tidak berlaku. Pemilik ditawari tiga pilihan — buang seluruh kolomnya,
+     buang labelnya saja, atau ringkas jadi satu baris ikon — dan memilih **buang
+     labelnya saja**. Konsekuensi yang sudah disampaikan dan diterima: keempatnya
+     kini tampak seperti tautan tanpa keterangan; `opacity: .6` justru dipertahankan
+     supaya tidak terbaca sebagai tautan aktif. **Jangan menambahkan label baru** dan
+     jangan menaikkan opacity-nya sampai akun sosialnya benar-benar ada.
   - Judul kolom pakai **`<h3>`** (`.foot-col h3`, distyle jadi label mono kecil) — bukan
     `h4`, agar urutan heading valid (WCAG 1.3.1, tak melompati level).
   - Depth latar: `--ink` + gradasi lembut + radial light + grain SVG (`::before`/

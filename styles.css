@@ -960,7 +960,11 @@ a.fc-val:hover { color: #fff; }
 }
 .fsoc-ico svg { width: 17px; height: 17px; }
 .fsoc-name { display: block; font-size: 0.95rem; font-weight: 600; color: #EAF1EB; line-height: 1.3; }
-.fsoc-soon { display: block; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: .12em; text-transform: uppercase; color: #8A9A8E; }
+/* .fsoc-soon (label "Segera hadir") DIHAPUS 5 Sep 2026 atas permintaan pemilik.
+   Ikon + nama platform SENGAJA tetap ada: akun medsosnya memang belum dibuat dan
+   akan dirilis nanti, jadi ini penanda tempat — tinggal ganti <span class="fsoc-name">
+   jadi <a href>. `.fsoc { opacity: .6 }` juga dipertahankan supaya keempatnya tetap
+   low-emphasis dan tidak terbaca sebagai tautan aktif. */
 
 .foot-bottom {
   max-width: var(--maxw);
