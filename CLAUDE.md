@@ -40,7 +40,7 @@ Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
 |---|---|---|
 | Profil | `C:\Users\USER` | `C:\Users\Asus` |
 | `ecoplast-web` (repo situs) | ada | ada |
-| `ecoplast-app` (Worker backend) | **ada** | **TIDAK ADA** (bisa dipulihkan dari Drive) |
+| `ecoplast-app` (Worker backend) | ada | **belum di-clone** — `git clone` repo privatnya |
 
 - **`ecoplast-app` hanya ada di PC Toko.** Laptop tidak pernah punya salinannya —
   bukan terhapus, memang belum pernah dirakit di sini. Jadi kalau dari laptop
@@ -51,11 +51,11 @@ Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
 - **Cara membuktikan Worker masih hidup** (bisa dari mesin mana pun):
   `GET https://ecoplastsolutions.id/api/wilayah/prov` → **200** (±885 byte).
   Kalau 404, barulah ada masalah sungguhan.
-- **Pembagian kerja yang mengikat:** apa pun yang menyentuh `ecoplast-app`
-  **hanya bisa dikerjakan di PC Toko** — kecuali kalau laptop lebih dulu memulihkan
-  salinannya dari `ecoplast-app.tar.gz` di Drive (sejak 5 Sep 2026 backup itu ADA;
-  lihat bagian Backup). Backup Worker **bukan lagi lubang terbuka**. Dari laptop,
-  repo situs lengkap dan bersih, jadi seluruh pekerjaan HTML/CSS/SEO jalan normal.
+- **Pembagian kerja — SUDAH TIDAK ADA lagi sejak 5 Sep 2026.** `ecoplast-app`
+  kini repo git privat dengan remote, jadi **boleh dikerjakan dari mesin mana pun**
+  asal `git clone`/`git pull` dulu. Catatan lama "hanya bisa dikerjakan di PC Toko"
+  **tidak berlaku**. Satu-satunya yang masih terkunci ke PC Toko: **deploy**, karena
+  `.cf-token` belum pernah dikirim ke laptop (lihat "Memindahkan token/secret").
 
 ### Sinkronisasi dua mesin — RUTINITAS, baca sebelum mulai & sebelum berhenti
 
@@ -80,16 +80,28 @@ dulu memaksa laptop mengoper pekerjaan lewat bundle Google Drive. Kalau ragu:
 `git pull --rebase origin main` lalu push. **Jangan `--force`** — riwayat ini
 dipakai dua mesin, memaksanya akan menghapus kerja mesin satunya.
 
-**`ecoplast-app` TIDAK ikut mekanisme ini — ini lubang yang masih ada.**
-Folder itu **bukan repo git** dan tidak punya remote, jadi tidak ada yang
-menyamakannya antar mesin. Kalau ia diedit di PC Toko **dan** di laptop, kedua
-salinan menyimpang **tanpa peringatan apa pun**, dan tarball di Drive hanya
-memuat versi mesin yang terakhir menjalankan `BACKUP-ecoplast-app.ps1` —
-menjalankannya dari mesin yang tertinggal akan **menimpa** versi yang lebih baru.
-Aturan sementara sampai ini dibereskan: **`ecoplast-app` diedit HANYA di PC
-Toko**; laptop memakainya untuk membaca/meninjau. Kalau terpaksa diedit di
-laptop, bandingkan `sha256sum src/index.js` di kedua mesin **sebelum** menjalankan
-skrip backup.
+**`ecoplast-app` kini ikut mekanisme yang sama** (sejak 5 Sep 2026) —
+`https://github.com/ecoplastsolutionsid-dot/ecoplast-app`, **repo PRIVAT**.
+Jadi dua repo, dua kali pull, dua kali push:
+```
+git -C C:\Users\<profil>\ecoplast-web pull origin main
+git -C C:\Users\<profil>\ecoplast-app pull origin main
+```
+**Privat, bukan publik** — `wrangler.toml` memuat `account_id`, id namespace KV,
+dan `store_id` Secrets Store. Itu pengenal, bukan kunci, tapi tidak ada gunanya
+diumbar. **Jangan diubah jadi publik.**
+`.cf-token` dan `.dev.vars` tetap di `.gitignore` dan **tidak pernah** ikut;
+diperiksa sebelum commit pertama (`git check-ignore` + pemindaian pola, nol
+kecocokan) dan dicek ulang di GitHub setelah push (nol file terlarang di remote).
+**Aturan lama "ecoplast-app diedit HANYA di PC Toko" SUDAH DICABUT** — sekarang
+boleh dikerjakan dari mesin mana pun, asal pull dulu.
+
+**Tarball Drive tetap ada dan tetap berguna**, tapi perannya berubah: sejak ada
+remote, `ecoplast-app.tar.gz` bukan lagi satu-satunya salinan. Ia sekarang
+titik pulih tambahan — dan satu-satunya jalan memulihkan `data/` tanpa akses
+GitHub. Kalau `BACKUP-ecoplast-app.ps1` dijalankan lagi, pastikan `git status`
+di `ecoplast-app` bersih dulu, supaya yang dibungkus bukan versi yang sudah
+tertinggal dari remote.
 
 ### Repo tetangga di laptop — JANGAN tersenggol
 
@@ -834,8 +846,10 @@ Modul pengajuan pemesanan. Halamannya statis di repo ini; logikanya di Worker
 terpisah, **bukan** di repo ini — `CLAUDE.md` mengunci repo situs tanpa build
 step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
 
-- **Repo Worker:** `C:\Users\USER\ecoplast-app` (`wrangler.toml`, `src/index.js`) —
-  **HANYA ada di PC Toko**, tidak di laptop. Lihat bagian "Mesin kerja".
+- **Repo Worker:** `github.com/ecoplastsolutionsid-dot/ecoplast-app` (**PRIVAT**),
+  lokalnya `C:\Users\<profil>\ecoplast-app` (`wrangler.toml`, `src/index.js`).
+  Sejak 5 Sep 2026 punya remote sendiri — sebelumnya folder biasa tanpa git yang
+  cuma ada di PC Toko. Lihat "Sinkronisasi dua mesin".
 - **Route:** `ecoplastsolutions.id/api/*` — **zona yang sama** dengan situsnya.
   Itu disengaja: halaman bisa POST tanpa CORS, tanpa preflight, tanpa subdomain
   tambahan. Path selain `/api/*` tidak disentuh dan tetap dilayani GitHub Pages.
@@ -1188,8 +1202,10 @@ Lokasi: **`G:\My Drive\_BACKUP-servis\ecoplast-app.tar.gz`**, **810.674 byte**,
 ecoplast-app/  src/index.js, wrangler.toml, package.json, .gitignore,
                data/wilayah-kv.json (553 kunci KV, ~3,9 MB)
 ```
-`ecoplast-app` **bukan repo git** — tidak ada `.git`, jadi tidak ada riwayat commit
-yang bisa ikut. Tarball ini satu-satunya versi berjangka waktu yang ada.
+**Tarball ini dibuat SEBELUM `ecoplast-app` punya git** (5 Sep 2026, beberapa jam
+lebih awal), jadi isinya **tanpa `.git`** — commit pertama `6916f4f` tidak ada di
+dalamnya. Itu bukan cacat: isi berkasnya identik, dan riwayatnya sekarang ada di
+repo privat. Kalau tarball dibuat ulang, `.git` akan ikut.
 
 **Sengaja TIDAK ikut:** `.cf-token` (token API Cloudflare), `.dev.vars`,
 `.wrangler/`, `node_modules/`. Konsekuensinya setelah restore: `npm install`, lalu
