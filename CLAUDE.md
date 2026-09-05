@@ -57,6 +57,40 @@ Cek dulu sedang di mana: `$env:USERPROFILE` di PowerShell.
   lihat bagian Backup). Backup Worker **bukan lagi lubang terbuka**. Dari laptop,
   repo situs lengkap dan bersih, jadi seluruh pekerjaan HTML/CSS/SEO jalan normal.
 
+### Sinkronisasi dua mesin — RUTINITAS, baca sebelum mulai & sebelum berhenti
+
+Pekerjaan berpindah antara PC Toko dan laptop. Yang membuat keduanya sinkron
+adalah **GitHub**, bukan Google Drive. Tarball di Drive itu **titik pulih kalau
+disk mati**, bukan jalur sinkronisasi — memakainya untuk mengoper pekerjaan
+harian akan menimpa `.git` yang masih hidup di mesin tujuan.
+
+**Awal sesi, di mesin mana pun — SELALU, sebelum menyentuh file apa pun:**
+```
+git -C <repo> pull origin main
+```
+Melewatkan ini adalah cara paling gampang menghasilkan konflik: mesin satunya
+mungkin sudah mengubah file yang sama. Sudah kejadian dan menghabiskan waktu.
+
+**Akhir sesi — commit DAN push, jangan cuma commit.**
+Commit lokal yang tidak di-push tidak terlihat oleh mesin lain, dan itulah yang
+dulu memaksa laptop mengoper pekerjaan lewat bundle Google Drive. Kalau ragu:
+`git status --short --branch` — kalau ada `[ahead N]`, belum selesai.
+
+**Kalau lupa push dan mesin lain sudah maju duluan:**
+`git pull --rebase origin main` lalu push. **Jangan `--force`** — riwayat ini
+dipakai dua mesin, memaksanya akan menghapus kerja mesin satunya.
+
+**`ecoplast-app` TIDAK ikut mekanisme ini — ini lubang yang masih ada.**
+Folder itu **bukan repo git** dan tidak punya remote, jadi tidak ada yang
+menyamakannya antar mesin. Kalau ia diedit di PC Toko **dan** di laptop, kedua
+salinan menyimpang **tanpa peringatan apa pun**, dan tarball di Drive hanya
+memuat versi mesin yang terakhir menjalankan `BACKUP-ecoplast-app.ps1` —
+menjalankannya dari mesin yang tertinggal akan **menimpa** versi yang lebih baru.
+Aturan sementara sampai ini dibereskan: **`ecoplast-app` diedit HANYA di PC
+Toko**; laptop memakainya untuk membaca/meninjau. Kalau terpaksa diedit di
+laptop, bandingkan `sha256sum src/index.js` di kedua mesin **sebelum** menjalankan
+skrip backup.
+
 ### Repo tetangga di laptop — JANGAN tersenggol
 
 Laptop menyimpan **5 repo git** milik **3 akun GitHub berbeda** di bawah
