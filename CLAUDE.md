@@ -1017,24 +1017,36 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
     Bing menolak dengan *"Incorrect authentication key"*. Setelah file diganti dan
     live, Verify langsung lolos. File ini **JANGAN dihapus/diubah lagi**.
   - **Jebakan saat membaca pesan Bing:** teks error terpotong di 100 karakter oleh
-    SEMUA pembaca teks (accessibility tree, find, get_page_text), `javascript_tool`
-    diblokir di domain `bing.com`, dan **screenshot ditolak** karena domain itu belum
-    diizinkan untuk ekstensi Chrome. Akal-akalannya: buka metode **"HTML Meta Tag"** —
-    kunci yang dipakai SAMA tapi ditampilkan sebagai string pendek sehingga utuh.
+    SEMUA pembaca teks (accessibility tree, find, get_page_text), dan
+    `javascript_tool` diblokir di domain `bing.com`. Akal-akalannya: buka metode
+    **"HTML Meta Tag"** — kunci yang dipakai SAMA tapi ditampilkan sebagai string
+    pendek sehingga utuh.
+    **Catatan lama soal screenshot SUDAH TIDAK BERLAKU (5 Sep 2026):** screenshot di
+    `bing.com` **sekarang bisa**, dan itulah yang akhirnya membuka jalan menuntaskan
+    submit sitemap. Dialog Bing memang tidak muncul di pohon aksesibilitas, jadi
+    **kerjakan lewat screenshot + klik koordinat**, bukan lewat `find`/`read_page`.
   - **JANGAN pakai "Import your sites from GSC"** walau lebih cepat: itu meminta izin
     OAuth ke akun Google pemegang Search Console, sedangkan pemilik memasang batasan
     tegas agar akun lain tidak disentuh. Jalur manual tidak menyentuhnya sama sekali.
-  - **Sitemap:** `https://ecoplastsolutions.id/sitemap.xml` sudah dikenal Bing dengan
-    status **Success** (ditemukan sendiri lewat `Sitemap:` di robots.txt), tapi
-    **crawl terakhir 1 Agu 2026** — sebelum `pemesanan.html` ada. Mengirim ulang
-    lewat tombol "Submit sitemap" **belum berhasil dilakukan**: dialog dan menu
-    dropdown Bing dirender di portal yang tidak muncul di pohon aksesibilitas, dan
-    tanpa izin screenshot di `bing.com` hal itu tak bisa dituntaskan dari sini.
-    Kerjakan manual, atau beri izin screenshot untuk `bing.com` lebih dulu.
-  - **IndexNow terbukti jalan.** Halaman IndexNow di BWT menunjukkan *"URLs submitted
-    in last 6 hours: 6"* dengan sumber **Self** — keenam ping 4 Sep 2026 teratribusi.
-    Riwayat: 31 Jul 7 URL, 1 Agu 11 URL. Ping tetap sah walau BWT belum terdaftar,
+  - **Sitemap: SUDAH DIKIRIM ULANG 5 Sep 2026 — lubang ini TUTUP.**
+    `https://ecoplastsolutions.id/sitemap.xml` dikirim lewat tombol "Submit sitemap",
+    Bing menjawab *"successfully submitted for processing"*; Last submit berubah
+    **1 Agu → 5 Sep 2026**, status **Processing**.
+    Alasannya perlu: sebelum itu **URLs discovered = 5** padahal sitemap berisi
+    **6** URL — Bing masih memakai crawl **1 Agu 2026**, yaitu sebelum
+    `pemesanan.html` ada. Jadi halaman pemesanan memang belum pernah masuk indeks Bing.
+    **Cara menilai apakah perlu dikirim ulang lagi:** bandingkan "URLs discovered"
+    di halaman Sitemaps dengan jumlah `<loc>` di `sitemap.xml`. Kalau timpang,
+    kirim ulang. Jangan menilai dari status "Success" — status itu tetap Success
+    walau isinya basi.
+  - **IndexNow terbukti jalan, dua kali.** Ping ulang **5 Sep 2026**: keenam URL
+    menjawab **200 OK**, dan BWT mencatat *"URLs submitted in last 4 hours: **6**"*
+    sumber **Self**, kumulatif **18**. Sebelumnya 4 Sep juga 6 URL. Riwayat lama:
+    31 Jul 7 URL, 1 Agu 11 URL. Ping tetap sah walau BWT belum terdaftar,
     karena yang mengautentikasi adalah file kunci di root.
+    Sebelum ping, pastikan tiga hal masih benar (semuanya dicek 5 Sep, lolos):
+    kunci `…4fe5.txt` live **dan isinya sama dengan nama filenya**, `sitemap.xml`
+    200, dan `robots.txt` live **tidak** disisipi blok managed Cloudflare.
 - **Google Search Console**: domain terverifikasi via file `google5c4d18bf39fc4ecf.html`
   di root (metode "HTML file"). File ini **JANGAN dihapus** — verifikasi dicek ulang
   berkala; hilang = verifikasi dicabut. Sitemap sudah di-submit (4 halaman kebaca).
