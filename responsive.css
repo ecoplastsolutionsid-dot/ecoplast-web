@@ -218,18 +218,20 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .btn:hover, .pcard:hover, .feature:hover, .gshot:hover,
+  .btn:hover, .pcard:hover, .feature:hover,
   /* Varian ber-.has-js/.in WAJIB ikut disebut. Aturan angkatannya di styles.css
      bernilai 3 kelas (`.has-js .pcard.in:hover`), jadi kalau di sini hanya ada
      `.pcard:hover` (2 kelas), peredaman gerak ini KALAH dan kartu tetap melompat
      walau pengguna minta gerak dikurangi. Sama-sama 3 kelas, menang karena
      responsive.css dimuat setelah styles.css. */
-  .has-js .pcard.in:hover, .has-js .feature.in:hover, .has-js .gshot.in:hover,
+  .has-js .pcard.in:hover, .has-js .feature.in:hover,
   .has-js .card.in:hover,
   .map-wrap:hover, .prod__img:hover,
   /* `.pcard:hover .pcard__img` sudah tidak ada lagi di styles.css — foto kartu
      beranda sengaja dibuat diam saat hover, jadi tak ada gerak yang perlu
-     diredam di sini. */
+     diredam di sini. Begitu juga `.gshot:hover` dan `.has-js .gshot.in:hover`:
+     tile galeri kini diam. Tapi ZOOM fotonya masih ada, jadi baris di bawah ini
+     TETAP diperlukan — itu satu-satunya gerak yang tersisa di galeri. */
   .gshot:hover .gshot__img,
   .step:hover .step__n,
   /* .foot-brand baru memakai transform sejak hover-nya jadi "terangkat" (dulu cuma

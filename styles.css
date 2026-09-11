@@ -602,9 +602,20 @@ h1, h2, h3 {
   border-radius: var(--radius-lg);
   overflow: hidden;                    /* sudut foto ikut membulat */
   box-shadow: var(--shadow-sm);
-  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
-.gshot:hover { transform: translateY(-4px); border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
+/* TILE-nya SENGAJA DIAM saat hover (permintaan pemilik 11 Sep 2026: "semua gambar
+   di halaman tentang kami hilangkan hover-nya, zoom-nya biarkan"). Yang dibuang:
+   `.gshot:hover { transform: translateY(-4px); border-color: rgba(31,122,77,.5);
+   box-shadow: var(--shadow-lg) }`, entri `.has-js .gshot.in:hover` di blok
+   hover-sesudah-reveal, `transition` transform/border/shadow di atas (tak ada
+   lagi yang berubah untuk ditransisikan), dan kedua entri `.gshot` di blok
+   `prefers-reduced-motion`.
+   Yang TETAP: zoom fotonya, `.gshot:hover .gshot__img` di bawah — itulah "zoom"
+   yang diminta dipertahankan, dan ia masih terlihat jelas karena foto mengisi
+   penuh tile ber-`overflow: hidden`. Entri zoom di `prefers-reduced-motion`
+   karena itu JANGAN ikut dihapus.
+   Ini PENGECUALIAN sadar atas aturan "semua kontainer bereaksi sama"; lihat
+   catatan aturan hover kontainer di CLAUDE.md sebelum menyeragamkannya lagi. */
 .gshot__link { display: block; }
 .gshot__img {
   width: 100%;
@@ -1433,10 +1444,13 @@ a.fc-val:hover { color: #fff; }
    membaca CSS-nya — dari membaca, aturannya tampak baik-baik saja.
    Nilainya sengaja disamakan dengan aturan aslinya di atas supaya tidak ada dua
    sumber kebenaran soal seberapa tinggi angkatannya.
-   Ketiganya WAJIB ikut di blok prefers-reduced-motion (responsive.css). */
+   Ketiganya WAJIB ikut di blok prefers-reduced-motion (responsive.css).
+   `.gshot` SENGAJA TIDAK ADA di sini sejak 11 Sep 2026 — tile galeri dibuat diam
+   saat hover, hanya fotonya yang zoom. Zoom itu `.gshot:hover .gshot__img`, yang
+   menyasar ANAK, jadi ia tidak pernah terkena `.has-js .gshot.in { transform:
+   none }` dan memang tak perlu ditulis ulang di sini. */
 .has-js .pcard.in:hover,
 .has-js .feature.in:hover,
-.has-js .gshot.in:hover,
 .has-js .card.in:hover   { transform: translateY(-4px); }
 
 /* ==========================================================================

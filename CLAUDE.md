@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905q`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905r`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -543,13 +543,30 @@ Aturan penting:
   `.feature__num`/`.crow__ico`/`.fc-ico` mengisi hijau saat hover, tombol
   hover/active (press scale), link footer memunculkan panah `::before`. Semua transform
   hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
-- **ATURAN HOVER KONTAINER — SEMUA sama, satu nilai, tanpa pengecualian.**
+- **ATURAN HOVER KONTAINER — satu nilai untuk semua yang MASIH bereaksi.**
   `translateY(-4px)` + border `rgba(31,122,77,.5)` + `--shadow-lg`. Berlaku untuk
   `.card` (termasuk `.quote-card` **dan** `.order-form`), `.pcard`, `.feature`,
-  `.gshot`, `.map-wrap`, dan `.prod__img`. Yang boleh berbeda hanya **tambahan**
-  yang memang khas elemennya: zoom foto `scale(1.035)` + `saturate(1.06)` pada
-  `.gshot` (galeri mesin) dan `.prod__img` (halaman produk). `produk.html` tidak
-  punya `.card` sama sekali, jadi `.prod__img` yang mewakili.
+  `.map-wrap`, dan `.prod__img`. `produk.html` tidak punya `.card` sama sekali,
+  jadi `.prod__img` yang mewakili.
+  - **`.gshot` (galeri mesin di `tentang.html`) DIKELUARKAN 11 Sep 2026** —
+    permintaan pemilik: "semua gambar di halaman tentang kami hilangkan
+    hover-nya, zoom-nya biarkan". Tile-nya kini **diam total**: tidak terangkat,
+    border & bayangannya tidak berubah. Yang **tetap hidup** cuma zoom fotonya,
+    `.gshot:hover .gshot__img` (`scale(1.035)` + `saturate(1.06)`) — itulah
+    "zoom" yang dimaksud, dan masih terlihat jelas karena foto mengisi penuh tile
+    ber-`overflow: hidden`. Terukur dengan kursor di atas foto: tile
+    `transform: none`, border tetap `rgb(217,224,214)` = `--line`, shadow tetap
+    `--shadow-sm`; foto `matrix(1.035,0,0,1.035,0,0)` + `saturate(1.06)`.
+  - **Membuang hover `.gshot` berarti menyentuh EMPAT tempat, jangan setengah:**
+    (1) aturan `.gshot:hover` di `styles.css`; (2) entri `.has-js .gshot.in:hover`
+    di blok hover-sesudah-reveal; (3) `transition` transform/border/shadow pada
+    `.gshot` (tak ada lagi yang berubah untuk ditransisikan); (4) **dua** entri
+    `.gshot` di blok `prefers-reduced-motion` (`responsive.css`). Yang **JANGAN**
+    ikut dihapus dari blok itu: `.gshot:hover .gshot__img` — zoom-nya masih ada,
+    dan itu satu-satunya gerak yang tersisa di galeri.
+  - **Satu-satunya zoom foto yang tersisa di seluruh situs kini `.gshot`.**
+    `.pcard` kehilangan zoom-nya 11 Sep 2026 (lihat di bawah) dan `.prod__img`
+    memang tak pernah punya — ia hanya terangkat.
   **PEMICU HOVER HARUS ELEMEN YANG DISENTUH ITU SENDIRI (self-hover), bukan
   leluhurnya yang jauh lebih lebar.** Diperbaiki 11 Sep 2026: aturannya dulu
   `.prod:hover .prod__img`, padahal `.prod` itu **seluruh baris grid** — foto di
@@ -559,9 +576,8 @@ Aturan penting:
   di kontainer". Sekarang `.prod__img:hover`. **Jangan pakai `.prod__media:hover`
   sebagai jalan tengah** — di baris biji, `.prod__media` juga memuat
   `.prod__proof` (foto bukti Balaraja), jadi masalah yang sama kembali dalam
-  skala kecil. Kontainer lain (`.card`, `.pcard`, `.feature`, `.gshot`,
-  `.map-wrap`) memang sudah self-hover sejak awal; `.prod__img` satu-satunya yang
-  menyimpang. Terukur: kursor di judul "Tali Plastik PP" → `.prod` ter-hover tapi
+  skala kecil. Kontainer lain (`.card`, `.pcard`, `.feature`, `.map-wrap`) memang
+  sudah self-hover sejak awal; `.prod__img` satu-satunya yang menyimpang. Terukur: kursor di judul "Tali Plastik PP" → `.prod` ter-hover tapi
   `img transform: none` & border tetap `--line`; kursor di fotonya →
   `matrix(1,0,0,1,0,-4)` + border `rgba(31,122,77,.5)` + shadow-lg.
   **`.pcard` (dua kartu produk di beranda) SENGAJA TANPA zoom foto sejak
