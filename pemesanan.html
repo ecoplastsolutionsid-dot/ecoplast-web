@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=20260905t" />
-  <link rel="stylesheet" href="/responsive.css?v=20260905t" />
+  <link rel="stylesheet" href="/styles.css?v=20260905u" />
+  <link rel="stylesheet" href="/responsive.css?v=20260905u" />
 
   <script type="application/ld+json">
   {
@@ -298,16 +298,16 @@
             </div>
           </fieldset>
 
-          <!-- `hidden` sejak awal: blok ini baru muncul setelah SELURUH isian lain
-               lengkap (lihat `segarkan()` di skrip bawah). Persetujuannya sendiri
-               tidak ikut dihitung sebagai syarat kemunculan — kalau ikut, ia tak
-               akan pernah tampil: mencentangnya butuh blok ini terlihat lebih
-               dulu. Umpan bot `.of-trap` sengaja dibiarkan di dalam sini; ia
-               memang sudah disembunyikan CSS, dan bot membaca DOM, bukan layar. -->
-          <fieldset class="of-set" id="set-setuju" hidden>
+          <!-- Blok ini SELALU TERLIHAT; yang dikunci cuma centangnya. `disabled`
+               dipasang sejak markup, lalu dilepas `segarkan()` begitu SELURUH
+               isian lain lengkap. Persetujuannya sendiri tidak ikut dihitung
+               sebagai syarat itu — kalau ikut, ia tak akan pernah bisa dicentang.
+               Umpan bot `.of-trap` ada di dalam sini; ia sudah disembunyikan CSS,
+               dan bot membaca DOM, bukan layar. -->
+          <fieldset class="of-set" id="set-setuju">
             <legend class="of-legend">Persetujuan</legend>
-            <label class="of-consent">
-              <input type="checkbox" id="setuju" required />
+            <label class="of-consent of-consent--mati" id="lbl-setuju">
+              <input type="checkbox" id="setuju" required disabled />
               <span>Saya setuju data di atas diproses untuk keperluan penawaran, sesuai
                 <a href="/kebijakan-privasi.html">Kebijakan Privasi</a>.</span>
             </label>
@@ -610,20 +610,32 @@
       }
 
       /* Dua penanda kesiapan, DUA AMBANG BERBEDA — jangan disamakan:
-         1. Blok "Persetujuan" muncul saat seluruh isian lain lengkap
+         1. Centang "Persetujuan" BARU BISA DIKLIK saat seluruh isian lain lengkap
             (`periksa(false, true)` — persetujuannya sendiri DIABAIKAN). Kalau
-            ikut dihitung, blok ini tak akan pernah tampil: mencentangnya butuh
-            bloknya terlihat lebih dulu.
+            ikut dihitung, ia tak akan pernah bisa dicentang: syaratnya jadi
+            dirinya sendiri. Bloknya TETAP TERLIHAT, cuma diredupkan — orang perlu
+            bisa membaca dulu apa yang akan disetujui, dan tinggi halaman tidak
+            berubah-ubah saat mengisi.
          2. Warna tombol baru menyala saat persetujuan ikut dicentang
-            (`periksa(false)` penuh) — jadi urutannya: isi semua → persetujuan
-            muncul → centang → tombol hijau.
+            (`periksa(false)` penuh) — jadi urutannya: isi semua → centang menyala
+            → dicentang → tombol hijau.
          Permintaan pemilik 11 Sep 2026. `btn--primary` varian yang sudah ada di
          sistem, bukan warna baru. */
-      var setSetuju = document.getElementById("set-setuju");
+      var setuju = document.getElementById("setuju"),
+          lblSetuju = document.getElementById("lbl-setuju");
       function segarkan() {
         var isiLain = periksa(false, true);
-        setSetuju.hidden = !isiLain;
-        tombol.classList.toggle("btn--primary", isiLain && document.getElementById("setuju").checked);
+        /* Centang DILEPAS saat dimatikan. Dulu ia dipertahankan supaya orang tak
+           perlu mencentang dua kali — itu masuk akal ketika bloknya disembunyikan
+           dan keadaan itu tak terlihat. Sekarang bloknya tampil, jadi centang
+           yang tertinggal akan terbaca sebagai "persetujuan sudah diberikan"
+           padahal formulirnya belum lengkap. Lagi pula bunyinya "data DI ATAS":
+           begitu datanya berubah, persetujuan lama memang sudah tidak menyangkut
+           data yang sekarang. */
+        if (!isiLain) setuju.checked = false;
+        setuju.disabled = !isiLain;
+        lblSetuju.classList.toggle("of-consent--mati", !isiLain);
+        tombol.classList.toggle("btn--primary", isiLain && setuju.checked);
       }
       /* Delegasi di tingkat form: satu pemasangan menangkap semua isian,
          termasuk <select> wilayah yang OPSINYA baru dibuat belakangan lewat

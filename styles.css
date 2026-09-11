@@ -1351,6 +1351,19 @@ a.fc-val:hover { color: #fff; }
 
 .of-consent { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9rem; color: var(--muted); }
 .of-consent input { width: auto; margin-top: 0.2rem; accent-color: var(--green); }
+/* Keadaan MATI: centang persetujuan baru bisa diklik setelah seluruh isian lain
+   lengkap (permintaan pemilik 11 Sep 2026). Bloknya TETAP terlihat — orang perlu
+   bisa membaca dulu apa yang akan disetujui, dan tinggi halaman tidak berubah-ubah
+   saat mengisi. Sebelumnya seluruh fieldset disembunyikan; itu memenuhi "tak bisa
+   diklik" tapi menyembunyikan isinya dan membuat halaman melompat.
+   `transition` sengaja ada supaya perpindahan redup → normal tidak mengejutkan;
+   `cursor: not-allowed` dipasang di LABEL, bukan cuma di input, supaya kursor
+   sudah memberi tahu sebelum orang mengarahkannya tepat ke kotak kecil itu.
+   Redupnya `.55`, bukan lebih pekat: teksnya masih harus terbaca, karena justru
+   itu gunanya dibiarkan tampil. Terukur — lihat catatan kontras di CLAUDE.md. */
+.of-consent { transition: opacity var(--dur) var(--ease); }
+.of-consent--mati { opacity: .55; cursor: not-allowed; }
+.of-consent--mati input { cursor: not-allowed; }
 
 /* Umpan bot: didorong keluar layar, BUKAN display:none — sebagian pengisi
    otomatis melewati kolom yang benar-benar disembunyikan. */

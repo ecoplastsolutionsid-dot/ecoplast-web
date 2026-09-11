@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905t`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905u`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -1302,27 +1302,40 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
     Jadi perilaku "berwarna kalau sudah lengkap" ini **baru**, bukan yang lama.
   - Di markup tombolnya tetap `class="btn"`. Kelas **`btn--primary`** (varian yang
     sudah ada, bukan warna baru) dipasang/dilepas `segarkan()`.
-  - **DUA AMBANG BERBEDA, jangan disamakan** (blok "Persetujuan" ikut disembunyikan
-    sejak permintaan susulan 11 Sep 2026: teksnya "baru muncul ketika form sudah
-    terisi semua"):
+  - **DUA AMBANG BERBEDA, jangan disamakan:**
     | ambang | dipakai untuk | pemanggilan |
     |---|---|---|
-    | seluruh isian lain lengkap, **persetujuan diabaikan** | memunculkan `<fieldset id="set-setuju">` | `periksa(false, true)` |
+    | seluruh isian lain lengkap, **persetujuan diabaikan** | mengaktifkan centang `#setuju` | `periksa(false, true)` |
     | di atas **+ persetujuan dicentang** | menyalakan `btn--primary` | `periksa(false)` |
-    Urutan yang dialami pengunjung: isi semua → blok Persetujuan muncul → centang
-    → tombol hijau.
-    **Persetujuan WAJIB diabaikan di ambang pertama.** Kalau ikut dihitung,
-    bloknya tak akan pernah tampil — mencentangnya butuh blok itu terlihat lebih
-    dulu. Ini bukan detail gaya; salah di sini membuat formulir mustahil dikirim.
-  - `<fieldset id="set-setuju">` diberi **`hidden` di markup** (seperti
-    `#q-tali`/`#q-biji`) supaya tidak berkedip sebelum skrip jalan. Umpan bot
-    `.of-trap` sengaja dibiarkan **di dalam** fieldset itu: ia memang sudah
-    disembunyikan CSS, dan bot membaca DOM, bukan layar — sudah dicek `#website`
-    tetap ada saat blok tersembunyi.
-  - Mengosongkan kembali salah satu kolom akan **menyembunyikan lagi** blok
-    Persetujuan; centangnya **tidak** ikut hilang, jadi begitu kolomnya diisi
-    ulang tombol langsung hijau lagi. Itu disengaja — memaksa orang mencentang
-    dua kali terasa seperti hukuman.
+    Urutan yang dialami pengunjung: isi semua → centang menyala → dicentang →
+    tombol hijau.
+    **Persetujuan WAJIB diabaikan di ambang pertama.** Kalau ikut dihitung, ia
+    tak akan pernah bisa dicentang — syaratnya jadi dirinya sendiri. Ini bukan
+    detail gaya; salah di sini membuat formulir mustahil dikirim.
+  - **BLOKNYA TETAP TERLIHAT; yang dikunci cuma centangnya.** Percobaan pertama
+    (11 Sep 2026) menyembunyikan seluruh `<fieldset id="set-setuju">` dengan
+    `hidden`. Itu memang memenuhi "tak bisa diklik", tapi dua ongkosnya nyata:
+    isi persetujuan tak bisa dibaca sebelum formulir selesai, dan halaman
+    bertambah tinggi mendadak saat blok itu muncul. Pemilik menegaskan ulang
+    ("kotak centang di persetujuan itu baru bisa diklik ketika form sudah terisi
+    semua") lalu memilih varian **terlihat tapi mati**. Mekanismenya: `disabled`
+    di markup, dilepas `segarkan()`; label diberi kelas **`.of-consent--mati`**
+    (`opacity: .55` + `cursor: not-allowed`, `cursor` dipasang di LABEL supaya
+    kursor memberi tahu sebelum orang membidik kotak kecilnya).
+  - **Centang DILEPAS saat dimatikan** (`setuju.checked = false`). Sempat
+    dipertahankan agar orang tak mencentang dua kali — masuk akal waktu bloknya
+    disembunyikan, karena keadaan itu tak terlihat. Begitu bloknya tampil,
+    centang yang tertinggal terbaca sebagai "persetujuan sudah diberikan" padahal
+    formulirnya belum lengkap. Alasan yang lebih kuat: bunyinya "data **di
+    atas**" — begitu datanya berubah, persetujuan lama tak lagi menyangkut data
+    yang sekarang.
+  - **Kontras keadaan redup 2,28:1** (teks efektif `#A5AEA8` di atas kartu putih;
+    normalnya `--muted` = 5,63:1). Itu **di bawah** 4,5:1 dan memang **boleh** —
+    WCAG 1.4.3 mengecualikan komponen antarmuka yang **tidak aktif**. Jangan
+    "perbaiki" dengan menaikkan opacity sampai keadaan mati jadi tak terbedakan
+    dari keadaan aktif; yang hilang justru sinyalnya.
+  - Umpan bot `.of-trap` ada di dalam fieldset itu; sudah dicek `#website` tetap
+    ada di DOM. Bot membaca DOM, bukan layar.
   - **SATU definisi "lengkap", dipakai dua kali.** Fungsi `periksa(tandaiSalah)`
     melayani pewarnaan tombol **dan** penghadang submit. Jangan disalin jadi dua
     daftar: kalau keduanya sempat berbeda, tombol bisa tampak siap padahal submit
