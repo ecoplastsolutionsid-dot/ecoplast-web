@@ -468,14 +468,28 @@ h1, h2, h3 {
    kartu Profil di tentang.html "belum ada efek hover", lalu menegaskan hasilnya
    jadi tidak konsisten. Betul — sebagian kontainer terangkat jelas, sebagian
    tampak mati. Konsistensi menang atas kemurnian semantik.
-   `.order-form` IKUT, tidak lagi dikecualikan: pengecualian itu justru yang
-   membuatnya terasa pilih kasih. Angkatannya tidak berkedip saat mengisi karena
-   hover tetap aktif selama kursor di dalam formulir.
    JANGAN pakai `.card:not(...)` — `:not()` IKUT MENAMBAH bobot spesifisitas
    (3 kelas) dan diam-diam mengalahkan `.pcard:hover` (2 kelas) berapa pun
    urutannya; sudah pernah mematikan hover kartu produk. Semua aturan hover kartu
    dijaga tetap 2 kelas supaya URUTAN yang menentukan, bukan bobot. */
 .card:hover { border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
+
+/* KECUALI FORMULIR PEMESANAN — `.order-form` diam total saat hover (permintaan
+   pemilik 11 Sep 2026: formulir "Data pemesan & kebutuhan" tidak perlu dikasih
+   hover).
+   Riwayatnya bolak-balik, jadi jangan diputar balik tanpa permintaan baru:
+   mula-mula formulir memang dikecualikan; 5 Sep 2026 pengecualian itu DICABUT
+   dengan alasan "justru pengecualian itu yang membuatnya terasa pilih kasih";
+   11 Sep 2026 dipasang lagi atas permintaan langsung. Alasannya masuk akal —
+   kartu lain cuma dilihat, formulir ini DIISI, dan panel setinggi ~1500px yang
+   ikut bergeser 4px saat kursor masuk terasa seperti halaman bergerak sendiri.
+   Kartu "Syarat pemesanan" di atasnya TIDAK ikut dikecualikan; ia kartu info
+   biasa dan tetap bereaksi seperti kartu di halaman lain.
+   Ditulis sebagai aturan TERPISAH, bukan `:not()`, supaya tetap 2 kelas dan
+   menang karena URUTAN (lihat peringatan di atas). Nilainya dikembalikan
+   eksplisit ke keadaan diam `.card`, bukan sekadar `transform: none`, supaya
+   border dan bayangannya pun tidak ikut berubah. */
+.order-form:hover { border-color: var(--line); box-shadow: var(--shadow-sm); }
 
 .quote-card:hover { box-shadow: var(--shadow-lg); }
 
@@ -1467,6 +1481,13 @@ a.fc-val:hover { color: #fff; }
 .has-js .pcard.in:hover,
 .has-js .feature.in:hover,
 .has-js .card.in:hover   { transform: translateY(-4px); }
+/* Pengecualian formulir pemesanan harus ditulis DI SINI JUGA, bukan cukup di
+   `.order-form:hover` dekat `.card:hover`. Angkatannya datang dari aturan di
+   atas yang bernilai 3 kelas; `.order-form:hover` cuma 2, jadi ia bisa
+   membatalkan border & bayangan tapi TIDAK transform-nya — formulir akan tetap
+   melompat 4px. Sama-sama 3 kelas dan ditulis belakangan, jadi yang ini menang.
+   Alasan lengkapnya ada di komentar `.order-form:hover`. */
+.has-js .order-form.in:hover { transform: none; }
 
 /* ==========================================================================
    Responsive & Motion

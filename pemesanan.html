@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=20260905s" />
-  <link rel="stylesheet" href="/responsive.css?v=20260905s" />
+  <link rel="stylesheet" href="/styles.css?v=20260905t" />
+  <link rel="stylesheet" href="/responsive.css?v=20260905t" />
 
   <script type="application/ld+json">
   {
@@ -205,7 +205,6 @@
               <div class="of-field of-field--full">
                 <label for="alamat">Alamat jalan</label>
                 <textarea id="alamat" maxlength="600" placeholder="Nama jalan, nomor, gedung/kawasan, patokan"></textarea>
-                <span class="of-hint">Bagian yang Anda ketik sendiri. Wilayahnya &#8212; provinsi sampai kelurahan &#8212; dipilih di bawah ini, dan kode pos terisi otomatis.</span>
               </div>
               <div class="of-field">
                 <label for="prov">Provinsi <span class="of-req">*</span></label>
@@ -226,7 +225,6 @@
               <div class="of-field of-field--pos">
                 <label for="pos">Kode pos</label>
                 <input id="pos" type="text" readonly placeholder="&#8212;" />
-                <span class="of-hint">Terisi sendiri setelah kelurahan dipilih.</span>
               </div>
             </div>
           </fieldset>
@@ -236,7 +234,7 @@
 
             <div class="of-picks">
               <label class="of-pick">
-                <input type="checkbox" id="p-tali" checked />
+                <input type="checkbox" id="p-tali" />
                 <span><strong>Tali Plastik PP</strong><span>Untuk kebutuhan industri</span></span>
               </label>
               <label class="of-pick">
@@ -245,7 +243,11 @@
               </label>
             </div>
 
-            <div class="of-qty" id="q-tali">
+            <!-- `hidden` sejak awal, sama seperti #q-biji: kotak "Tali Plastik PP"
+                 tidak lagi tercentang otomatis, jadi blok jumlahnya pun harus
+                 mulai tertutup. Tanpa ini ia sempat terlihat sekejap sebelum
+                 skrip di akhir <body> menjalankan sync() dan menyembunyikannya. -->
+            <div class="of-qty" id="q-tali" hidden>
               <div class="of-grid">
                 <div class="of-field">
                   <label for="tali">Jumlah tali plastik PP <span class="of-req">*</span></label>

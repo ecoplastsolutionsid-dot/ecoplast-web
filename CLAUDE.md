@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905s`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905t`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -545,9 +545,32 @@ Aturan penting:
   hover baru wajib dimasukkan ke blok `prefers-reduced-motion` di `responsive.css`.
 - **ATURAN HOVER KONTAINER — satu nilai untuk semua yang MASIH bereaksi.**
   `translateY(-4px)` + border `rgba(31,122,77,.5)` + `--shadow-lg`. Berlaku untuk
-  `.card` (termasuk `.quote-card` **dan** `.order-form`), `.pcard`, `.feature`,
-  `.map-wrap`, dan `.prod__img`. `produk.html` tidak punya `.card` sama sekali,
-  jadi `.prod__img` yang mewakili.
+  `.card` (termasuk `.quote-card`), `.pcard`, `.feature`, `.map-wrap`, dan
+  `.prod__img`. `produk.html` tidak punya `.card` sama sekali, jadi `.prod__img`
+  yang mewakili.
+  - **`.order-form` DIKECUALIKAN LAGI 11 Sep 2026** — permintaan pemilik:
+    formulir "Data pemesan & kebutuhan" tidak perlu dikasih hover. Riwayatnya
+    bolak-balik, jadi **jangan diputar balik tanpa permintaan baru**: mula-mula
+    dikecualikan → 5 Sep 2026 pengecualian dicabut ("justru pengecualian itu yang
+    membuatnya terasa pilih kasih") → 11 Sep 2026 dipasang lagi. Alasannya masuk
+    akal: kartu lain cuma dilihat, formulir ini **diisi**, dan panel setinggi
+    ~1500px yang ikut bergeser 4px begitu kursor masuk terasa seperti halaman
+    bergerak sendiri. Kartu "Syarat pemesanan" di atasnya **tidak** ikut
+    dikecualikan — ia kartu info biasa.
+  - **Mengecualikannya butuh DUA aturan, bukan satu**, karena angkat dan
+    border/bayangan datang dari tempat berbeda:
+    `.order-form:hover { border-color: var(--line); box-shadow: var(--shadow-sm) }`
+    (2 kelas, menang atas `.card:hover` karena urutan) **dan**
+    `.has-js .order-form.in:hover { transform: none }` (3 kelas, menang atas
+    `.has-js .card.in:hover`). Kalau yang kedua lupa, formulir tetap melompat 4px
+    walau border & bayangannya sudah diam. Nilainya dikembalikan **eksplisit** ke
+    keadaan diam `.card`, bukan sekadar `transform: none`.
+    Tetap **jangan** `:not()` — lihat peringatan spesifisitas di bawah.
+  - Terukur dengan kursor benar-benar di dalam formulir: `transform: none`,
+    border `rgb(217,224,214)` = `--line`, shadow `--shadow-sm`. Kartu "Syarat
+    pemesanan" di halaman yang sama, saat di-hover: `matrix(1,0,0,1,0,-4)` +
+    border `rgba(31,122,77,.5)` + shadow-lg — jadi pengecualiannya benar-benar
+    hanya mengenai formulir.
   - **`.gshot` (galeri mesin di `tentang.html`) DIKELUARKAN 11 Sep 2026** —
     permintaan pemilik: "semua gambar di halaman tentang kami hilangkan
     hover-nya, zoom-nya biarkan". Tile-nya kini **diam total**: tidak terangkat,
@@ -626,11 +649,11 @@ Aturan penting:
   hover" padahal menyentuhnya mengisi ikonnya; (2) tidak menelusuri leluhur —
   `.pcard__media`, `.prod__img`, dan `<figcaption>` terbaca diam padahal
   menyentuhnya memicu `.pcard` / `.prod` / `.gshot` di atasnya.
-  `.of-set`, `.of-qty`, `.of-actions` tercakup lewat induknya `.order-form`, yang
-  sejak 5 Sep 2026 **ikut terangkat** seperti kartu lain (pengecualian "formulir
-  dibiarkan diam" sudah dicabut — justru pengecualian itu yang membuatnya terasa
-  pilih kasih). Angkatannya tidak berkedip saat mengisi, karena hover tetap aktif
-  selama kursor ada di dalam formulir.
+  `.of-set`, `.of-qty`, `.of-actions` memang tidak punya hover sendiri, dan sejak
+  11 Sep 2026 induknya (`.order-form`) pun **sengaja diam** — jadi kalau audit ini
+  diulang, seluruh isi formulir pemesanan akan terbaca "tanpa hover" dan **itu
+  benar**, bukan temuan. Lihat pengecualian `.order-form` di aturan hover
+  kontainer di atas.
 - **DUA BUG LAMA YANG MEMATIKAN HOVER, ditemukan 5 Sep 2026 — jangan diulang.**
   Keduanya tidak terlihat dari membaca CSS; aturannya tampak baik-baik saja.
   Ketahuan dengan mengukur `getComputedStyle` **saat kursor benar-benar di atas
@@ -1256,6 +1279,28 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
      kiri; sebagai kotak 491px penuh, barisnya tampak seperti grid yang patah dan
      kotaknya mengundang diketik. Kelas **`.of-field--pos`** mempersempitnya ke
      `10ch` (terukur **87px**) + font mono. Jangan kembalikan ke lebar penuh.
+- **DUA `.of-hint` DIHAPUS 11 Sep 2026 atas permintaan pemilik — jangan
+  dikembalikan tanpa permintaan baru.** Yang dibuang:
+  - di bawah **Alamat jalan**: *"Bagian yang Anda ketik sendiri. Wilayahnya —
+    provinsi sampai kelurahan — dipilih di bawah ini, dan kode pos terisi
+    otomatis."*
+  - di bawah **Kode pos**: *"Terisi sendiri setelah kelurahan dipilih."*
+  Tidak ada fungsi yang hilang: rantai wilayahnya tetap `disabled` sampai
+  tingkat di atasnya dipilih (dan `<option>`-nya sendiri berbunyi "Pilih
+  kecamatan dulu"), sedangkan Kode pos tetap `readonly` — jadi keduanya sudah
+  menjelaskan diri lewat perilaku, bukan cuma lewat teks. Efek samping yang
+  diukur: tinggi kolom Kode pos turun jadi **69px**, praktis sejajar dengan
+  Kelurahan di sebelahnya (**70px**); sebelumnya baris itu terlihat lebih tinggi
+  sendirian karena hint-nya. Sisa `.of-hint` di halaman: **5**.
+- **Kotak "Tali Plastik PP" TIDAK lagi tercentang otomatis (11 Sep 2026,
+  permintaan pemilik).** Dulu `<input type="checkbox" id="p-tali" checked>`,
+  sehingga setiap pengunjung seolah sudah memesan tali sebelum memilih apa pun.
+  **`#q-tali` ikut diberi `hidden` di markup**, sama seperti `#q-biji` — kalau
+  tidak, blok jumlahnya sempat terlihat sekejap sebelum skrip di akhir `<body>`
+  menjalankan `sync()` dan menutupnya. Fungsi `ikat()` sudah memanggil `sync()`
+  sekali saat load, jadi tidak ada logika yang perlu diubah. Diuji: saat dimuat
+  kedua kotak tidak tercentang & kedua blok jumlah tertutup; mencentang Tali
+  membuka bloknya; melepasnya menutup lagi.
 - **LEBAR ISIAN MENGIKUTI PANJANG ISI, bukan lebar kolom grid (5 Sep 2026).**
   Prinsip `.of-field--pos` diperluas ke isian lain. Dulu semuanya `width: 100%` di
   grid 2 kolom → tiap kotak **491px**; kotak selebar itu untuk nomor telepon atau
