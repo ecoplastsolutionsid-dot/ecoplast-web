@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905p`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905q`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -1080,6 +1080,39 @@ Aturan penting:
   melaporkannya. Sekarang `align-items: start` + `margin-top: auto` dihapus:
   void tinggal **22,4px**, kartu kanan setinggi isinya sendiri. Jangan
   kembalikan `stretch` tanpa memikirkan void itu lagi.
+- **WARNA TEKS TIDAK PERNAH DITULIS INLINE — pakai kelas.** Dirapikan 11 Sep 2026
+  setelah audit warna teks; 17 tempelan `style="color:…"` dibuang dan diganti
+  empat aturan di `styles.css`:
+  | aturan | untuk apa |
+  |---|---|
+  | `.card .lead { color: var(--ink) }` | `.lead` di dalam kartu = teks UTAMA (profil `tentang.html`), bukan pengantar |
+  | `.card > p { color: var(--muted) }` | paragraf biasa di kartu = teks pendukung |
+  | `.card > p strong { color: var(--ink) }` | penegasan di dalamnya kembali gelap |
+  | `.link-inline` | tautan di dalam paragraf isi (hijau, tebal, garis bawah saat hover) |
+  - **Kenapa ini penting, bukan sekadar kerapian:** inline style tidak
+    meninggalkan jejak di stylesheet, jadi kelas yang sama bisa tampil dua warna
+    tanpa ada aturan yang bisa dibaca. Itu persis yang terjadi pada `.lead` —
+    `--muted` di `produk.html` tapi `--ink` di `tentang.html` — dan baru ketahuan
+    lewat audit, bukan lewat membaca CSS.
+  - **`.fc-val` JANGAN dipakai di luar footer.** Di `kebijakan-privasi.html`
+    nomor telepon di badan teks sempat memakainya, lalu harus ditambal
+    `style="color:var(--green)"` supaya terbaca — sebab `.fc-val` berwarna
+    `#EAF1EB` untuk latar gelap. Yang ikut terbawa diam-diam: `white-space:
+    nowrap` dan ukuran font footer. Sekarang `.link-inline`.
+  - **Tanda `>` pada `.card > p` disengaja** (anak langsung), dan dua aturan lain
+    sudah dicek menang spesifisitas sehingga TIDAK ikut berubah:
+    `.quote-card p { color: #CFE7D8 }` (0,2,0 — kartu gelap di `kontak.html`,
+    kalau ikut muted ia nyaris tak terbaca) dan `.card .lead` (0,2,0).
+    `.feature p` (0,1,1, ditulis belakangan) nilainya memang sudah `--muted`.
+  - **Terbukti nol perubahan tampilan:** seluruh elemen berteks di keenam halaman
+    dipotret (warna + ukuran font + `white-space`) sebelum & sesudah → **0 beda**.
+    Kalau kelak menyentuh aturan ini, ulangi perbandingan itu; membaca CSS saja
+    tidak cukup untuk membuktikan tak ada yang bergeser.
+  - **Yang SENGAJA masih inline:** `kebijakan-privasi.html` baris 175
+    ("Terakhir diperbarui") — paragraf itu **di luar** `.card`, jadi `.card > p`
+    tak menjangkaunya. Sisa inline style di halaman itu (ukuran font `<h2>`,
+    lebar pembungkus) bukan warna dan dibiarkan; halaman itu memang dirakit
+    dengan inline style sejak awal.
 - **PAKEM KELAS SAAT MENAMBAH HALAMAN — baca ini SEBELUM menulis markup baru.**
   Halaman baru wajib menyalin kelas dari halaman yang sudah ada, bukan mengarang
   nama kelas yang "kedengarannya benar". CSS tidak pernah mengeluh: kelas karangan

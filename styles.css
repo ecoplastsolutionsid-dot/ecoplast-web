@@ -131,6 +131,44 @@ h1, h2, h3 {
 .eyebrow.on-dark { color: var(--green-light); }
 
 .lead { font-size: clamp(1.05rem, 1.8vw, 1.25rem); line-height: 1.62; color: var(--muted); max-width: 60ch; letter-spacing: -0.005em; }
+/* `.lead` punya DUA peran, dan warnanya ikut perannya:
+   - di bawah `<h2>` (mis. `produk.html`) ia kalimat pengantar → `--muted`, sengaja
+     lebih redup dari judulnya;
+   - di dalam `.card` (mis. profil di `tentang.html`) ia SATU-SATUNYA isi kartu,
+     jadi ia teks utama, bukan pendukung → `--ink`.
+   Dulu yang kedua ditulis sebagai `style="color:var(--ink)"` inline di dua
+   paragraf `tentang.html`. Hasilnya sama, tapi kelas yang sama jadi tampil dua
+   warna tanpa jejak apa pun di stylesheet — audit warna teks 11 Sep 2026
+   menandainya sebagai tidak konsisten justru karena tak ada aturannya di sini.
+   Dipindahkan jadi aturan bernama; tampilannya tidak berubah sedikit pun.
+   `produk.html` tidak terpengaruh: `.lead` di sana ada di `.prod__body`, bukan
+   di dalam `.card`. */
+.card .lead { color: var(--ink); }
+/* Paragraf biasa di dalam kartu = teks pendukung → `--muted`, dan `<strong>` di
+   dalamnya kembali ke `--ink` supaya penegasannya tetap terbaca. Sebelum 11 Sep
+   2026 kedua hal ini ditulis sebagai `style="color:…"` inline di SETIAP paragraf
+   (`tentang.html` bagian Lokasi, dan seluruh `kebijakan-privasi.html` yang memang
+   dirakit dengan inline style) — 17 tempelan yang semuanya mengulang nilai yang
+   sama. Dijadikan aturan supaya warnanya punya satu sumber.
+   Tanda `>` (anak LANGSUNG) disengaja: tanpa itu paragraf yang ter-nest di dalam
+   komponen lain ikut terseret.
+   Yang TIDAK boleh ikut berubah dan sudah dicek menang spesifisitas:
+   `.quote-card p { color: #CFE7D8 }` (0,2,0) — kartu gelap di `kontak.html`,
+   kalau ikut jadi muted ia nyaris tak terbaca; dan `.feature p` (0,1,1, ditulis
+   belakangan) yang nilainya memang sudah `--muted`. `.card .lead` (0,2,0) juga
+   tetap menang atas aturan ini (0,1,1), jadi lead di kartu tetap `--ink`. */
+.card > p { color: var(--muted); }
+.card > p strong { color: var(--ink); }
+/* Tautan di dalam paragraf isi. Dasarnya `a { color: inherit }`, jadi tanpa kelas
+   ini tautan dalam teks tidak terlihat sebagai tautan sama sekali. Hijau dipilih
+   karena itu sudah warna hover tautan di tempat lain (`a.crow__val:hover`).
+   Dibuat 11 Sep 2026 untuk menggantikan pemakaian `.fc-val` yang keliru di
+   `kebijakan-privasi.html`: `.fc-val` itu kelas FOOTER — warnanya `#EAF1EB`
+   untuk latar gelap dan ber-`white-space: nowrap` — jadi di badan teks ia harus
+   ditambal `style="color:var(--green)"` supaya terbaca, sementara `nowrap`-nya
+   tetap terbawa diam-diam. */
+.link-inline { color: var(--green); font-weight: 600; text-decoration: none; }
+.link-inline:hover { text-decoration: underline; }
 /* frasa highlight: warna + jaga tidak terpecah tengah kata antar-baris */
 .hl-light { color: var(--green-light); white-space: nowrap; }
 
