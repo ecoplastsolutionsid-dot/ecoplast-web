@@ -298,7 +298,13 @@
             </div>
           </fieldset>
 
-          <fieldset class="of-set">
+          <!-- `hidden` sejak awal: blok ini baru muncul setelah SELURUH isian lain
+               lengkap (lihat `segarkan()` di skrip bawah). Persetujuannya sendiri
+               tidak ikut dihitung sebagai syarat kemunculan — kalau ikut, ia tak
+               akan pernah tampil: mencentangnya butuh blok ini terlihat lebih
+               dulu. Umpan bot `.of-trap` sengaja dibiarkan di dalam sini; ia
+               memang sudah disembunyikan CSS, dan bot membaca DOM, bukan layar. -->
+          <fieldset class="of-set" id="set-setuju" hidden>
             <legend class="of-legend">Persetujuan</legend>
             <label class="of-consent">
               <input type="checkbox" id="setuju" required />
@@ -317,7 +323,7 @@
             <!-- Sengaja `.btn` POLOS di markup, tanpa varian warna. Kelas
                  `btn--primary` (hijau) dipasang/dilepas oleh skrip di bawah,
                  hanya ketika seluruh isian wajib sudah lengkap — lihat
-                 `segarkanTombol()`. Tombolnya TETAP bisa diklik saat belum
+                 `segarkan()`. Tombolnya TETAP bisa diklik saat belum
                  lengkap, supaya pesan "Ada isian yang belum lengkap…" tetap
                  muncul dan menunjuk kolom yang kurang; yang berubah cuma
                  warnanya. Kalau JS mati, tombol tetap polos dan formulir memang
@@ -580,7 +586,7 @@
          `tandaiSalah` memisahkan efek sampingnya: saat dipanggil untuk mewarnai
          tombol kita TIDAK boleh menandai kolom merah — orang baru mulai mengetik,
          belum melakukan kesalahan apa pun. */
-      function periksa(tandaiSalah) {
+      function periksa(tandaiSalah, tanpaSetuju) {
         var wajib = [
           [document.getElementById("nama"), function (v) { return v.trim(); }],
           [document.getElementById("perusahaan"), function (v) { return v.trim(); }],
@@ -599,22 +605,32 @@
           ok = false;
           if (tandaiSalah) tandai(document.getElementById("tali"), true);
         }
-        if (!document.getElementById("setuju").checked) ok = false;
+        if (!tanpaSetuju && !document.getElementById("setuju").checked) ok = false;
         return ok;
       }
 
-      /* Warna tombol = penanda kesiapan (permintaan pemilik 11 Sep 2026: tombol
-         polos dulu, "warna baru muncul ketika form sudah terisi semua").
-         `btn--primary` varian yang sudah ada di sistem, bukan warna baru. */
-      function segarkanTombol() {
-        tombol.classList.toggle("btn--primary", periksa(false));
+      /* Dua penanda kesiapan, DUA AMBANG BERBEDA — jangan disamakan:
+         1. Blok "Persetujuan" muncul saat seluruh isian lain lengkap
+            (`periksa(false, true)` — persetujuannya sendiri DIABAIKAN). Kalau
+            ikut dihitung, blok ini tak akan pernah tampil: mencentangnya butuh
+            bloknya terlihat lebih dulu.
+         2. Warna tombol baru menyala saat persetujuan ikut dicentang
+            (`periksa(false)` penuh) — jadi urutannya: isi semua → persetujuan
+            muncul → centang → tombol hijau.
+         Permintaan pemilik 11 Sep 2026. `btn--primary` varian yang sudah ada di
+         sistem, bukan warna baru. */
+      var setSetuju = document.getElementById("set-setuju");
+      function segarkan() {
+        var isiLain = periksa(false, true);
+        setSetuju.hidden = !isiLain;
+        tombol.classList.toggle("btn--primary", isiLain && document.getElementById("setuju").checked);
       }
       /* Delegasi di tingkat form: satu pemasangan menangkap semua isian,
          termasuk <select> wilayah yang OPSINYA baru dibuat belakangan lewat
          fetch — kalau listener dipasang per elemen, opsi susulan itu terlewat. */
-      f.addEventListener("input", segarkanTombol);
-      f.addEventListener("change", segarkanTombol);
-      segarkanTombol();
+      f.addEventListener("input", segarkan);
+      f.addEventListener("change", segarkan);
+      segarkan();
 
       f.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -622,7 +638,7 @@
         hasil.className = "of-result";
 
         var ok = periksa(true);
-        segarkanTombol();
+        segarkan();
 
         if (!ok) {
           hasil.className = "of-result of-result--gagal";
@@ -672,7 +688,7 @@
             f.reset();
             syncs.forEach(function (s) { s(); });   /* tutup lagi blok jumlah */
             cekMoq(); pos.value = "";
-            segarkanTombol();                       /* tombol kembali polos */
+            segarkan();                       /* tombol kembali polos */
           })
           .catch(function (err) {
             hasil.className = "of-result of-result--gagal";

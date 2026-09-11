@@ -1301,7 +1301,28 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
     logika status yang ada cuma `disabled` + teks "Mengirim…" selama pengiriman.
     Jadi perilaku "berwarna kalau sudah lengkap" ini **baru**, bukan yang lama.
   - Di markup tombolnya tetap `class="btn"`. Kelas **`btn--primary`** (varian yang
-    sudah ada, bukan warna baru) dipasang/dilepas `segarkanTombol()`.
+    sudah ada, bukan warna baru) dipasang/dilepas `segarkan()`.
+  - **DUA AMBANG BERBEDA, jangan disamakan** (blok "Persetujuan" ikut disembunyikan
+    sejak permintaan susulan 11 Sep 2026: teksnya "baru muncul ketika form sudah
+    terisi semua"):
+    | ambang | dipakai untuk | pemanggilan |
+    |---|---|---|
+    | seluruh isian lain lengkap, **persetujuan diabaikan** | memunculkan `<fieldset id="set-setuju">` | `periksa(false, true)` |
+    | di atas **+ persetujuan dicentang** | menyalakan `btn--primary` | `periksa(false)` |
+    Urutan yang dialami pengunjung: isi semua → blok Persetujuan muncul → centang
+    → tombol hijau.
+    **Persetujuan WAJIB diabaikan di ambang pertama.** Kalau ikut dihitung,
+    bloknya tak akan pernah tampil — mencentangnya butuh blok itu terlihat lebih
+    dulu. Ini bukan detail gaya; salah di sini membuat formulir mustahil dikirim.
+  - `<fieldset id="set-setuju">` diberi **`hidden` di markup** (seperti
+    `#q-tali`/`#q-biji`) supaya tidak berkedip sebelum skrip jalan. Umpan bot
+    `.of-trap` sengaja dibiarkan **di dalam** fieldset itu: ia memang sudah
+    disembunyikan CSS, dan bot membaca DOM, bukan layar — sudah dicek `#website`
+    tetap ada saat blok tersembunyi.
+  - Mengosongkan kembali salah satu kolom akan **menyembunyikan lagi** blok
+    Persetujuan; centangnya **tidak** ikut hilang, jadi begitu kolomnya diisi
+    ulang tombol langsung hijau lagi. Itu disengaja — memaksa orang mencentang
+    dua kali terasa seperti hukuman.
   - **SATU definisi "lengkap", dipakai dua kali.** Fungsi `periksa(tandaiSalah)`
     melayani pewarnaan tombol **dan** penghadang submit. Jangan disalin jadi dua
     daftar: kalau keduanya sempat berbeda, tombol bisa tampak siap padahal submit
@@ -1317,7 +1338,7 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   - Sesudah kirim sukses, `f.reset()` **tidak** cukup: ia mengembalikan keadaan
     checkbox tapi tidak menyentuh atribut `hidden` yang diatur JS. Karena itu ada
     larik **`syncs`** yang dipanggil ulang setelah reset (menutup blok jumlah),
-    lalu `segarkanTombol()` (mengembalikan tombol ke polos).
+    lalu `segarkan()` (tombol kembali polos DAN blok Persetujuan tertutup lagi).
   - **JEBAKAN saat menguji ini** — dua-duanya sudah kejadian:
     (1) `getComputedStyle` di tab yang tidak aktif **membeku**, jadi tombol yang
     sudah hijau tetap terbaca `rgb(240,240,240)` (warna bawaan UA). Percayai
