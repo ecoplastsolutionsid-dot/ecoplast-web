@@ -149,6 +149,15 @@
   .grid--4 { grid-template-columns: 1fr; }
   .gallery { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
+  /* Satu kolom = keempat langkah TIDAK lagi masuk viewport bersamaan; masing-masing
+     ter-reveal saat digulir ke tempatnya. Stagger 0,34s/langkah di styles.css
+     dirancang untuk baris 4 kolom di desktop, dan di sini justru jadi jeda mati:
+     langkah ke-4 baru mulai bergerak 1,02 detik setelah ia terlihat. Dinolkan.
+     Arah geser dari kanan TETAP dipertahankan — yang dibuang cuma antreannya. */
+  .has-js .steps .step:nth-child(1),
+  .has-js .steps .step:nth-child(2),
+  .has-js .steps .step:nth-child(3),
+  .has-js .steps .step:nth-child(4) { transition-delay: 0s !important; }
   /* Footer mobile = SATU kolom, dan kini SATU tepi kiri: x=20 (padding .container).
      Terukur di 504px — plakat logo, blok alamat, chip Kontak, dan chip Media Sosial
      semuanya mulai di x=20,0.

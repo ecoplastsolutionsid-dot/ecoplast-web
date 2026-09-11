@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905n`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905o`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -649,6 +649,32 @@ Aturan penting:
     `.card`, `.map-block`, `.cta-band .container > *`. Kalau menambah target,
     ubah **kedua** tempat (dan blok reduced-motion di bawah). Hindari menargetkan
     elemen yang ter-nest (mis. `.crow` di dalam `.card`) agar tak dobel-animasi.
+  - **SATU PENGECUALIAN: `.step` (alur produksi, `produk.html`) — mendatar &
+    berurutan.** Permintaan pemilik 11 Sep 2026: "jangan langsung semua point,
+    tapi satu-persatu dari 1–4, pergeseran dari kanan ke kiri" (mula-mula
+    disebut kiri ke kanan lalu **diralat sendiri** ke kanan ke kiri). Dua hal
+    berbeda dari target reveal lain, keduanya di `styles.css` tepat sesudah blok
+    `.in`:
+    - **Arah:** mulai `translateX(26px)` — di sebelah **kanan** tempat akhirnya —
+      lalu bergerak ke kiri menuju `transform: none`; bukan `translateY(22px)`
+      naik. 26px, jangan lebih jauh: di 1 kolom kartu sudah selebar container,
+      dan geseran besar terpotong `overflow-x: clip`. Terukur nol overflow
+      horizontal di 360/375/504/560/900/1280 pada keadaan **sebelum** reveal
+      (`scrollWidth` selalu 15px di bawah `innerWidth`).
+    - **Antrean:** durasi dipendekkan ke `.55s` (bukan `--dur-reveal` 1.1s) dan
+      jaraknya dilebarkan ke **0,34s** lewat `nth-child(1..4)`. Dengan stagger
+      bawaan 0,12s + durasi 1,1s, empat kartu yang masuk viewport bersamaan
+      praktis tampil serentak — persis yang dikeluhkan. Terukur: pada t≈1000ms
+      langkah 1–2 sudah selesai, 3 hampir, 4 masih di `x=26` & `opacity 0`.
+    - **`!important` pada delay WAJIB** — skrip body menulis `transition-delay`
+      sebagai **inline style**, jadi aturan stylesheet tanpa `!important` kalah.
+      Jangan dihapus dengan anggapan itu kelebihan. Kalau langkahnya bertambah,
+      tambahkan `nth-child` berikutnya; di luar daftar itu kartu kembali memakai
+      delay inline 0,12s dan keluar dari irama.
+    - **Di ≤560px delay-nya dinolkan** (`responsive.css`): satu kolom berarti
+      keempatnya tidak lagi masuk viewport bersamaan, jadi antrean 0,34s cuma
+      menjadi jeda mati — langkah ke-4 baru bergerak 1,02 detik setelah terlihat.
+      Arah geser dari kanan tetap dipertahankan.
   - **`prefers-reduced-motion`** (`responsive.css`): target dipaksa
     `opacity:1 !important; transform:none !important` → konten selalu tampil tanpa
     gerak (aman walau observer tak jalan). Skrip observer dipasang **identik di
