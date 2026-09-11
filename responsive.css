@@ -218,7 +218,10 @@
   .has-js .pcard.in:hover, .has-js .feature.in:hover, .has-js .gshot.in:hover,
   .has-js .card.in:hover,
   .map-wrap:hover, .prod:hover .prod__img,
-  .pcard:hover .pcard__img, .gshot:hover .gshot__img,
+  /* `.pcard:hover .pcard__img` sudah tidak ada lagi di styles.css — foto kartu
+     beranda sengaja dibuat diam saat hover, jadi tak ada gerak yang perlu
+     diredam di sini. */
+  .gshot:hover .gshot__img,
   .step:hover .step__n,
   /* .foot-brand baru memakai transform sejak hover-nya jadi "terangkat" (dulu cuma
      box-shadow, jadi tak perlu ada di sini). Bayangannya tetap berubah — yang

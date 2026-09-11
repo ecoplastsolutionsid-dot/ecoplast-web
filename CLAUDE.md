@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905b`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905l`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -494,8 +494,18 @@ Aturan penting:
   `.card` (termasuk `.quote-card` **dan** `.order-form`), `.pcard`, `.feature`,
   `.gshot`, `.map-wrap`, dan `.prod__img`. Yang boleh berbeda hanya **tambahan**
   yang memang khas elemennya: zoom foto `scale(1.035)` + `saturate(1.06)` pada
-  `.pcard`/`.gshot`. `produk.html` tidak punya `.card` sama sekali, jadi
-  `.prod:hover .prod__img` yang mewakili.
+  `.gshot` (galeri mesin) dan `.prod__img` (halaman produk). `produk.html` tidak
+  punya `.card` sama sekali, jadi `.prod:hover .prod__img` yang mewakili.
+  **`.pcard` (dua kartu produk di beranda) SENGAJA TANPA zoom foto sejak
+  11 Sep 2026** — permintaan pemilik: "gambar jangan gerak, cukup hover kontainer
+  saja". Yang dibuang: aturan `.pcard:hover .pcard__img`, `transition`
+  transform/filter pada `.pcard__img`, dan entri `.pcard:hover .pcard__img` di
+  blok `prefers-reduced-motion`. Kartunya sendiri **tetap** terangkat `-4px` +
+  border hijau + `--shadow-lg` seperti kontainer lain, jadi aturan "semua
+  kontainer bereaksi sama" tidak dilanggar; yang hilang cuma tambahan khas foto.
+  Galeri mesin & halaman produk tidak ikut diubah — permintaannya khusus beranda.
+  Terukur dengan kursor benar-benar di atas foto: `img transform: none`,
+  `filter: none`, sementara `card transform: matrix(1,0,0,1,0,-4)`.
   **JANGAN membedakan lagi berdasarkan "bisa diklik atau tidak".** Itu percobaan
   pertama: kartu teks hanya diberi border + `--shadow-md` tanpa gerak, dengan alasan
   `.card` polos bukan tautan sehingga tak pantas terangkat. Alasannya masuk akal,
@@ -543,6 +553,9 @@ Aturan penting:
      biasa**, jadi `.pcard:hover .pcard__img { transform: scale(1.035) }` tidak
      pernah jalan. Diganti `backwards`: frame awal tetap ditahan sebelum animasi
      mulai, tapi kendali dilepas sesudah selesai. Tampilan diam tidak berubah.
+     Zoom `.pcard` itu sendiri kini sudah dibuang atas permintaan pemilik (lihat
+     aturan hover kontainer di atas), tapi **`backwards` tetap wajib** — `.prod__img`
+     masih memakai pola yang sama dan komentarnya di `styles.css` menunjuk ke sini.
 - **`:not()` IKUT MENAMBAH BOBOT SPESIFISITAS.** `.card:not(.order-form):hover`
   bernilai **3 kelas** dan diam-diam mengalahkan `.pcard:hover` (2 kelas) berapa pun
   urutannya — sempat mematikan angkatan kartu produk. Aturan hover kartu sengaja

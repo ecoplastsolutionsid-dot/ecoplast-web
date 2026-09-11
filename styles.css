@@ -456,15 +456,21 @@ h1, h2, h3 {
   display: block;
   /* `backwards`, BUKAN `both`. Dengan `both`, keadaan akhir keyframe
      (`transform: none`) terkunci selamanya — dan di kaskade CSS animasi
-     mengalahkan deklarasi biasa, sehingga `.pcard:hover .pcard__img
-     { transform: scale(1.035) }` di bawah TIDAK PERNAH jalan. Sama persis
-     dengan yang terjadi pada angkatan kartu. `backwards` tetap menahan frame
-     awal sebelum animasi mulai, tapi melepas kendali sesudah selesai.
-     Ditemukan 5 Sep 2026 dengan mengukur transform saat hover. */
+     mengalahkan deklarasi biasa, sehingga transform apa pun dari aturan biasa
+     TIDAK PERNAH jalan. Ditemukan 5 Sep 2026 saat zoom hover foto di sini mati
+     tanpa sebab yang terlihat dari membaca CSS. Zoom-nya sendiri sudah dibuang
+     (lihat di bawah), tapi `.prod__img` di produk.html masih memakai pola yang
+     sama dan menunjuk komentar ini — jangan kembalikan ke `both`. */
   animation: img-in .55s ease backwards;
-  transition: transform var(--dur-slow) var(--ease-out), filter var(--dur) var(--ease);
 }
-.pcard:hover .pcard__img { transform: scale(1.035); filter: saturate(1.06); }
+/* Foto SENGAJA DIAM saat hover (permintaan pemilik, 11 Sep 2026): yang bereaksi
+   cukup kontainernya — kartu terangkat + border hijau + shadow, seperti kartu
+   lain. Dulu ada `.pcard:hover .pcard__img { transform: scale(1.035);
+   filter: saturate(1.06) }` plus `transition` transform/filter di atas; keduanya
+   dibuang bersama entri `.pcard:hover .pcard__img` di blok
+   `prefers-reduced-motion` (responsive.css) yang kini tak punya sasaran.
+   Galeri mesin (`.gshot`) dan halaman produk (`.prod__img`) TIDAK ikut diubah —
+   permintaannya khusus dua kartu di beranda. */
 .pcard__tag { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--blue); }
 .pcard h3 { font-size: 1.3rem; }
 .pcard p { color: var(--muted); }
