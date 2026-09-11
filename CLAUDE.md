@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905w`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905x`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -532,7 +532,7 @@ Aturan penting:
   - Shadow berlapis low-opacity: `--shadow-xs/sm/md/lg`. Kartu diam = `--shadow-sm`,
     hover naik ke `--shadow-md`/`--shadow-lg`. Hindari drop-shadow berat.
   - Motion: easing `--ease` (umum) & `--ease-out` (masuk), durasi `--dur .22s` &
-    `--dur-slow .4s`. Semua transisi memakai token ini agar terasa satu bahasa.
+    `--dur-slow .62s`. Semua transisi memakai token ini agar terasa satu bahasa.
 - **Pola pellet**: kelas `.dotted` = `--green-deep` + SVG titik-titik (data-URI inline).
   Dipakai di hero halaman & CTA band. Kedalaman via pseudo: `::before` = ambient
   lighting (glow hijau kiri-atas + aksen biru kanan-atas + vignette bawah, radial),
@@ -583,7 +583,7 @@ Aturan penting:
     | | sebelum | sekarang |
     |---|---|---|
     | skala | `1.035` (±18,1px di tile 517px) | **`1.018`** (±9,3px) |
-    | durasi | `--dur-slow` .4s | **.62s** |
+    | durasi | .4s | **.62s** (`--dur-slow`, nilainya ikut disesuaikan) |
     | warna | `filter: saturate(1.06)` | **dibuang** |
     `saturate` dibuang seluruhnya karena warna yang ikut menyala itu bagian
     terbesar dari kesan ramai; setelah itu `transition` untuk `filter` juga ikut
@@ -698,7 +698,7 @@ Aturan penting:
     target (`opacity:0` + `translateY(22px)`, transisi `--dur-reveal`/`--ease-out`)
     **hanya** saat `.has-js` aktif → tanpa JS = tak ada `.has-js` = konten tampil
     normal, tanpa flash. **Durasi reveal sengaja lambat & elegan**: token khusus
-    `--dur-reveal: 1.1s` (bukan `--dur-slow` yang .4s dipakai hover kartu) supaya
+    `--dur-reveal: 1.1s` (bukan `--dur-slow` yang .62s dipakai zoom galeri) supaya
     kemunculan terasa mengambang, tidak kaku. Kalau mau lebih lambat/cepat, ubah
     satu angka token ini.
   - Skrip di akhir `<body>` (gabung dengan skrip tahun) menjalankan
@@ -1164,6 +1164,33 @@ Aturan penting:
     tak menjangkaunya. Sisa inline style di halaman itu (ukuran font `<h2>`,
     lebar pembungkus) bukan warna dan dibiarkan; halaman itu memang dirakit
     dengan inline style sejak awal.
+- **AUDIT DEAD CODE — cara menjalankannya, dan hasil yang WAJAR (11 Sep 2026).**
+  Jalankan kalau baru saja membuang markup/aturan; menghapus satu hal biasanya
+  meninggalkan yatim di tempat lain. **Buang komentar dulu** (`/* … */` di CSS,
+  `<!-- … -->` di HTML) sebelum mencocokkan apa pun — komentar di repo ini penuh
+  menyebut nama kelas & berkas yang sudah dihapus, dan tanpa dibuang ia memberi
+  **positif palsu** (`logo-mark.png` sempat terbaca "masih dipakai" padahal
+  satu-satunya kemunculannya ada di komentar `styles.css`).
+  Enam pemeriksaan: (1) kelas di CSS tanpa pemakai di markup; (2) kelas di markup
+  tanpa aturan CSS; (3) token `--var` terdefinisi tanpa `var()`; (4) `id` di
+  markup tanpa rujukan JS/CSS/atribut; (5) deklarasi JS yang cuma muncul sekali;
+  (6) berkas di `assets/` tanpa rujukan.
+  **Regex token harus berjangkar** (`(?:^|[;{]\s*)--nama\s*:`) — tanpa jangkar,
+  `.btn--ghost:hover` terbaca sebagai definisi token `--ghost`; sempat memberi
+  5 token palsu.
+  **Hasil yang WAJAR dan bukan temuan:**
+  - `.has-js`, `.in`, `.of-invalid`, `.of-result--ok`, `.of-result--gagal`,
+    `.of-consent--mati`, `.btn--primary` — dipasang JS saat runtime, jadi memang
+    tak ada di markup statis.
+  - `crows`, `js-qty`, `prod__body` — kelas tanpa aturan CSS: pembungkus tanpa
+    gaya & cantolan JS.
+  - `--brand-green`, `--brand-navy` — sengaja nol pemakaian (acuan warna brand).
+  - `robots.txt`, `sitemap.xml`, `BingSiteAuth.xml`,
+    `google5c4d18bf39fc4ecf.html`, kunci IndexNow — diambil crawler lewat path
+    tetap, memang tak pernah ditaut.
+  - `assets/logo-mark.png` (58 KB) — **satu-satunya aset yang benar-benar tidak
+    dirujuk**, dipertahankan sengaja sebagai acuan crop emblem & pembanding audit
+    OG. Kalau kelak mau diramping, itu keputusan pemilik, bukan temuan bug.
 - **PAKEM KELAS SAAT MENAMBAH HALAMAN — baca ini SEBELUM menulis markup baru.**
   Halaman baru wajib menyalin kelas dari halaman yang sudah ada, bukan mengarang
   nama kelas yang "kedengarannya benar". CSS tidak pernah mengeluh: kelas karangan

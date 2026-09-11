@@ -58,7 +58,13 @@
   --ease: cubic-bezier(.4, 0, .2, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --dur: .22s;
-  --dur-slow: .4s;
+  /* .62s, bukan .4s lagi. Nilainya diubah 11 Sep 2026 saat zoom galeri
+     dikalemkan — dan itu aman justru karena saat itu `--dur-slow` sudah TIDAK
+     dipakai siapa pun: dua pemakainya (transisi `.pcard__img` dan `.gshot__img`)
+     hilang pada hari yang sama. Token yatim itu ketahuan lewat audit dead code,
+     bukan dari membaca berkas. Dipakai lagi di `.gshot__img` menggantikan angka
+     lepas `.62s`, supaya aturan "semua transisi memakai token" tetap berlaku. */
+  --dur-slow: .62s;
   --dur-reveal: 1.1s; /* khusus reveal scroll-in — lambat & elegan (bukan kaku) */
 
   --font-sans: "Archivo", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -643,10 +649,9 @@ h1, h2, h3 {
   object-position: center;
   display: block;
   background: #EDF1EA;                 /* placeholder saat lazy-load, tanpa lompatan layout */
-  /* .62s, lebih lambat dari `--dur-slow` (.4s) yang dipakai zoom foto lain dulu.
-     Dibiarkan angka lepas, bukan token baru, karena cuma satu tempat yang
-     memakainya — lihat alasannya di aturan hover di bawah. */
-  transition: transform .62s var(--ease-out);
+  /* `--dur-slow` = .62s. Ini satu-satunya pemakainya, dan nilai tokennya memang
+     disesuaikan untuk zoom ini (lihat catatan di blok token). */
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 /* Zoom SENGAJA lembut (permintaan pemilik 11 Sep 2026: "efek zoomnya biar agak
    kalem"). Dua hal yang diturunkan sekaligus, karena "kalem" itu soal seberapa
