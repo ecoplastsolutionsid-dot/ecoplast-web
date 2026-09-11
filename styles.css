@@ -629,9 +629,24 @@ h1, h2, h3 {
   object-position: center;
   display: block;
   background: #EDF1EA;                 /* placeholder saat lazy-load, tanpa lompatan layout */
-  transition: transform var(--dur-slow) var(--ease-out), filter var(--dur) var(--ease);
+  /* .62s, lebih lambat dari `--dur-slow` (.4s) yang dipakai zoom foto lain dulu.
+     Dibiarkan angka lepas, bukan token baru, karena cuma satu tempat yang
+     memakainya — lihat alasannya di aturan hover di bawah. */
+  transition: transform .62s var(--ease-out);
 }
-.gshot:hover .gshot__img { transform: scale(1.035); filter: saturate(1.06); }
+/* Zoom SENGAJA lembut (permintaan pemilik 11 Sep 2026: "efek zoomnya biar agak
+   kalem"). Dua hal yang diturunkan sekaligus, karena "kalem" itu soal seberapa
+   jauh DAN seberapa cepat:
+   - skalanya 1.035 → 1.018. Di tile 517px, itu memangkas pemekaran dari ±18px
+     jadi ±9px — masih jelas terlihat karena foto ter-crop `cover` di dalam tile
+     ber-`overflow: hidden`, tapi tidak lagi terasa "melompat".
+   - durasinya .4s → .62s, jadi pergerakannya mengalir, bukan menyentak.
+   `filter: saturate(1.06)` DIBUANG seluruhnya. Warna yang ikut menyala itu
+   bagian terbesar dari kesan ramai; setelah dibuang, transisi `filter` di atas
+   juga ikut dihapus karena tak ada lagi yang berubah.
+   Ini satu-satunya zoom foto yang tersisa di situs — `.pcard` sudah dibuat diam
+   dan `.prod__img` memang tak pernah punya zoom. */
+.gshot:hover .gshot__img { transform: scale(1.018); }
 /* `.gshot figcaption` DIHAPUS 5 Sep 2026 atas permintaan pemilik — keenam
    keterangan foto mesin dibuang, tinggal fotonya saja. Deskripsi tetap ada di
    `alt` tiap gambar, jadi tidak ada informasi yang hilang bagi pembaca layar

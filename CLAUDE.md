@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905r`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905s`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -552,11 +552,23 @@ Aturan penting:
     permintaan pemilik: "semua gambar di halaman tentang kami hilangkan
     hover-nya, zoom-nya biarkan". Tile-nya kini **diam total**: tidak terangkat,
     border & bayangannya tidak berubah. Yang **tetap hidup** cuma zoom fotonya,
-    `.gshot:hover .gshot__img` (`scale(1.035)` + `saturate(1.06)`) — itulah
-    "zoom" yang dimaksud, dan masih terlihat jelas karena foto mengisi penuh tile
-    ber-`overflow: hidden`. Terukur dengan kursor di atas foto: tile
-    `transform: none`, border tetap `rgb(217,224,214)` = `--line`, shadow tetap
-    `--shadow-sm`; foto `matrix(1.035,0,0,1.035,0,0)` + `saturate(1.06)`.
+    `.gshot:hover .gshot__img` — itulah "zoom" yang dimaksud, dan masih terlihat
+    karena foto mengisi penuh tile ber-`overflow: hidden`.
+  - **Zoom-nya lalu DIKALEMKAN di permintaan susulan yang sama harinya** ("efek
+    zoomnya biar agak kalem"). Tiga hal diturunkan sekaligus, karena "kalem" itu
+    soal seberapa jauh, seberapa cepat, **dan** seberapa menyala:
+    | | sebelum | sekarang |
+    |---|---|---|
+    | skala | `1.035` (±18,1px di tile 517px) | **`1.018`** (±9,3px) |
+    | durasi | `--dur-slow` .4s | **.62s** |
+    | warna | `filter: saturate(1.06)` | **dibuang** |
+    `saturate` dibuang seluruhnya karena warna yang ikut menyala itu bagian
+    terbesar dari kesan ramai; setelah itu `transition` untuk `filter` juga ikut
+    dihapus — tak ada lagi yang berubah. Durasi `.62s` sengaja ditulis sebagai
+    angka lepas, bukan token baru, karena cuma satu tempat yang memakainya.
+    Terukur dengan kursor benar-benar di atas foto: tile `transform: none`,
+    border tetap `rgb(217,224,214)` = `--line`, shadow tetap `--shadow-sm`; foto
+    skala `1.018`, `filter: none`.
   - **Membuang hover `.gshot` berarti menyentuh EMPAT tempat, jangan setengah:**
     (1) aturan `.gshot:hover` di `styles.css`; (2) entri `.has-js .gshot.in:hover`
     di blok hover-sesudah-reveal; (3) `transition` transform/border/shadow pada
