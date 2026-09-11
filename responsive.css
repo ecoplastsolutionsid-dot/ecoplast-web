@@ -190,7 +190,8 @@
   .of-picks { grid-template-columns: 1fr; }
   .of-actions { flex-direction: column; align-items: stretch; }
   .of-actions .btn { width: 100%; }
-  .of-side { text-align: center; }
+  /* `.of-side` sudah tidak ada lagi (markup & aturannya dibuang 11 Sep 2026),
+     jadi aturan text-align-nya ikut dihapus dari sini. */
   .cta-band .container { flex-direction: column; align-items: flex-start; }
   /* Banner judul (produk/tentang/kontak): min-height lebih tinggi karena lead
      wrap lebih banyak di layar sempit — beri ruang agar ketiganya tetap seragam. */

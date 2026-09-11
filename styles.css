@@ -1374,7 +1374,12 @@ a.fc-val:hover { color: #fff; }
   justify-content: space-between; padding: var(--card-pad); background: var(--bg);
   border-top: 1px solid var(--line);
 }
-.of-side { margin: 0; font-size: 0.86rem; color: var(--muted); }
+/* `.of-side` DIHAPUS 11 Sep 2026 atas permintaan pemilik, beserta markup-nya
+   ("Perlu lebih cepat? Hubungi via WhatsApp."). Tautan WhatsApp tetap tersedia
+   di header dan di FAB mengambang pada mobile, jadi tak ada jalan yang hilang.
+   `justify-content: space-between` di atas SENGAJA dipertahankan: kini hanya
+   tombol yang tersisa sehingga ia rata kiri — hasilnya sama dengan
+   `flex-start`, dan aturannya tetap benar kalau kelak ada isi kedua. */
 .of-actions .btn[disabled] { opacity: .6; cursor: progress; }
 
 .of-result { padding: var(--card-pad); border-top: 1px solid var(--line); font-size: 0.95rem; }
