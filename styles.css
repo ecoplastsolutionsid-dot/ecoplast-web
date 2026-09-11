@@ -14,6 +14,30 @@
 
   --green-light: #7BE0A6;      /* highlight on dark backgrounds */
 
+  /* GOLD — SATU pemakaian saja: bulatan nomor alur produksi (.step__n) saat hover.
+     Sama seperti --blue, artinya dijaga tunggal supaya tetap berarti; begitu
+     disebar ke elemen lain ia kembali jadi dekorasi.
+
+     Pasangan ini DIPILIH PEMILIK dari perbandingan yang dirender & dilihat
+     (11 Sep 2026), setelah usulan awal yang lebih gelap ditolak: "warna goldnya
+     kurang pas". Ia paling dekat ke golden yellow di antara kandidat yang dicoba.
+
+     KONSEKUENSI YANG SUDAH DISAMPAIKAN & DITERIMA: angkanya tetap PUTIH
+     (permintaan pemilik juga), dan putih di atas warna seterang ini cuma
+     **2,42:1** di titik terbaiknya — di bawah ambang WCAG 4,5:1 untuk teks kecil.
+     Itu bukan kelalaian, itu pilihan sadar: pemilik lebih mengutamakan warnanya.
+     Angka pada `.step__n` juga bukan pembawa makna — judul & deskripsi tiap
+     langkah ada di `<h3>`/`<p>` di bawahnya, dan urutannya sudah dibawa `<ol>`,
+     jadi yang hilang adalah kenyamanan baca, bukan informasi.
+     **Kalau kelak ingin lolos ambang tanpa mengubah warnanya**, jalannya cuma
+     satu dan sudah diukur: ganti warna angka dari putih ke `var(--ink)` →
+     **4,73:1**. Jangan menambal dengan text-shadow/-webkit-text-stroke; trik
+     semacam itu sudah pernah ditolak di footer.
+     Tanpa gradasi rata pun sama saja — yang menentukan terangnya warna, bukan
+     titik berhentinya. */
+  --gold: #F2E3A8;             /* ujung terang gradasi */
+  --gold-deep: #A88A2A;        /* ujung gelap gradasi */
+
   /* Warna wordmark dari LOGO ASLI (kiblat): ECO = hijau, PLAST + SOLUTIONS = navy.
      Dipakai di lockup header & footer agar warna teks brand persis logo. */
   --brand-green: #3E9B37;      /* huruf "ECO" */
@@ -670,9 +694,45 @@ h1, h2, h3 {
   font-size: 1.02rem;
   margin-bottom: 1rem;
   box-shadow: 0 8px 18px -8px rgba(18,68,43,.55), 0 0 0 1px rgba(31,122,77,.15);
-  transition: transform var(--dur) var(--ease-out);
+  /* Wadah untuk lapisan gold di bawah. `isolation: isolate` bikin stacking
+     context sendiri supaya ::after ber-z-index negatif berhenti di sini dan tidak
+     tenggelam ke belakang latar section (pola yang sama dipakai .site-footer). */
+  position: relative;
+  isolation: isolate;
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease);
 }
-.step:hover .step__n { transform: translateY(-2px) scale(1.05); }
+/* Lapisan gold: gradasi hijau di background TIDAK bisa ditransisikan (gradien
+   bukan properti yang bisa diinterpolasi browser), jadi kalau warnanya ditukar
+   langsung ia akan mengedip. Lapisan terpisah yang di-fade `opacity` 0 -> 1
+   memberi perpindahan mulus tanpa mengubah cara .step__n disusun.
+   `position: absolute` WAJIB — .step__n itu grid container, dan pseudo-element
+   yang masih dalam alur akan dihitung sebagai grid ITEM lalu menggeser angkanya
+   dari tengah. Absolute mengeluarkannya dari alur, jadi aman.
+   z-index -1: di kaskade painting, anak ber-z-index negatif dilukis SESUDAH
+   background elemen tapi SEBELUM isinya → menutup gradasi hijau, angka putih
+   tetap di atas. */
+.step__n::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  /* Berhenti di 50%, BUKAN 100%: separuh bawah bulatan rata di --gold-deep,
+     sehingga sorotan terangnya terkumpul di pojok kiri-atas dan bentuk bulatnya
+     tetap terbaca sebagai logam, bukan bidang datar. Terukur di bawah angka
+     (posisi 35%/50%/65% glif): 2,42 / 3,32 / 3,32 : 1 terhadap putih — lihat
+     catatan lengkap di token --gold soal kenapa angka di bawah ambang ini
+     diterima. */
+  background: linear-gradient(150deg, var(--gold) 0%, var(--gold-deep) 50%);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+  z-index: -1;
+}
+/* Hover: bulatan jadi gold, ANGKA TETAP PUTIH (permintaan pemilik 11 Sep 2026 —
+   pilihan "angka jadi gelap" ditawarkan dan ditolak). Bayangannya ikut bergeser
+   dari rona hijau ke rona gold supaya bulatannya tidak tampak hijau lagi dari
+   pinggirnya. */
+.step:hover .step__n { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 18px -8px rgba(120,96,24,.5), 0 0 0 1px rgba(168,138,42,.45); }
+.step:hover .step__n::after { opacity: 1; }
 .step h3 { font-size: 1.05rem; margin-bottom: 0.35rem; }
 .step p { color: var(--muted); font-size: 0.95rem; }
 

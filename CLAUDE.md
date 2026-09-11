@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905m`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905n`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -436,6 +436,46 @@ Aturan penting:
   `:focus-visible` (2 aturan) dan titik aksen di dalam data-URI `.dotted`.
   **`--brand-green` & `--brand-navy` tetap NOL pemakaian** — memang cuma acuan warna
   brand untuk memverifikasi aset, bukan token yang mewarnai UI.
+- **`--gold #F2E3A8` / `--gold-deep #A88A2A` — SATU pemakaian, sama disiplinnya
+  dengan `--blue`:** bulatan nomor alur produksi (`.step__n`) di `produk.html`
+  **saat hover**. Ditambahkan 11 Sep 2026 atas permintaan pemilik: "ketika hover
+  maka warna berubah menjadi gold", dan ditegaskan **angkanya tetap PUTIH**.
+  Jangan sebar ke elemen lain.
+  - **Warnanya DIPILIH PEMILIK dari perbandingan yang dirender lalu dilihat**,
+    bukan dihitung. Usulan pertama jauh lebih gelap (`#C9A227` → `#5C4000`,
+    berhenti 70%) dan **ditolak**: "warna goldnya kurang pas" — di ukuran 42px ia
+    terbaca perunggu, bukan emas. Pemilik lalu menunjuk varian paling kuning dari
+    lembar perbandingan ("F") dan bertanya soal *golden yellow*; F itulah token
+    yang sekarang. Kalau kelak ada usul menggelapkannya lagi "demi kontras",
+    **itu sudah pernah ditolak** — tawarkan mengubah warna ANGKA, bukan warnanya.
+  - **KONSEKUENSI YANG SUDAH DIUKUR, DISAMPAIKAN, DAN DITERIMA:** putih di atas
+    gold seterang ini cuma **2,42:1** di titik terbaiknya (tepi atas glif), 3,32
+    di pusat & tepi bawah — **di bawah ambang WCAG 4,5:1** untuk teks kecil. Itu
+    pilihan sadar, bukan kelalaian: pemilik mengutamakan warnanya. Yang menahan
+    kerusakannya, angka pada `.step__n` **bukan pembawa makna** — judul &
+    deskripsi tiap langkah ada di `<h3>`/`<p>` di bawahnya dan urutannya sudah
+    dibawa `<ol>`, jadi yang berkurang kenyamanan baca, bukan informasi.
+  - **Kalau kelak ingin lolos ambang TANPA mengubah warnanya**, jalannya cuma
+    satu dan sudah diukur: warna angka putih → `var(--ink)` = **4,73:1**. Jangan
+    menambal dengan `text-shadow`/`-webkit-text-stroke`; trik semacam itu sudah
+    pernah ditolak di footer.
+  - Titik berhenti gradasi **50%** (`linear-gradient(150deg, var(--gold) 0%,
+    var(--gold-deep) 50%)`): separuh bawah bulatan rata di `--gold-deep` sehingga
+    sorotan terangnya terkumpul di pojok kiri-atas dan bentuk bulatnya terbaca
+    sebagai logam, bukan bidang datar. Titik berhenti **tidak** menyelamatkan
+    kontras di sini — yang menentukan terangnya warna, bukan posisi stop-nya.
+  - **Perubahan warnanya lewat lapisan `::after` yang di-fade opacity, BUKAN
+    menukar `background`.** Gradien bukan properti yang bisa diinterpolasi
+    browser, jadi menukar langsung akan mengedip sementara angkatannya mulus.
+    Dua hal yang wajib ikut: `.step__n { position: relative; isolation: isolate }`
+    (agar `z-index: -1` berhenti di elemen itu, tidak tenggelam ke latar section —
+    pola yang sama dipakai `.site-footer`), dan `::after` **wajib**
+    `position: absolute` — `.step__n` itu grid container, jadi pseudo-element yang
+    masih dalam alur akan dihitung sebagai grid **item** lalu menggeser angkanya
+    dari tengah.
+  - Bayangannya ikut bergeser ke rona gold saat hover (`rgba(120,96,24,.5)` +
+    ring `rgba(168,138,42,.45)`), supaya bulatannya tidak tetap tampak hijau dari
+    pinggirnya.
 - **Warna wordmark "Ecoplast Solutions" (kiblat = LOGO ASLI):** logo memenggal warna
   **ECO = hijau** + **PLAST = navy**, dan **SOLUTIONS = navy** (sama dgn PLAST). Token:
   `--brand-green #3E9B37` (ECO) & `--brand-navy #173B5C` (PLAST + SOLUTIONS).
