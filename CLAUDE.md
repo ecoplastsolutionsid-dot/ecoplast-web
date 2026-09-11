@@ -346,9 +346,7 @@ MBH, di luar lingkup repo ini.)
 │                      #   PLAKAT putih max-width 176px → logo 160x34.8px, tinggi
 │                      #   ikut lebar). Disusun dari potongan logo-full.png; resep di
 │                      #   bagian Footer. Dulu bernama logo-footer.png.
-│  ├─ logo-mark.png    # Emblem asli (248x218, transparan) — SUDAH TIDAK dipakai di
-│                      #   halaman mana pun sejak header ikut memakai logo-lockup.png.
-│                      #   Disimpan sebagai acuan crop emblem & pembanding audit OG.
+│                      #   (logo-mark.png DIHAPUS 11 Sep 2026 — lihat catatan di bawah)
 │  ├─ logo-full.png    # Logo lockup resmi 500x500 transparan — sumber ikon + JSON-LD `logo`
 │  ├─ og-image.png     # Gambar Open Graph 1200x630 (og:image + JSON-LD `image`)
 │  ├─ mesin/           # Foto mesin & area produksi (.webp) untuk galeri di
@@ -1188,9 +1186,17 @@ Aturan penting:
   - `robots.txt`, `sitemap.xml`, `BingSiteAuth.xml`,
     `google5c4d18bf39fc4ecf.html`, kunci IndexNow — diambil crawler lewat path
     tetap, memang tak pernah ditaut.
-  - `assets/logo-mark.png` (58 KB) — **satu-satunya aset yang benar-benar tidak
-    dirujuk**, dipertahankan sengaja sebagai acuan crop emblem & pembanding audit
-    OG. Kalau kelak mau diramping, itu keputusan pemilik, bukan temuan bug.
+  - **`assets/logo-mark.png` SUDAH DIHAPUS** (11 Sep 2026, atas permintaan
+    pemilik setelah audit ini menemukannya sebagai satu-satunya aset tak
+    terpakai; 58.271 byte, emblem 248×218). Sebelum dihapus dipindai ke SELURUH
+    repo, bukan cuma HTML+CSS: nol rujukan fungsional — yang tersisa hanya prosa
+    (dokumen ini, satu komentar `styles.css`, berkas izin `.claude/`).
+    **Kalau kelak dibutuhkan lagi, jangan cari-cari berkasnya** — dua jalan
+    pulih: `git show 314005a:assets/logo-mark.png > assets/logo-mark.png`, atau
+    crop ulang dari `assets/logo-full.png` (emblem = blok konten teratas,
+    y 70–287 pada kanvas 500px; resep lengkapnya di bagian Favicon).
+    Sesudahnya `assets/` tinggal **3 berkas**: `logo-full.png`,
+    `logo-lockup.png`, `og-image.png` (+ `mesin/` & `product/`).
 - **PAKEM KELAS SAAT MENAMBAH HALAMAN — baca ini SEBELUM menulis markup baru.**
   Halaman baru wajib menyalin kelas dari halaman yang sudah ada, bukan mengarang
   nama kelas yang "kedengarannya benar". CSS tidak pernah mengeluh: kelas karangan
@@ -1482,12 +1488,16 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
     piksel inti** per kelompok warna, sama seperti verifikasi token brand. Hasil:
     wordmark ECO `#3E9B37` & PLAST/SOLUTIONS `#173B5C` = **jarak 0.0** ke
     `--brand-green`/`--brand-navy` (pixel-exact); emblem hijau `#489E31` = **jarak
-    0.0** ke `assets/logo-mark.png`, navy `#10325A` vs `#0F3058` = jarak 3.0 (selisih
+    0.0** ke emblem acuan, navy `#10325A` vs `#0F3058` = jarak 3.0 (selisih
     resampling). Arc navy + pellet navy + "e"/daun hijau semuanya ada → yang dipakai
-    **logo asli**, bukan varian `ecoplast logo.png`. **Jangan** pixel-diff kartu OG
-    vs `logo-mark.png` pakai crop yang ditebak — skala/offset tak presisi memberi
-    mean-diff besar (pernah terbaca 77/255) yang MENYESATKAN, seolah emblemnya beda.
-    Bandingkan warna inti, bukan piksel per piksel.
+    **logo asli**, bukan varian `ecoplast logo.png`.
+    **Acuan emblem waktu itu `assets/logo-mark.png`, yang kini sudah dihapus** —
+    kalau audit ini diulang, ambil emblemnya dari `assets/logo-full.png`
+    (y 70–287 pada kanvas 500px) atau pulihkan berkas lamanya dari git.
+    **Jangan** pixel-diff kartu OG vs emblem memakai crop yang ditebak —
+    skala/offset tak presisi memberi mean-diff besar (pernah terbaca 77/255) yang
+    MENYESATKAN, seolah emblemnya beda. Bandingkan warna inti, bukan piksel per
+    piksel.
   - Kalau `og-image.png` diganti, ingat cache **di luar repo**: Facebook/WhatsApp
     menyimpan preview per URL, jadi kartu lama bisa tetap tampil sampai di-refresh
     manual lewat Facebook Sharing Debugger. Bukan bug yang bisa dibetulkan dari repo.

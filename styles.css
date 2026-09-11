@@ -244,7 +244,8 @@ h1, h2, h3 {
 
 /* Brand header = ASET YANG SAMA dengan footer (`assets/logo-lockup.png`) supaya
    susunan DAN tipografi wordmark konsisten di kedua tempat. Sebelumnya header
-   memakai emblem `logo-mark.png` + teks HTML ber-font Archivo satu baris, sementara
+   memakai emblem tersendiri (`logo-mark.png`, berkasnya sudah dihapus 11 Sep 2026
+   karena tak dipakai lagi) + teks HTML ber-font Archivo satu baris, sementara
    footer memakai huruf logo asli bertumpuk — dua wordmark yang jelas beda.
    Tidak ada lagi teks wordmark HTML di situs ini: `.brand__name` & `.eco` sudah
    DIHAPUS dari styles.css dan responsive.css. Nama aksesibel tetap ada lewat
