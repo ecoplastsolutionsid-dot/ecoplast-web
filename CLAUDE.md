@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905v`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905w`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
