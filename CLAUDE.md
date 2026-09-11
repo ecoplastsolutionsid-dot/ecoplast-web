@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905o`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260905p`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -421,19 +421,33 @@ Aturan penting:
 - CSS variables warna: `--bg #F4F6F1`, `--ink #14271D`, `--green #1F7A4D`,
   `--green-deep #12442B`, `--blue #2B5CB8`, `--muted #5C6B60`, `--line #D9E0D6`,
   `--green-light #7BE0A6` (highlight di background gelap).
-- **`--blue` PUNYA SATU ARTI: penanda KATEGORI PRODUK. Jangan disebar.**
-  Diaudit 5 Sep 2026 — sebelumnya biru muncul **tepat dua kali di seluruh situs**,
-  hanya di `.pcard__tag` beranda ("Produk jadi", "Bahan baku"). Frasa yang **sama
-  persis** di `produk.html` (`.prod__tag`: "Produk jadi · PP", "Bahan baku · PP")
-  mewarisi hijau dari `.eyebrow`, jadi label identik tampil beda warna antar halaman
-  dan biru terbaca seperti kelupaan. Kini `.prod__tag` ikut `var(--blue)`.
-  **Yang TETAP hijau dan jangan diikutkan:** semua `.eyebrow` lain — "Produk kami",
-  "Kenapa Ecoplast", "Alur produksi", "Lokasi", "Profil", dsb. Justru kedisiplinan
-  itu yang membuat biru berarti sesuatu; begitu disebar, ia kembali jadi dekorasi.
-  Terukur: biru `#2B5CB8` di atas `--bg #F4F6F1` = **5,80 : 1** (ambang teks kecil
-  4,5:1 — lolos).
-  Pemakaian `--blue` yang lain, semuanya sah dan tak perlu diubah: outline
-  `:focus-visible` (2 aturan) dan titik aksen di dalam data-URI `.dotted`.
+- **`--blue` TIDAK MENANDAI APA PUN LAGI — NOL teks berwarna biru di seluruh
+  situs (sejak 11 Sep 2026).** Sisa pemakaiannya hanya outline `:focus-visible`
+  (2 aturan) dan titik aksen di dalam data-URI `.dotted`. **Jangan
+  menghidupkannya kembali sebagai warna teks.**
+  - Riwayatnya wajib dibaca sebelum ada yang "memperbaiki" ini balik. **5 Sep
+    2026:** biru dijadikan penanda KATEGORI PRODUK — `.pcard__tag` beranda sudah
+    biru sejak awal, lalu `.prod__tag` di `produk.html` ("Produk jadi · PP",
+    "Bahan baku · PP") ikut dibirukan supaya frasa identik tak beda warna antar
+    halaman. **11 Sep 2026: dibatalkan pemilik.** Di `produk.html`, "PRODUK JADI ·
+    PP" biru berdiri persis di samping "ALUR PRODUKSI" hijau dengan bentuk huruf
+    yang sama persis (mono, uppercase, letter-spacing lebar) — yang tertangkap
+    mata bukan "ini kategori, itu bukan", melainkan dua label kembar yang
+    warnanya tak sama. Pemilik bertanya "teks kecil Produk jadi · PP itu warna
+    hijau atau biru?" lalu memutuskan: **"harusnya warna sama seperti teks alur
+    produksi"**.
+  - **Keduanya diubah sekaligus, dan itu memang perlu.** `.prod__tag` saja tidak
+    cukup: kalau beranda dibiarkan biru, frasa identik kembali beda warna antar
+    halaman — persis masalah yang perubahan 5 Sep dulu hendak selesaikan. Pemilik
+    ditawari kedua cakupan dan memilih "produk + beranda sekaligus".
+  - **Cara menulisnya berbeda di dua tempat, jangan disamakan:** `.prod__tag`
+    **tidak punya deklarasi `color` sama sekali** — ia `.eyebrow` juga, jadi hijau
+    diwarisi dan tak bisa lepas sendiri lagi. `.pcard__tag` **bukan** `.eyebrow`
+    (punya gaya mono sendiri), jadi `color: var(--green)` harus ditulis eksplisit.
+  - Terukur sesudahnya: ketujuh label kecil di beranda + produk semuanya
+    `rgb(31,122,77)`, kontras **4,89:1** di atas `--bg` dan **5,32:1** di atas
+    kartu putih (ambang 4,5:1 — lolos). Pemindaian keenam halaman: **nol** teks
+    `rgb(43,92,184)`.
   **`--brand-green` & `--brand-navy` tetap NOL pemakaian** — memang cuma acuan warna
   brand untuk memverifikasi aset, bukan token yang mewarnai UI.
 - **`--gold #F2E3A8` / `--gold-deep #A88A2A` — SATU pemakaian, sama disiplinnya
