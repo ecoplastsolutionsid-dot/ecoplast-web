@@ -598,8 +598,19 @@ h1, h2, h3 {
    satu-satunya halaman yang kontainernya diam saat disentuh. `.prod__img` adalah
    elemen berbingkai di sana, jadi ia yang mewakili — dengan nilai yang sama
    persis seperti kartu. `.prod__img` bukan target reveal (yang jadi target
-   `.prod`), jadi transform-nya aman ditulis langsung. */
-.prod:hover .prod__img { transform: translateY(-4px); border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
+   `.prod`), jadi transform-nya aman ditulis langsung.
+
+   PEMICUNYA `.prod__img:hover`, BUKAN `.prod:hover .prod__img` (diperbaiki
+   11 Sep 2026 — pemilik: "ketika mouse belum mengarah ke gambar, hover tidak
+   tepat di kontainer"). `.prod` adalah SELURUH baris grid (foto + kolom teks
+   selebar halaman), jadi dengan pemicu lama frame foto sudah terangkat saat
+   kursor masih jauh di kolom teks di seberangnya — reaksinya muncul di tempat
+   yang tidak sedang ditunjuk. Sekarang yang bereaksi = yang disentuh, sama
+   seperti `.card`/`.pcard`/`.feature`/`.gshot` yang semuanya memakai
+   self-hover. JANGAN pakai `.prod__media:hover` sebagai jalan tengah: di baris
+   biji, `.prod__media` juga memuat `.prod__proof` (foto bukti Balaraja), jadi
+   masalah yang sama kembali dalam skala kecil. */
+.prod__img:hover { transform: translateY(-4px); border-color: rgba(31,122,77,.5); box-shadow: var(--shadow-lg); }
 @keyframes img-in {
   from { opacity: 0; transform: translateY(8px) scale(.99); }
   to   { opacity: 1; transform: none; }

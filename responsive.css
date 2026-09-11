@@ -217,7 +217,7 @@
      responsive.css dimuat setelah styles.css. */
   .has-js .pcard.in:hover, .has-js .feature.in:hover, .has-js .gshot.in:hover,
   .has-js .card.in:hover,
-  .map-wrap:hover, .prod:hover .prod__img,
+  .map-wrap:hover, .prod__img:hover,
   /* `.pcard:hover .pcard__img` sudah tidak ada lagi di styles.css — foto kartu
      beranda sengaja dibuat diam saat hover, jadi tak ada gerak yang perlu
      diredam di sini. */
