@@ -194,7 +194,7 @@
               <div class="of-field">
                 <label for="email">Email <span class="of-req">*</span></label>
                 <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" placeholder="nama@perusahaan.co.id" />
-                <span class="of-hint">Nomor pengajuan dan salinannya dikirim ke sini.</span>
+                <span class="of-hint">Nomor pengajuan dan salinannya akan dikirim ke alamat email yang didaftarkan.</span>
               </div>
             </div>
           </fieldset>
@@ -314,6 +314,14 @@
           </fieldset>
 
           <div class="of-actions">
+            <!-- Sengaja `.btn` POLOS di markup, tanpa varian warna. Kelas
+                 `btn--primary` (hijau) dipasang/dilepas oleh skrip di bawah,
+                 hanya ketika seluruh isian wajib sudah lengkap — lihat
+                 `segarkanTombol()`. Tombolnya TETAP bisa diklik saat belum
+                 lengkap, supaya pesan "Ada isian yang belum lengkap…" tetap
+                 muncul dan menunjuk kolom yang kurang; yang berubah cuma
+                 warnanya. Kalau JS mati, tombol tetap polos dan formulir memang
+                 tidak berfungsi (rantai wilayah pun butuh JS). -->
             <button class="btn" type="submit" id="kirim">Kirim pengajuan</button>
             <p class="of-side">
               Perlu lebih cepat?
@@ -522,11 +530,17 @@
         pos.value = (o && o.dataset.pos) || "";
       });
 
-      /* Blok jumlah mengikuti produk yang dicentang. */
+      /* Blok jumlah mengikuti produk yang dicentang. `syncs` menyimpan tiap
+         fungsi sync supaya bisa dipanggil ulang SETELAH `f.reset()` — reset
+         mengembalikan keadaan checkbox tapi tidak menyentuh atribut `hidden`
+         yang kita atur sendiri lewat JS, jadi tanpa ini blok jumlah bisa
+         tertinggal terbuka padahal produknya sudah tak tercentang lagi. */
+      var syncs = [];
       function ikat(cbId, boxId) {
         var c = document.getElementById(cbId), b = document.getElementById(boxId);
         function sync() { b.hidden = !c.checked; cekMoq(); }
         c.addEventListener("change", sync); sync();
+        syncs.push(sync);
       }
 
       /* Ambang minimum DIJUMLAH lintas produk: 5 ton tali + 5 ton biji sudah
@@ -559,11 +573,14 @@
         return !salah;
       }
 
-      f.addEventListener("submit", function (e) {
-        e.preventDefault();
-        hasil.hidden = true;
-        hasil.className = "of-result";
-
+      /* SATU definisi "lengkap", dipakai DUA kali: untuk memutuskan warna tombol
+         dan untuk menghadang submit. Sengaja tidak disalin jadi dua daftar —
+         kalau keduanya sempat berbeda, tombol bisa tampak siap padahal submit
+         menolaknya (atau sebaliknya), dan itu jenis bug yang sulit dilihat.
+         `tandaiSalah` memisahkan efek sampingnya: saat dipanggil untuk mewarnai
+         tombol kita TIDAK boleh menandai kolom merah — orang baru mulai mengetik,
+         belum melakukan kesalahan apa pun. */
+      function periksa(tandaiSalah) {
         var wajib = [
           [document.getElementById("nama"), function (v) { return v.trim(); }],
           [document.getElementById("perusahaan"), function (v) { return v.trim(); }],
@@ -573,10 +590,39 @@
           [kec, function (v) { return v; }], [kel, function (v) { return v; }]
         ];
         var ok = true;
-        wajib.forEach(function (p) { if (!tandai(p[0], !p[1](p[0].value))) ok = false; });
-        if (total() <= 0) { ok = false; tandai(document.getElementById("tali"), true); }
-        var setuju = document.getElementById("setuju");
-        if (!setuju.checked) ok = false;
+        wajib.forEach(function (p) {
+          var salah = !p[1](p[0].value);
+          if (salah) ok = false;
+          if (tandaiSalah) tandai(p[0], salah);
+        });
+        if (total() <= 0) {
+          ok = false;
+          if (tandaiSalah) tandai(document.getElementById("tali"), true);
+        }
+        if (!document.getElementById("setuju").checked) ok = false;
+        return ok;
+      }
+
+      /* Warna tombol = penanda kesiapan (permintaan pemilik 11 Sep 2026: tombol
+         polos dulu, "warna baru muncul ketika form sudah terisi semua").
+         `btn--primary` varian yang sudah ada di sistem, bukan warna baru. */
+      function segarkanTombol() {
+        tombol.classList.toggle("btn--primary", periksa(false));
+      }
+      /* Delegasi di tingkat form: satu pemasangan menangkap semua isian,
+         termasuk <select> wilayah yang OPSINYA baru dibuat belakangan lewat
+         fetch — kalau listener dipasang per elemen, opsi susulan itu terlewat. */
+      f.addEventListener("input", segarkanTombol);
+      f.addEventListener("change", segarkanTombol);
+      segarkanTombol();
+
+      f.addEventListener("submit", function (e) {
+        e.preventDefault();
+        hasil.hidden = true;
+        hasil.className = "of-result";
+
+        var ok = periksa(true);
+        segarkanTombol();
 
         if (!ok) {
           hasil.className = "of-result of-result--gagal";
@@ -623,7 +669,10 @@
             hasil.innerHTML = "<strong>Pengajuan terkirim — " + (res.d.nomor || "") + "</strong>" +
               "Salinan sudah dikirim ke email Anda. Tim kami akan menghubungi via WhatsApp pada jam kerja, Senin–Sabtu 08.00–17.00 WIB.";
             hasil.hidden = false;
-            f.reset(); cekMoq(); pos.value = "";
+            f.reset();
+            syncs.forEach(function (s) { s(); });   /* tutup lagi blok jumlah */
+            cekMoq(); pos.value = "";
+            segarkanTombol();                       /* tombol kembali polos */
           })
           .catch(function (err) {
             hasil.className = "of-result of-result--gagal";

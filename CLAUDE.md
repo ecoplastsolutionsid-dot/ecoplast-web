@@ -1292,6 +1292,40 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   diukur: tinggi kolom Kode pos turun jadi **69px**, praktis sejajar dengan
   Kelurahan di sebelahnya (**70px**); sebelumnya baris itu terlihat lebih tinggi
   sendirian karena hint-nya. Sisa `.of-hint` di halaman: **5**.
+- **Tombol "Kirim pengajuan" POLOS dulu, hijau hanya saat isian lengkap
+  (11 Sep 2026).** Permintaan pemilik: "kembalikan polos seperti semula, warna
+  baru muncul ketika form sudah terisi semua".
+  - **Luruskan dulu premis yang sempat salah:** tombol itu **tidak pernah**
+    berubah warna mengikuti kelengkapan isian. Sebelumnya ia `.btn` polos —
+    tanpa latar maupun border yang terlihat, **dalam keadaan apa pun**. Satu-satunya
+    logika status yang ada cuma `disabled` + teks "Mengirim…" selama pengiriman.
+    Jadi perilaku "berwarna kalau sudah lengkap" ini **baru**, bukan yang lama.
+  - Di markup tombolnya tetap `class="btn"`. Kelas **`btn--primary`** (varian yang
+    sudah ada, bukan warna baru) dipasang/dilepas `segarkanTombol()`.
+  - **SATU definisi "lengkap", dipakai dua kali.** Fungsi `periksa(tandaiSalah)`
+    melayani pewarnaan tombol **dan** penghadang submit. Jangan disalin jadi dua
+    daftar: kalau keduanya sempat berbeda, tombol bisa tampak siap padahal submit
+    menolak (atau sebaliknya) — bug yang sulit terlihat. Parameternya memisahkan
+    efek samping: saat mewarnai tombol, kolom **tidak** ditandai merah; orang baru
+    mulai mengetik, belum melakukan kesalahan.
+  - **Listener dipasang di tingkat `<form>`** (`input` + `change`), bukan per
+    elemen — `<select>` wilayah baru diisi `<option>`-nya belakangan lewat fetch,
+    jadi pemasangan per elemen akan melewatkan opsi susulan itu.
+  - **Tombol TETAP bisa diklik** saat belum lengkap, supaya pesan "Ada isian yang
+    belum lengkap…" tetap muncul dan menunjuk kolom yang kurang. Yang berubah
+    hanya warnanya — jangan diganti jadi `disabled`, itu menghilangkan panduannya.
+  - Sesudah kirim sukses, `f.reset()` **tidak** cukup: ia mengembalikan keadaan
+    checkbox tapi tidak menyentuh atribut `hidden` yang diatur JS. Karena itu ada
+    larik **`syncs`** yang dipanggil ulang setelah reset (menutup blok jumlah),
+    lalu `segarkanTombol()` (mengembalikan tombol ke polos).
+  - **JEBAKAN saat menguji ini** — dua-duanya sudah kejadian:
+    (1) `getComputedStyle` di tab yang tidak aktif **membeku**, jadi tombol yang
+    sudah hijau tetap terbaca `rgb(240,240,240)` (warna bawaan UA). Percayai
+    `className`, atau buktikan lewat **screenshot**; (2) menyuntik `<option>` ke
+    `#prov` memicu handler aslinya yang **mengosongkan** `#kab`/`#kec`/`#kel`
+    (di localhost fetch-nya 404), jadi isi dari atas ke bawah lalu **isi ulang
+    tingkat di bawahnya** — kalau tidak, "lengkap" tak pernah tercapai dan
+    tombolnya terlihat rusak padahal benar.
 - **Kotak "Tali Plastik PP" TIDAK lagi tercentang otomatis (11 Sep 2026,
   permintaan pemilik).** Dulu `<input type="checkbox" id="p-tali" checked>`,
   sehingga setiap pengunjung seolah sudah memesan tali sebelum memilih apa pun.
