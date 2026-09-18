@@ -614,8 +614,17 @@ h1, h2, h3 {
    grid seragam. Pada 4/3 keempat mesin tetap terbaca penuh dan foto lanskap
    tidak kehilangan panel kontrolnya; pada 1/1 panel itu terpotong. Kalau kelak
    menambah foto, cek ulang crop-nya sebelum mengubah rasio ini.
+   TIGA KOLOM di desktop (permintaan pemilik 18 Sep 2026, sebelumnya dua). Cocok
+   karena fotonya ada 6: tepat 2 baris penuh, tidak ada tile yatim di baris akhir.
+   Kalau jumlah fotonya kelak berubah, ingat aritmetikanya — 7 foto akan
+   menyisakan satu tile sendirian selebar sepertiga baris.
+   Tangganya: 3 kolom → 2 di ≤900px → 1 di ≤560px (dua yang terakhir di
+   responsive.css). Ambang 900px itu penting, bukan pilihan bebas: TERUKUR, di 3
+   kolom tile tinggal 258x194px pada 901px — foto potret ter-crop 4/3 mulai
+   kehilangan konteks mesinnya di ukuran itu. Tepat di 900px ia melompat kembali
+   ke 397x298px karena 2 kolom.
    ========================================================================== */
-.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1rem, 2.2vw, 1.5rem); }
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2.2vw, 1.5rem); }
 .gshot {
   margin: 0;
   background: #fff;

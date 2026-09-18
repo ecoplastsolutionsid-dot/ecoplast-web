@@ -263,7 +263,7 @@ MBH, di luar lingkup repo ini.)
     tak terpicu setelah `history.back()`; pakai polling `readyState` +
     `location.pathname` dengan `setTimeout`.
 - **Cache-buster WAJIB di link stylesheet:** `/styles.css?v=<versi>` &
-  `/responsive.css?v=<versi>` (kini `v=20260905x`, sama di **keenam** file).
+  `/responsive.css?v=<versi>` (kini `v=20260918a`, sama di **keenam** file).
   **PROBE-nya harus memakai penanda yang UNIK untuk perubahan itu.** Versi
   `20260905a` hangus persis karena ini: probe menunggu string `aspect-ratio: 4 / 3`
   muncul, padahal string itu **sudah ada** di CSS lama (dipakai `.gshot` galeri
@@ -791,10 +791,24 @@ Aturan penting:
   - **Tanpa lightbox JS.** `<a>` menuju file fotonya langsung
     (`target="_blank" rel="noopener"`) → foto bisa dilihat ukuran penuh tanpa skrip
     ketiga. Situs ini sengaja cuma punya dua skrip; jangan tambah.
-  - **Rasio tile `4/3`**, grid 2 kolom → 1 kolom di ≤560px. Rasio dipilih setelah
-    merender center-crop `1/1` vs `4/3` keempat foto dan **melihat**-nya: pada 4/3
-    keempat mesin tetap terbaca penuh dan foto lanskap tak kehilangan panel
-    kontrolnya; pada 1/1 panel itu terpotong.
+  - **Rasio tile `4/3`**, grid **3 kolom → 2 di ≤900px → 1 di ≤560px**. Rasio
+    dipilih setelah merender center-crop `1/1` vs `4/3` keempat foto dan
+    **melihat**-nya: pada 4/3 keempat mesin tetap terbaca penuh dan foto lanskap
+    tak kehilangan panel kontrolnya; pada 1/1 panel itu terpotong.
+  - **TIGA kolom sejak 18 Sep 2026** (permintaan pemilik: "1 line 3 photo");
+    sebelumnya dua sejak awal. Cocok karena fotonya **6** — tepat 2 baris penuh,
+    tanpa tile yatim di baris akhir. **Kalau jumlah foto berubah, hitung ulang:**
+    7 foto akan menyisakan satu tile sendirian selebar sepertiga baris.
+  - **Langkah 2 kolom di ≤900px WAJIB ada, jangan langsung 3 → 1.** Tanpa itu
+    tile 3 kolom menyusut terus sampai ambang 560px; terukur tinggal **166px** di
+    561px — mesinnya tak lagi terbaca. Terukur pada tangga yang sekarang:
+    1280 → tile 337×254, 1024 → 295×221, **901 → 258×194** (titik tersempit 3
+    kolom), 900 → 397×298 (lompat ke 2 kolom), 561 → 243×182, 560 → 500×376
+    (1 kolom), 375 → 320×241. Rasio terbaca **1,333 di semua lebar** (tidak
+    gepeng) dan **nol overflow horizontal** di 11 lebar yang diuji.
+  - Mengubah jumlah kolom = **dua berkas**: `.gallery` di `styles.css` (desktop)
+    dan override `≤900px` di `responsive.css`. Jangan taruh `@media` di
+    `styles.css`.
   - **`.gshot__img` WAJIB `height: auto`.** Atribut `width`/`height` di `<img>`
     (dipasang untuk mencegah layout shift) masuk sebagai presentational hint
     width+height; kalau **keduanya definite, `aspect-ratio` DIABAIKAN** browser.

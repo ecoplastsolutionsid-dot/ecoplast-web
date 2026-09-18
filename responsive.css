@@ -12,6 +12,10 @@
   .contact-grid { grid-template-columns: 1fr; }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
+  /* Galeri mesin: 3 kolom (desktop) → 2 di sini. Tanpa langkah ini, tile 3 kolom
+     menyusut terus sampai ambang 1 kolom di ≤560px — di 561px tile tinggal ~166px,
+     terlalu kecil untuk membaca mesinnya. Turun ke 1 kolom tetap di ≤560px. */
+  .gallery { grid-template-columns: repeat(2, 1fr); }
   .foot-cols { grid-template-columns: 1fr 1fr; }   /* tablet: 2 kolom */
   /* Batalkan perapatan-ke-kanan kolom Media Sosial. Di desktop ia menyeimbangkan
      sisi kanan footer, tapi begitu grid tinggal 2 kolom (dan 1 kolom di ≤560px)
