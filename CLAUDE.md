@@ -1576,7 +1576,25 @@ step dan tanpa Node, jadi aplikasi ber-Node tidak boleh menumpang di sini.
   dan tidak menimbulkan overflow horizontal di 375/504/900/1280.
 - Semua tombol WhatsApp: `https://wa.me/6285214401234?text=<pesan-terurl-encode>`,
   selalu `target="_blank" rel="noopener"`, teks pre-filled sesuai konteks tombol.
-- Alamat: Kp. Tobat, Desa Sentul Jaya, Kec. Balaraja, Kab. Tangerang, Banten.
+- Alamat: **Jl. Raya Tobat, Sentul Jaya, Kec. Balaraja, Kabupaten Tangerang,
+  Banten 15610.** Diubah pemilik **18 Sep 2026**; sebelumnya "Kp. Tobat, Desa Sentul
+  Jaya, Kec. Balaraja, Kab. Tangerang" — nama jalan yang benar, bukan kampung, dan
+  "Kabupaten" ditulis penuh. **Koordinat TIDAK berubah** (`-6.2077458;106.4389806`),
+  jadi geo meta, embed peta, dan `hasMap` (CID) tidak disentuh.
+  Tempat yang WAJIB ikut kalau alamat berubah lagi — **11 kemunculan di 6 file**:
+  `streetAddress` JSON-LD (`index.html` + `kontak.html`, **tanpa** kode pos karena
+  itu tugas `postalCode`), `.foot-address` footer **keenam** file (2 baris dipisah
+  `<br />`: jalan+kecamatan, lalu kabupaten+kode pos), `.crow__val` kartu
+  "Informasi kontak" (`kontak.html`), kartu "Alamat" (`tentang.html`), dan blok
+  "Hubungi kami" (`kebijakan-privasi.html`).
+  **Yang SENGAJA tetap `Kab. Tangerang`** (bukan terlewat): meta description, og
+  description, `og:image:alt`, figcaption bukti produksi, eyebrow hero beranda, dan
+  baris copyright `.foot-bottom` — semuanya penanda wilayah/prosa, bukan alamat NAP.
+  `addressLocality` tetap `Balaraja`, `postalCode` tetap `15610`.
+  Terukur sesudahnya (iframe lebar sungguhan, 1280/900/504/375): alamat footer tetap
+  **2 baris** (lebar baris terpanjang 274px di dalam blok 287px, turun dari 281px),
+  `.crow__val` tetap 3 baris di 1280 & 4 baris di 375 — **nol** perubahan jumlah
+  baris dibanding versi lama, nol overflow horizontal.
 - Jam: Senin–Sabtu, 08.00–17.00 WIB.
 
 ## Aturan repo
